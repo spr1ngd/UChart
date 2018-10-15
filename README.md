@@ -12,10 +12,10 @@
 
 name | description | 2d status | 3d status
 ----|----|----|----
-Point2D|2D点|:x:
-Point3D|3D点|:x:
-Line2D|2D点|:x:
-Line2D|3D点|:x:
+Point2D|2D点|:x:|:x:
+Point3D|3D点|:x:|:x:
+Line2D|2D线|:x:|:x:
+Line2D|3D线|:x:|:x:
 Line|折线图|:x:|:x:
 Bar|柱状图|:x:|:x:
 Pie|饼图|:x:|:x:
