@@ -3,12 +3,11 @@ using UnityEngine;
 
 namespace UChart
 {
-    public class Point : UChartObject,IPoint
+    public class Point : UChartObject,IPoint 
     {
         public override void Init()
         {
             base.Init();
-
         }
 
         public virtual void SetColor(Color color)
@@ -21,7 +20,12 @@ namespace UChart
 
         }
 
-        public virtual void SetSize(int size)
+        public virtual void SetAlpha(float alpha)
+        {
+
+        }
+
+        public virtual void SetSize(float size)
         {
 
         }
