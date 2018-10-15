@@ -12,7 +12,7 @@
 
 name | description | 2d status | 3d status
 ----|----|----|----
-Point2D|2D点|:x:|:x:
+Point2D|2D点|:x: 40%|:x:
 Point3D|3D点|:x:|:x:
 Line2D|2D线|:x:|:x:
 Line2D|3D线|:x:|:x:

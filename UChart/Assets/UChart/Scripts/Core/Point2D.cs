@@ -1,16 +1,14 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
 
 namespace UChart
 {
-    public class Point2D : Point
+    public class Point2D : Point 
     {
         private RectTransform m_rect = null;
         private Image m_image = null;
 
-        private Vector3 m_animationOriginScale = Vector3.one;
         private Vector3 m_originScale = Vector3.one;
         private Vector3 m_parentScale = Vector3.one;
         private float m_size = -1;
@@ -26,47 +24,32 @@ namespace UChart
             SetColor(Color.black);
         }
 
-        public override void SetColor(Color color)
+        protected override void SetColor(Color color)
         {
             m_image.color = color;
         }
 
-        public override void SetColor(Color32 color32)
+        protected override void SetColor(Color32 color32)
         {
             m_image.color = color32;
         }
 
-        public override void SetAlpha(float alpha)
+        protected override void SetAlpha(float alpha)
         {
             Color color = m_image.color;
             m_image.color = new Color(color.r,color.g,color.b,alpha);
         }
 
-        public override void SetSize(float size)
+        protected override void SetSize(float size)
         {
             m_size = size;
             m_rect.sizeDelta = new Vector2(m_size,m_size);
         }
 
-        public override void SetTexture(Texture2D texture)
+        protected override void SetTexture(Texture2D texture)
         {
             Sprite sprite = Sprite.Create(texture,new Rect(0,0,texture.width,texture.height),new Vector2(0.5f,0.5f));
             m_image.overrideSprite = sprite;
-        }
-
-        public override void OnEnterAnimation()
-        {
-            m_animationOriginScale = myTransform.localScale;
-            animationTweener.Complete();
-            animationTweener.Kill();
-            animationTweener = this.myTransform.DOScale(m_animationOriginScale * 1.5f, 0.5f).SetLoops(-1,LoopType.Yoyo);
-        }
-
-        public override void OnExitAnimation()
-        {
-            animationTweener.Complete();
-            animationTweener.Kill();
-            animationTweener = this.myTransform.DOScale(m_animationOriginScale,0.5f);
         }
 
         private void LateUpdate()
