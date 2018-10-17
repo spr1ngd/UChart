@@ -23,7 +23,7 @@ Radar|雷达图|:x:|:x:
 Scatter|散点图|:x:|:x:
 Map|地图|:x:|:x:
 Candlestick|K线图|:x:|:x:
-Heatmap|热力图|:x:|:x:
+Heatmap|热力图|:x:|:x: 40%
 Graph|关系图|:x:|:x:
 Path|路径图|:x:|:x:
 Tree|树图|:x:|--

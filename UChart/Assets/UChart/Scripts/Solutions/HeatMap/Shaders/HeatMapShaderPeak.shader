@@ -40,18 +40,17 @@ Shader "UChart/HeatMap/Peak"
 			v2f vert(a2v input)
 			{
 				v2f o;
-                half wp = mul(unity_ObjectToWorld,input.pos).xyz;
+                half3 worldPos = mul(unity_ObjectToWorld,input.pos).xyz;
                 half heat = 0;
 				for( int i = 0 ; i < _FactorCount;i++ )
 				{
-					half dis = distance(wp,_Factors[i].xyz);
+					half dis = distance(worldPos,_Factors[i].xyz);
 					float radius = _FactorsProperties[i].x;
 					float intensity = _FactorsProperties[i].y;
 					half ratio = 1 - saturate(dis/radius);
 					heat += intensity * ratio;
-					// heat = clamp(heat,0.05,0.95);
-				}
-				o.pos = UnityObjectToClipPos(input.pos + half3(0,20,0));
+				}	
+				o.pos = UnityObjectToClipPos(input.pos + half3(0,heat*3,0));
 				o.worldPos = mul(unity_ObjectToWorld,input.pos).xyz;
 				return o;
 			}

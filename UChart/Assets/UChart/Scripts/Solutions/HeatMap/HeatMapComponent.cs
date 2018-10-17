@@ -78,6 +78,13 @@ namespace UChart.HeatMap
             for( int i = 0 ; i < impactFactors.Count;i++ )
                 properties[i] = new Vector2(influenceRadius,intensity);
             material.SetVectorArray("_FactorsProperties",properties);
+
+            // TODO: 将温度本身数值作为一个影响因子累乘
+            // set factor values
+            // var values = new float[impactFactors.Count];
+            // for( int i = 0 ; i < impactFactors.Count;i++ )
+            //     values[i] = Random.Range(0,5);
+            // material.SetFloatArray("_FactorsValues",values);
         }
     }
 }

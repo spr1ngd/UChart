@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace UChart
 {
-    public class UChartObject : MonoBehaviour , IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
+    public class UChartObject : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
     {
         protected IAnimationEvent animationEvent { get { return (IAnimationEvent)this.GetComponent<AnimationBase>(); } }
         protected string uchartId = string.Empty;
