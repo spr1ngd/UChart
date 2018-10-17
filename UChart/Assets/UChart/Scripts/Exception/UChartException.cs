@@ -1,9 +1,7 @@
 ﻿
-using System;
-
 namespace UChart
 {
-    public class UChartException : Exception
+    public class UChartException : System.Exception
     {
         public UChartException()
         {
@@ -15,7 +13,7 @@ namespace UChart
 
         }
 
-        public UChartException(string message,Exception exception)
+        public UChartException(string message,System.Exception exception)
         {
 
         }
