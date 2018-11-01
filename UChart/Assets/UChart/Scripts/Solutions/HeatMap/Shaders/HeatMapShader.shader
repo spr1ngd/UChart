@@ -8,13 +8,16 @@
 
 	SubShader
 	{
-		Tags {"Queue"="Transparent"} 
+		Tags {"RenderType"="Overlay" "Queue"="Transparent" } 
 		Blend SrcAlpha OneMinusSrcAlpha
+		ZTest [unity_GUIZTestMode]
+		ZWrite On
+		// Cull off
 
 		Pass
 		{
 			CGPROGRAM
-
+			
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -64,5 +67,5 @@
 		}
 	}
 
-	FallBack "Diffuse"
+	 FallBack "Diffuse"
 }

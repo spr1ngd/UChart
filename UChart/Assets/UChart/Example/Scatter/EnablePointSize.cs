@@ -12,7 +12,7 @@ namespace UChart.Example.Scatter
     public class EnablePointSize : MonoBehaviour
     {
         const UInt32 GL_VERTEX_PROGRAM_POINT_SIZE = 0x8642 * 2000;
-        const UInt32 GL_POINT_SMOOTH = 0x0B10;
+        // const UInt32 GL_POINT_SMOOTH = 0x0B10;
 
         const string LibGLPath =
 #if UNITY_STANDALONE_WIN
@@ -42,7 +42,7 @@ namespace UChart.Example.Scatter
             {
                 glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
             }
-            glEnable(GL_POINT_SMOOTH);
+            // glEnable(GL_POINT_SMOOTH);
         }
         // #endif
     }

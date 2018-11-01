@@ -1,46 +1,26 @@
-ï»¿
+
 using UnityEngine;
 using System.Collections.Generic;
+using UChart.Core;
 
 namespace UChart.HeatMap
 {
-    public enum HeatMapMode
+    public class HeatmapComponent2D : MonoBehaviour
     {
-        RefreshEachFrame,
-        RefreshByInterval
-    }
-
-    public class HeatMapComponent : MonoBehaviour
-    {
-        // TODO: set point properties for shader properties.
-        // TODO: get mesh.material
-
-        private Material m_material = null;
-
-        public Material material 
+        public new Material material
         {
-            get
-            {
-                if( null == m_material )
-                {
-                    var renderer = this.GetComponent<Renderer>();
-                    if( null == renderer )
-                        throw new UChartNotFoundException("Can not found Renderer component on HeatMapComponent");
-                    m_material = renderer.material;
-                }
-                return m_material;
-            }
+            get { return this.GetComponent<Widget2D>().material; }
         }
 
         public HeatMapMode heatMapMode = HeatMapMode.RefreshEachFrame;
 
-        // çƒ­åŠ›å›¾åˆ·æ–°é—´éš” TODO: æ”¯æŒè®¾ç½®ä¸ºæ¯å¸§åˆ·æ–°
+        // ÈÈÁ¦Í¼Ë¢ÐÂ¼ä¸ô TODO: Ö§³ÖÉèÖÃÎªÃ¿Ö¡Ë¢ÐÂ
         public float interval = 0.02f;
 
-        // çƒ­åŠ›å½±å“åŠå¾„
+        // ÈÈÁ¦Ó°Ïì°ë¾¶
         public float influenceRadius = 3.0f;
 
-        // äº®åº¦
+        // ÁÁ¶È
         public float intensity = 3.0f;
 
         private float m_timer = 0.0f;
@@ -49,13 +29,13 @@ namespace UChart.HeatMap
 
         private void Update()
         {
-            if( heatMapMode == HeatMapMode.RefreshEachFrame )
+            if(heatMapMode == HeatMapMode.RefreshEachFrame)
             {
-                 RefreshHeatmap();
-                 return;
+                RefreshHeatmap();
+                return;
             }
             m_timer += Time.deltaTime;
-            if( m_timer > interval )
+            if(m_timer > interval)
             {
                 RefreshHeatmap();
                 m_timer -= interval;
@@ -69,17 +49,17 @@ namespace UChart.HeatMap
 
             // set impact factors
             var ifPosition = new Vector4[impactFactors.Count];
-            for( int i = 0 ; i < impactFactors.Count;i++ )
+            for(int i = 0; i < impactFactors.Count; i++)
                 ifPosition[i] = impactFactors[i].transform.position;
             material.SetVectorArray("_Factors",ifPosition);
 
             // set factor properties
             var properties = new Vector4[impactFactors.Count];
-            for( int i = 0 ; i < impactFactors.Count;i++ )
+            for(int i = 0; i < impactFactors.Count; i++)
                 properties[i] = new Vector2(influenceRadius,intensity);
             material.SetVectorArray("_FactorsProperties",properties);
 
-            // TODO: å°†æ¸©åº¦æœ¬èº«æ•°å€¼ä½œä¸ºä¸€ä¸ªå½±å“å› å­ç´¯ä¹˜
+            // TODO: ½«ÎÂ¶È±¾ÉíÊýÖµ×÷ÎªÒ»¸öÓ°ÏìÒò×ÓÀÛ³Ë
             // set factor values
             // var values = new float[impactFactors.Count];
             // for( int i = 0 ; i < impactFactors.Count;i++ )
