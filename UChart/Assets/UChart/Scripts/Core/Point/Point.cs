@@ -5,28 +5,6 @@ namespace UChart
 {
     public class Point : UChartObject
     {
-        // todo 将颜色、尺寸、贴图、shader、posteffect等改为属性设置
-        private Color32 m_color32;
-        public Color32 color32
-        {
-            get { return m_color32; }
-            set
-            {
-                m_color32 = value;
-                SetColor(value);
-            }
-        }
-
-        private Color m_color;
-        public Color color
-        {
-            get { return m_color; }
-            set
-            {
-                m_color = value;
-                SetColor(value);
-            }
-        }
 
         private float m_alpha = 1;
         public float alpha
@@ -64,16 +42,6 @@ namespace UChart
         {
             myGameobject.AddComponent<T>();
             return this;
-        }
-
-        protected virtual void SetColor(Color color)
-        {
-
-        }
-
-        protected virtual void SetColor(Color32 color32)
-        {
-
         }
 
         protected virtual void SetAlpha(float alpha)

@@ -1,7 +1,7 @@
-﻿
+
 namespace UChart.Barchart
 {
-    public class Barchart
+    public class Bar : UChartObject
     {
         
     }

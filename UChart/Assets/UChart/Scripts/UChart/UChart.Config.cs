@@ -6,6 +6,12 @@ namespace UChart
         Scale
     }
 
+    public enum UChartColorTweenMode
+    {
+        NORMAL,
+        FADE,
+    }
+
     public partial class UChart
     {
         public const UChartState uchartState = UChartState.Pixel;

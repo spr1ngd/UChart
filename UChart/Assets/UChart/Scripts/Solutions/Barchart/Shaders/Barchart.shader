@@ -24,12 +24,14 @@ Shader "UChart/Barchart/Simple"
 
 			struct a2v
 			{
-				
+				float4 POSITION : POSITION;
+				float4 NORMAL : NORMAL;
+				float4 UV : TEXCOORD0;
 			};
 
 			struct v2f
 			{
-
+				float4 POSITION : SV_POSITION;
 			};
 
 			v2f vert( a2v IN )
