@@ -8,8 +8,8 @@ namespace UChart
     {
         #region base components
 
-        protected IAnimationEvent animationEvent { get { return (IAnimationEvent)this.GetComponent<AnimationBase>(); } }
         protected string uchartId = string.Empty;
+        protected IAnimationEvent animationEvent { get { return (IAnimationEvent)this.GetComponent<AnimationBase>(); } }        
         protected Transform myTransform = null;
         protected GameObject myGameobject = null;
 
@@ -99,7 +99,7 @@ namespace UChart
             Debug.Log(string.Format("<color=green>{0}->{1}</color>","Click",uchartId));
         }
 
-        protected virtual void OnPointerEnter(PointerEventData eventData)
+        public virtual void OnPointerEnter(PointerEventData eventData)
         {
             if( !interactive )
                 return;
@@ -108,7 +108,7 @@ namespace UChart
             Debug.Log(string.Format("<color=green>{0}->{1}</color>","Enter",uchartId));
         }
 
-        protected virtual void OnPointerExit(PointerEventData eventData)
+        public virtual void OnPointerExit(PointerEventData eventData)
         {
             if( !interactive )
                 return;
@@ -117,7 +117,7 @@ namespace UChart
             Debug.Log(string.Format("<color=green>{0}->{1}</color>","Exit",uchartId));
         }
 
-        protected virtual void OnPointerClick(PointerEventData eventData)
+        public virtual void OnPointerClick(PointerEventData eventData)
         {
             if( !interactive )
                 return;

@@ -28,12 +28,7 @@ namespace UChart
         {
             m_image.color = color;
         }
-
-        protected override void SetColor(Color32 color32)
-        {
-            m_image.color = color32;
-        }
-
+        
         protected override void SetAlpha(float alpha)
         {
             Color color = m_image.color;
