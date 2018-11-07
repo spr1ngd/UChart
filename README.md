@@ -17,7 +17,7 @@ Point3D|3D点|:x:|:x:
 Line2D|2D线|:x:|:x:
 Line2D|3D线|:x:|:x:
 Line|折线图|:x:|:x:
-Bar|柱状图|:x:|:x:
+Bar|柱状图|:x:|:x:0%
 Pie|饼图|:x:|:x:
 Radar|雷达图|:x:|:x:
 Scatter|散点图|:x:|:x:

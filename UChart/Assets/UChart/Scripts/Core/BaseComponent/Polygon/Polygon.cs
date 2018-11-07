@@ -7,9 +7,13 @@ namespace UChart.Polygon
     {
         public Color defaultColor = Color.white;
 
+        public PolygonAnchor anchor = PolygonAnchor.Center;
+
         protected Vector3[] vertices = null;
 
         protected int[] triangles = null;
+
+        protected Color[] colors = null;
 
         public Mesh Create(string name)
         {

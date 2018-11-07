@@ -21,11 +21,12 @@ namespace UChart.Barchart
             var meshRenderer = myGameobject.AddComponent<MeshRenderer>();
 
             Cube mesh = new Cube();
-            mesh.size = size;          
+            mesh.size = size;      
+            mesh.anchor = PolygonAnchor.Bottom;    
             meshFilter.mesh = mesh.Create("bar3d_mesh");
             meshRenderer.material = material;
-
             myGameobject.AddComponent<MeshCollider>();
+            myGameobject.AddComponent<Anim4Point2D_01>();
         }
 
         #region properties && events
