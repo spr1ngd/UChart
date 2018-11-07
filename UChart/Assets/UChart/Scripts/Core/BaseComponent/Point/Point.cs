@@ -5,18 +5,6 @@ namespace UChart
 {
     public class Point : UChartObject
     {
-
-        private float m_alpha = 1;
-        public float alpha
-        {
-            get { return m_alpha; }
-            set
-            {
-                m_alpha = value;
-                SetAlpha(value);
-            }
-        }
-
         private float m_size = 1;
         public float size
         {
@@ -42,11 +30,6 @@ namespace UChart
         {
             myGameobject.AddComponent<T>();
             return this;
-        }
-
-        protected virtual void SetAlpha(float alpha)
-        {
-
         }
 
         protected virtual void SetSize(float size)

@@ -42,6 +42,11 @@ namespace UChart
         
         #region uchart base method
 
+        private void Awake()
+        {
+            Init();
+        }
+
         public virtual void Init()
         {
             this.myTransform = this.transform;

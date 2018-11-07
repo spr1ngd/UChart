@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UChart.Polygon;
 
 namespace UChart.Barchart
 {
@@ -7,11 +8,27 @@ namespace UChart.Barchart
     {
         private Material m_material;
 
+        [HideInInspector]
         public Material material
         {
             get{return m_material;}
             set{m_material = value;}
         }
+
+        public void Generate(Vector3 size)
+        {
+            var meshFilter = myGameobject.AddComponent<MeshFilter>();
+            var meshRenderer = myGameobject.AddComponent<MeshRenderer>();
+
+            Cube mesh = new Cube();
+            mesh.size = size;          
+            meshFilter.mesh = mesh.Create("bar3d_mesh");
+            meshRenderer.material = material;
+
+            myGameobject.AddComponent<MeshCollider>();
+        }
+
+        #region properties && events
 
         protected override void SetColor(Color color)
         {
@@ -35,5 +52,8 @@ namespace UChart.Barchart
             base.OnMouseUpAsButton();
             // TODO: trigger to show the information tip
         }
+
+        #endregion
+
     }
 }
