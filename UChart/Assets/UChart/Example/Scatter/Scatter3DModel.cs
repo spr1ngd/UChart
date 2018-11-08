@@ -27,7 +27,7 @@ namespace UChart.Scatter
                 points[i] = new Vector3(Random.Range(-10,10),Random.Range(-10,10),Random.Range(-10,10));
                 indecies[i] = i;
                 //colors[i] = new Color(Random.Range(0.0f,1.0f),Random.Range(0.0f,1.0f),Random.Range(0.0f,1.0f),1.0f);
-            }
+            } 
             mesh.vertices = points;
             //mesh.colors = colors;
             mesh.SetIndices(indecies, MeshTopology.Points,0);    

@@ -35,12 +35,15 @@ namespace UChart.Barchart
         protected override void CreateBar(Vector3 position)
         {
             GameObject bar3D = new GameObject("Bar3D");
-            // bar3D.hideFlags = HideFlags.HideInHierarchy;
+            bar3D.hideFlags = HideFlags.HideInHierarchy;
             bar3D.transform.position = position;
-            var bar = bar3D.AddComponent<Bar3D>();            
+            var bar = bar3D.AddComponent<Bar3D>();
             bar.material = this.barMaterial;
             bar.barWidth = this.barWidth;
-            bar.Generate(new Vector3(barWidth,Random.Range(0,5),barWidth));            
+            float value = Random.Range(0, 5);
+            bar.Generate(new Vector3(barWidth,value,barWidth));
+            bar.color = Color.green * Mathf.Abs(5 - value) / 5 + Color.red * value / 5;
+            bar.alpha = 0.5f;
         }
     }
 }

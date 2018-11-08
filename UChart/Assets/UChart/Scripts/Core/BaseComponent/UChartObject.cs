@@ -22,14 +22,22 @@ namespace UChart
         public Color color
         {
             get{return m_color;}
-            set{m_color = value;}
+            set
+            {
+                SetColor(value);
+                m_color = value;
+            }
         }
 
         protected float m_alpha;
         public float alpha
         {
             get{return m_alpha;}
-            set{m_alpha = value;}
+            set
+            {
+                SetAlpha(value);
+                m_alpha = value;
+            }
         }
 
         #endregion

@@ -5,8 +5,6 @@ namespace UChart.Polygon
 {
     public class Cube : Polygon
     {
-        public Vector3 size = Vector3.one;
-
         protected override void CreateMesh(Mesh mesh)
         {
             this.vertices = new Vector3[8];
@@ -36,17 +34,10 @@ namespace UChart.Polygon
                 colors[i] = defaultColor;
 
             // uv
-
-            mesh.vertices = this.vertices;
-            mesh.triangles = this.triangles;
         }
 
         private void SetVertices()
         {
-            float x = size.x / 2.0f;
-            float y = size.y / 2.0f;
-            float z = size.z / 2.0f;
-
             float bottom = 0, up = 0, left = 0, right = 0, forword = 0, back = 0;
 
             switch (anchor)

@@ -1,33 +1,36 @@
-
+﻿
 using UnityEngine;
 using UChart.Polygon;
 
-namespace UChart.Barchart
+namespace UChart.Scatter
 {
-    public class Bar3D : Bar
+    public class Scatter3D : Scatter
     {
         private Material m_material;
 
         [HideInInspector]
         public Material material
         {
-            get{return m_material;}
-            set{m_material = value;}
+            get { return m_material; }
+            set { m_material = value; }
         }
+
+        public Mesh mesh = null;
 
         private MeshRenderer m_meshRenderer = null;
 
-        public void Generate(Vector3 size)
+        public override void Generate(Vector3 size)
         {
             var meshFilter = myGameobject.AddComponent<MeshFilter>();
             m_meshRenderer = myGameobject.AddComponent<MeshRenderer>();
 
-            Cube mesh = new Cube
-            {
-                size = size,
-                anchor = PolygonAnchor.Bottom
-            };
-            meshFilter.mesh = mesh.Create("bar3d_mesh");
+            //Polygon.Polygon mesh = new Cube
+            //{
+            //    size = size,
+            //    anchor = PolygonAnchor.Bottom
+            //};
+            //meshFilter.mesh = mesh.Create("scatter3d_mesh");
+            meshFilter.mesh = this.mesh;
             m_meshRenderer.material = material;
             myGameobject.AddComponent<MeshCollider>();
             myGameobject.AddComponent<Anim4Point2D_01>();
@@ -37,12 +40,12 @@ namespace UChart.Barchart
 
         protected override void SetColor(Color color)
         {
-            m_meshRenderer.material.SetColor("_Color", color);
+            m_meshRenderer.material.SetColor("_Color",color);
         }
 
         protected override void SetAlpha(float alpha)
         {
-            m_meshRenderer.material.SetFloat("_Alpha",alpha);
+            //m_meshRenderer.material.SetFloat("_Alpha",alpha);
         }
 
         protected override void OnMouseEnter()
@@ -64,6 +67,5 @@ namespace UChart.Barchart
         }
 
         #endregion
-
     }
 }

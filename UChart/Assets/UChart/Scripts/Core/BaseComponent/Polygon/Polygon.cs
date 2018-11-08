@@ -7,6 +7,8 @@ namespace UChart.Polygon
     {
         public Color defaultColor = Color.white;
 
+        public Vector3 size = Vector3.one;
+
         public PolygonAnchor anchor = PolygonAnchor.Center;
 
         protected Vector3[] vertices = null;
@@ -20,14 +22,18 @@ namespace UChart.Polygon
             Mesh mesh = new Mesh();
             mesh.name = name;
             CreateMesh(mesh);
-            mesh.RecalculateBounds();
-            mesh.RecalculateNormals();
+            mesh.vertices = this.vertices;
+            mesh.triangles = this.triangles;
+            //mesh.RecalculateBounds();
+            //mesh.RecalculateNormals();
+            //mesh.RecalculateTangents();
             return mesh;
         }
 
         protected virtual void CreateMesh(Mesh mesh)
         {
-            throw new UChartException("Please override method in subclass.");
+            if( vertices.Length == 0 || triangles.Length == 0 )
+                throw new UChartException("Please override method in subclass.");
         }
     }
 }
