@@ -44,17 +44,19 @@ namespace UChart.Scatter
             GameObject scatter = new GameObject("scatter3D");
             scatter.hideFlags = HideFlags.HideInHierarchy;
             scatter.transform.position = position;
-            var scatter3D = scatter.AddComponent<Scatter3D>();
-            scatter3D.material = this.material;
-            scatter3D.size = this.scatterSize;
-            scatter3D.mesh = meshFilter.mesh;
-            scatter3D.Generate(Vector3.one);
-            float value = Random.Range(0,5);
-            scatter3D.color = Color.green * Mathf.Abs(5 - value) / 5 + Color.red * value / 5;
+            scatter.AddComponent<BoxCollider>();
+            return null;
+            //var scatter3D = scatter.AddComponent<Scatter3D>();
+            //scatter3D.material = this.material;
+            //scatter3D.size = this.scatterSize;
+            //scatter3D.mesh = meshFilter.mesh;
+            //scatter3D.Generate(Vector3.one);
+            //float value = Random.Range(0,5);
+            //scatter3D.color = Color.green * Mathf.Abs(5 - value) / 5 + Color.red * value / 5;
             //scatter3D.color = new Color(scatter3D.color.r,
             //    scatter3D.color.g,
             //    scatter3D.color.b,0.5f);
-            return scatter3D;
+            //return scatter3D;
         }
     }
 }
