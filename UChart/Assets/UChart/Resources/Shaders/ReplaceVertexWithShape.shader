@@ -1,7 +1,6 @@
 // Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-
 Shader "UChart/Geometry/VertexReplace"
 {
     Properties
@@ -10,12 +9,16 @@ Shader "UChart/Geometry/VertexReplace"
         _Color("Color(RGBA)",COLOR) = (1,1,1,1)
         _QuadSize("Quad Size",Range(0.001,1.0)) = 0.5
         _CircleSize("Circle Size",Range(0.001,1.0)) = 0.1
+        _FeatherWidth("Feather Width",range(0.001,0.2)) = 0.08
+        _BorderColor("Border Color",COLOr) = (1,1,1,1)
     }
 
     SubShader
     {
         Tags{"Queue"="Transparent"}
         Blend SrcAlpha OneMinusSrcAlpha
+        ZWRITE OFF
+        // ZTEST Always  
         LOD 100
 
         Pass
@@ -32,6 +35,8 @@ Shader "UChart/Geometry/VertexReplace"
             fixed4 _Color;
             float _QuadSize;
             float _CircleSize;
+            float _FeatherWidth;
+            float4 _BorderColor;
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
@@ -45,7 +50,6 @@ Shader "UChart/Geometry/VertexReplace"
             {
                 float4 vertex : SV_POSITION;
                 float4 color : COLOR0;
-                // float2 uv : TEXCOORD0;
             };
 
             struct v2f
@@ -59,6 +63,7 @@ Shader "UChart/Geometry/VertexReplace"
             {
                 gIn OUT;
                 // OUT.vertex = UnityObjectToClipPos(IN.vertex);
+                // OUT.vertex =  mul(UNITY_MATRIX_P,mul(UNITY_MATRIX_MV,float4(0,0,0,1)) + float4(IN.vertex.x,IN.vertexy,0,0));
                 OUT.vertex = IN.vertex;
                 OUT.color = IN.color;
                 // OUT.uv = TRANSFER_TEX(IN.uv,);
@@ -116,8 +121,16 @@ Shader "UChart/Geometry/VertexReplace"
                 for( int i = 0 ; i < MAXCOUNT ; i++ )
                 {
                     float4 IN = p[0].vertex + vertices[i];
-                    v[i].vertex = UnityObjectToClipPos(IN);
-                    // v[i].vertex =  mul(UNITY_MATRIX_P,mul(UNITY_MATRIX_MV,float4(0,0,0,1)) + float4(IN.x,IN.y,0,0));
+                    float4 ori = mul(UNITY_MATRIX_MV,float4(0,0,0,1));
+                    IN.y = IN.z;
+                    IN.z = 0;
+                    IN.xyz += ori.xyz;
+                    v[i].vertex = mul(UNITY_MATRIX_P,IN);
+                    // v[i].vertex = UnityObjectToClipPos(IN);
+                    // v[i].vertex = mul(UNITY_MATRIX_P,mul(UNITY_MATRIX_MV,float4(0,0,0,1)) + float4(IN.x,IN.y,0,0));
+                    // v[i].vertex = mul(UNITY_MATRIX_P,
+                    // mul(UNITY_MATRIX_MV, float4(0.0, 0.0, 0.0, 1.0))
+                    // + float4(IN.x, IN.y, 0.0, 0.0));
                     v[i].color = p[0].color;
                     v[i].uv = TRANSFORM_TEX(uvs[i],_MainTex);
                 }
@@ -131,18 +144,19 @@ Shader "UChart/Geometry/VertexReplace"
                 }
             }
 
+            float antialias( float radius , float borderSize, float distance )
+            {
+                return smoothstep(radius - borderSize , radius + borderSize , distance);
+            }
+
             fixed4 frag(v2f IN) : COLOR
             {
-                // TODO: 将quad绘制为圆形
                 fixed4 color = tex2D(_MainTex,IN.uv);
-                float distance = sqrt(pow((0.5 - IN.uv.x),2) + pow((0.5 - IN.uv.y) ,2));
-                if( distance > _CircleSize )
-                {
-                    discard;
-                }else
-                {
-                    color = fixed4(_Color.rgb,1);
-                }
+                float dd = sqrt(pow((0.5 - IN.uv.x),2) + pow((0.5 - IN.uv.y) ,2));
+
+                // TODO: 在进行运算之前，计算出主色及边缘色
+                float aliasValue = antialias(_CircleSize,_FeatherWidth,dd);
+                color = lerp(IN.color,_BorderColor,aliasValue);   
                 return color;
             }
 
