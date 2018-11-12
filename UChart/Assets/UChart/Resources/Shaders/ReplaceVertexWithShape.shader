@@ -128,9 +128,6 @@ Shader "UChart/Geometry/VertexReplace"
                     v[i].vertex = mul(UNITY_MATRIX_P,IN);
                     // v[i].vertex = UnityObjectToClipPos(IN);
                     // v[i].vertex = mul(UNITY_MATRIX_P,mul(UNITY_MATRIX_MV,float4(0,0,0,1)) + float4(IN.x,IN.y,0,0));
-                    // v[i].vertex = mul(UNITY_MATRIX_P,
-                    // mul(UNITY_MATRIX_MV, float4(0.0, 0.0, 0.0, 1.0))
-                    // + float4(IN.x, IN.y, 0.0, 0.0));
                     v[i].color = p[0].color;
                     v[i].uv = TRANSFORM_TEX(uvs[i],_MainTex);
                 }
