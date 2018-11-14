@@ -1,3 +1,8 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 // Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
@@ -11,6 +16,7 @@ Shader "UChart/Geometry/VertexReplace"
         _CircleSize("Circle Size",Range(0.001,1.0)) = 0.1
         _FeatherWidth("Feather Width",range(0.001,0.2)) = 0.08
         _BorderColor("Border Color",COLOr) = (1,1,1,1)
+        _Scale("Scale",range(1,10)) = 1
     }
 
     SubShader
@@ -40,6 +46,8 @@ Shader "UChart/Geometry/VertexReplace"
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
+            float _Scale;
+
             struct a2v
             {
                 float4 vertex : POSITION;
@@ -63,82 +71,92 @@ Shader "UChart/Geometry/VertexReplace"
             {
                 gIn OUT;
                 // OUT.vertex = UnityObjectToClipPos(IN.vertex);
-                // OUT.vertex =  mul(UNITY_MATRIX_P,mul(UNITY_MATRIX_MV,float4(0,0,0,1)) + float4(IN.vertex.x,IN.vertexy,0,0));
+                // OUT.vertex =  mul(UNITY_MATRIX_P,mul(UNITY_MATRIX_MV,float4(0,0,0,1)) + float4(IN.vertex.x,IN.vertex.y,0,0));
                 OUT.vertex = IN.vertex;
                 OUT.color = IN.color;
-                // OUT.uv = TRANSFER_TEX(IN.uv,);
                 return OUT;
             }
 
-            // TODO: 普通Vertex Lit Shader
-            // [maxvertexcount(11)]
-            // void gemo(triangle gIn p[3] , inout TriangleStream<v2f> triStream)
-            // {
-            //     for( int i = 0; i < 3 ; i++ )
-            //     {
-            //         v2f OUT;
-            //         OUT.vertex = p[i].vertex;
-            //         OUT.color = p[i].color;
-            //         triStream.Append(OUT);
-            //     }
-            //     triStream.RestartStrip();
-            // }
-
-            // TODO: 利用billboard代替point
             [maxvertexcount(MAXCOUNT)]
             void gemo( point gIn p[1] , inout TriangleStream<v2f> triStream )
             {
-                float size = _QuadSize / 2;
+                float halfS = _QuadSize / 2;
+
+                float3 up = UNITY_MATRIX_IT_MV[0].xyz;
+                float3 look = _WorldSpaceCameraPos - p[0].vertex;
+                look.y = 0;
+                look = normalize(look);
+                float right = UNITY_MATRIX_IT_MV[1].xyz;
+
+                float4 v[4];
+                v[0] = float4(p[0].vertex + halfS * right - halfS * up, 1.0f);
+                v[1] = float4(p[0].vertex + halfS * right + halfS * up, 1.0f);
+                v[2] = float4(p[0].vertex - halfS * right - halfS * up, 1.0f);
+                v[3] = float4(p[0].vertex - halfS * right + halfS * up, 1.0f);
+
+                v2f pIn;
+                pIn.color = p[0].color;
+
+                pIn.vertex = UnityObjectToClipPos(v[0]);
+                pIn.uv = float2(1.0f, 0.0f);
+                triStream.Append(pIn);
+
+                pIn.vertex = UnityObjectToClipPos(v[1]);
+                pIn.uv = float2(1.0f, 1.0f);
+                triStream.Append(pIn);
+
+                pIn.vertex = UnityObjectToClipPos(v[2]);
+                pIn.uv = float2(0.0f, 0.0f);
+                triStream.Append(pIn);
+
+                pIn.vertex = UnityObjectToClipPos(v[3]);
+                pIn.uv = float2(0.0f, 1.0f);
+                triStream.Append(pIn);
 
                 // vertices
-                const float4 vertices[MAXCOUNT] = 
-                {
-                    float4(-size,0,-size,0),
-                    float4(-size,0,size,0),
-                    float4(size,0,size,0),
-                    float4(size,0,size,0),
-                    float4(size,0,-size,0),
-                    float4(-size,0,-size,0)
-                };
+                // const float4 vertices[MAXCOUNT] = 
+                // {
+                //     float4(-size,0,-size,0),
+                //     float4(-size,0,size,0),
+                //     float4(size,0,size,0),
+                //     float4(size,0,size,0),
+                //     float4(size,0,-size,0),
+                //     float4(-size,0,-size,0)
+                // };
 
                 // triangles
-                const int triangles[6] = {0,1,2,3,4,5};
+                // const int triangles[6] = {0,1,2,3,4,5};
 
                 // uvs
-                const float2 uvs[MAXCOUNT] = 
-                {
-                    float2(0,0),
-                    float2(0,1),
-                    float2(1,1),
-                    float2(1,1),
-                    float2(1,0),
-                    float2(0,0)
-                };
+                // const float2 uvs[MAXCOUNT] = 
+                // {
+                //     float2(0,0),
+                //     float2(0,1),
+                //     float2(1,1),
+                //     float2(1,1),
+                //     float2(1,0),
+                //     float2(0,0)
+                // };
 
-                v2f v[MAXCOUNT];
+                // v2f v[MAXCOUNT];
 
                 // vertics
-                for( int i = 0 ; i < MAXCOUNT ; i++ )
-                {
-                    float4 IN = p[0].vertex + vertices[i];
-                    float4 ori = mul(UNITY_MATRIX_MV,float4(0,0,0,1));
-                    IN.y = IN.z;
-                    IN.z = 0;
-                    IN.xyz += ori.xyz;
-                    v[i].vertex = mul(UNITY_MATRIX_P,IN);
-                    // v[i].vertex = UnityObjectToClipPos(IN);
-                    // v[i].vertex = mul(UNITY_MATRIX_P,mul(UNITY_MATRIX_MV,float4(0,0,0,1)) + float4(IN.x,IN.y,0,0));
-                    v[i].color = p[0].color;
-                    v[i].uv = TRANSFORM_TEX(uvs[i],_MainTex);
-                }
+                // for( int i = 0 ; i < MAXCOUNT ; i++ )
+                // {
+                //     float4 IN = p[0].vertex + vertices[i];
+                //     v[i].vertex = UnityObjectToClipPos(IN);
+                //     // v[i].vertex = mul(UNITY_MATRIX_P,mul(UNITY_MATRIX_MV,float4(0,0,0,1)) + float4(IN.x,IN.y,0,0) *float4(_Scale,_Scale,1,1));
+                //     v[i].color = p[0].color;
+                //     v[i].uv = TRANSFORM_TEX(uvs[i],_MainTex);
+                // }
 
-                for( int j = 0; j < 2 ; j++ )
-                {
-                    triStream.Append(v[triangles[j*3 + 0]]);
-                    triStream.Append(v[triangles[j*3 + 1]]);
-                    triStream.Append(v[triangles[j*3 + 2]]);
-                    triStream.RestartStrip();
-                }
+                // for( int j = 0; j < 2 ; j++ )
+                // {
+                //     triStream.Append(v[triangles[j*3 + 0]]);
+                //     triStream.Append(v[triangles[j*3 + 1]]);
+                //     triStream.Append(v[triangles[j*3 + 2]]);
+                //     triStream.RestartStrip();
+                // }
             }
 
             float antialias( float radius , float borderSize, float distance )
