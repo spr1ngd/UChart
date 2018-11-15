@@ -21,8 +21,8 @@ namespace UChart.Scatter
 
         public override void Generate(Vector3 size)
         {
-            var meshFilter = myGameobject.AddComponent<MeshFilter>();
-            m_meshRenderer = myGameobject.AddComponent<MeshRenderer>();
+            //var meshFilter = myGameobject.AddComponent<MeshFilter>();
+            //m_meshRenderer = myGameobject.AddComponent<MeshRenderer>();
 
             //Polygon.Polygon mesh = new Cube
             //{
@@ -30,9 +30,9 @@ namespace UChart.Scatter
             //    anchor = PolygonAnchor.Bottom
             //};
             //meshFilter.mesh = mesh.Create("scatter3d_mesh");
-            meshFilter.mesh = this.mesh;
-            m_meshRenderer.material = material;
-            myGameobject.AddComponent<MeshCollider>();
+            //meshFilter.mesh = this.mesh;
+            //m_meshRenderer.material = material;
+            //myGameobject.AddComponent<MeshCollider>();
             myGameobject.AddComponent<Anim4Point2D_01>();
         }
 
