@@ -48,6 +48,7 @@ Shader "UChart/Scatter/Circle"
             {
                 v2f OUT;
                 // OUT.vertex = UnityObjectToClipPos(IN.vertex);
+                // OUT.vertex = mul(UNITY_MATRIX_VP,IN.vertex);
                 OUT.vertex = mul(UNITY_MATRIX_P,mul(UNITY_MATRIX_MV,float4(0,0,0,1)) + float4(IN.vertex.x,IN.vertex.y,0,0));
                 OUT.uv = TRANSFORM_TEX(IN.uv,_MainTex);
                 UNITY_TRANSFER_FOG(OUT,OUT.vertex);

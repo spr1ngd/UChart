@@ -29,31 +29,35 @@ namespace UChart.Scatter
         {
             CreateScatterMesh();
 
+            int vertexIndex = 0;
             for (int x = 0; x < xCount; x++)
             {
                 for(int y = 0; y < yCount; y++)
                 {
                     for(int z = 0; z < zCount; z++)
                     {
-                        Vector3 pos = Vector3.zero + new Vector3(x * scatterSize + (x - 1) * offset,y * scatterSize + (y - 1) * offset,z * scatterSize + (z - 1) * offset);
-                        CreateScatter(pos);
+                        Vector3 pos = Vector3.zero + new Vector3(x * scatterSize + x * offset,y * scatterSize + y * offset,z * scatterSize + z * offset);
+                        CreateScatter(pos ,size[vertexIndex]);
+                        vertexIndex++;
                     }
                 }
             }
         }
 
+        private List<float> size = new List<float>();
+
         private void CreateScatterMesh()
         {
-            var meshFilter = this.gameObject.AddComponent<MeshFilter>();
+            /*var*/ meshFilter = this.gameObject.AddComponent<MeshFilter>();
             var meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
 
             Mesh mesh = new Mesh();
             mesh.name = "ScatterGraph3D";
 
-            // vertices
             List<Vector3> vertices = new List<Vector3>();
             List<int> indices = new List<int>();
-            //Vector3[] vertices = new Vector3[xCount * yCount * zCount];
+            List<Color> colors = new List<Color>();
+
             int vertexIndex = 0;
             for (int x = 0; x < xCount; x++)
             {
@@ -61,40 +65,40 @@ namespace UChart.Scatter
                 {
                     for (int z = 0; z < zCount; z++)
                     {
-                        Vector3 pos = Vector3.zero + new Vector3(x * scatterSize + (x - 1) * offset, y * scatterSize + (y - 1) * offset, z * scatterSize + (z - 1) * offset);
+                        Vector3 pos = Vector3.zero + new Vector3(x * scatterSize + x * offset, y * scatterSize + y * offset, z * scatterSize + z * offset);
                         vertices.Add(pos);
                         indices.Add(vertexIndex);
+                        float value = Random.Range(0.1f, 1.0f);
+                        size.Add(value);
+                        Color randomColor = new Color(value,value,value,value);
+                        colors.Add(randomColor);
                         vertexIndex++;
                     }
                 }
             }
 
             mesh.vertices = vertices.ToArray();
-            //mesh.triangles = indices.ToArray();
             mesh.SetIndices(indices.ToArray(),MeshTopology.Points, 0);
+            mesh.colors = colors.ToArray();
+
             mesh.RecalculateBounds();
             meshFilter.mesh = mesh;
             meshRenderer.material = material;
+
+            //meshRenderer.material.SetInt("_PointCount",size.Count);
         }
 
-        protected override Scatter CreateScatter(Vector3 position)
+        protected override Scatter CreateScatter(Vector3 position,float size)
         {
             GameObject scatter = new GameObject("scatter3D");
             //scatter.hideFlags = HideFlags.HideInHierarchy;
+            // todo 受到Shader Quad 和Circle尺寸影响
             scatter.transform.position = position;
-            scatter.AddComponent<BoxCollider>();
+            var boxCollider = scatter.AddComponent<BoxCollider>();
+            boxCollider.size = new Vector3(size,size,size) * 36;
             var scatter3D = scatter.AddComponent<Scatter3D>();
-            //scatter3D.material = this.material;
-            //scatter3D.size = this.scatterSize;
-            //scatter3D.mesh = meshFilter.mesh;
             scatter3D.Generate(Vector3.one);
-            //float value = Random.Range(0,5);
-            //scatter3D.color = Color.green * Mathf.Abs(5 - value) / 5 + Color.red * value / 5;
-            //scatter3D.color = new Color(scatter3D.color.r,
-            //    scatter3D.color.g,
-            //    scatter3D.color.b,0.5f);
-            //return scatter3D;
-            return null;
+            return scatter3D;
         }
     }
 }

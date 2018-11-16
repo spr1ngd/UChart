@@ -4,8 +4,8 @@ Shader "UChart/Geometry/VertexReplace"
     {
         _MainTex("Main Texture",2D) = "white"{}
         _Color("Color(RGBA)",COLOR) = (1,1,1,1)
-        _QuadSize("Quad Size",Range(0.1,10)) = 2
-        _CircleSize("Circle Size",Range(0.04,4)) = 0.8
+        _QuadSize("Quad Size",float) = 2
+        _CircleSize("Circle Size",float) = 0.8
         _FeatherWidth("Feather Width",range(0.001,0.2)) = 0.08
         _BorderColor("Border Color",COLOr) = (1,1,1,1)
     }
@@ -21,7 +21,7 @@ Shader "UChart/Geometry/VertexReplace"
         Pass
         {
             CGPROGRAM
-
+            
             #pragma vertex vert
             #pragma geometry gemo
             #pragma fragment frag
@@ -34,6 +34,10 @@ Shader "UChart/Geometry/VertexReplace"
             float _CircleSize;
             float _FeatherWidth;
             float4 _BorderColor;
+
+            // uniform float _SizeArray[64];
+            // uniform int _PointCount = 0;
+
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
@@ -41,19 +45,22 @@ Shader "UChart/Geometry/VertexReplace"
             {
                 float4 vertex : POSITION;
                 float4 color : COLOR0;
+                uint vertexId : SV_VertexID;
             };
 
             struct gIn
             {
                 float4 vertex : SV_POSITION;
                 float4 color : COLOR0;
+                // float4 size : TEXCOORD1;
             };
 
             struct v2f
             {
                 float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
-                float4 color : COLOR0;                
+                float4 color : COLOR0;          
+                // float4 size : TEXCOORD1;      
             };
 
             gIn vert(a2v IN)
@@ -63,6 +70,7 @@ Shader "UChart/Geometry/VertexReplace"
                 // OUT.vertex =  mul(UNITY_MATRIX_P,mul(UNITY_MATRIX_MV,float4(0,0,0,1)) + float4(IN.vertex.x,IN.vertex.y,0,0));
                 OUT.vertex = IN.vertex;
                 OUT.color = IN.color;
+                // OUT.size = float4(1,0,0,0);
                 return OUT;
             }
 
@@ -85,6 +93,7 @@ Shader "UChart/Geometry/VertexReplace"
 
                 v2f pIn;
                 pIn.color = p[0].color;
+                // pIn.size = float4(1,1,1,1);
 
                 pIn.vertex = UnityObjectToClipPos(v[0]);
                 pIn.uv = float2(1.0f, 0.0f);
@@ -112,10 +121,9 @@ Shader "UChart/Geometry/VertexReplace"
             {
                 fixed4 color = tex2D(_MainTex,IN.uv);
                 float dd = sqrt(pow((0.5 - IN.uv.x),2) + pow((0.5 - IN.uv.y) ,2));
-
-                float aliasValue = antialias(_CircleSize,_FeatherWidth,dd);
-                color = lerp(IN.color,_BorderColor,aliasValue);   
-                return fixed4(color.rgb,color.a * _Color.a);
+                float aliasValue = antialias(_CircleSize * IN.color.r ,_FeatherWidth,dd);
+                color = lerp(IN.color,_BorderColor,aliasValue);                
+                return fixed4(color.rgb,color.a * _Color.a); //color.a * _Color.a
             }
 
             ENDCG
