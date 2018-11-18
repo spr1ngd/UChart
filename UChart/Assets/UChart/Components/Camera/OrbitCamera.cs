@@ -14,9 +14,7 @@ public class OrbitCamera : MonoBehaviour
     public float distanceMin = 8f;
     public float distanceMax = 15f;
     public float zoomSpeed = 0.5f;
-
-    private Rigidbody rigidbody;
-
+    
     private float x = 0.0f;
     private float y = 0.0f;
 
@@ -30,14 +28,7 @@ public class OrbitCamera : MonoBehaviour
         x = angles.y;
         y = angles.x;
         fx = x;
-        fy = y;
-
-        rigidbody = GetComponent<Rigidbody>();
-
-        if (rigidbody != null)
-        {
-            rigidbody.freezeRotation = true;
-        }
+        fy = y; 
         UpdateRotaAndPos();
         fDistance = distance;
     }
