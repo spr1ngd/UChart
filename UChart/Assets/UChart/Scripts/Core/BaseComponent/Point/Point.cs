@@ -26,12 +26,6 @@ namespace UChart
             uchartId = string.Format("point_{0}", NewGuid());
         }
 
-        public virtual Point AddAnimation<T>() where T : AnimationBase, IAnimationEvent
-        {
-            myGameobject.AddComponent<T>();
-            return this;
-        }
-
         protected virtual void SetSize(float size)
         {
 

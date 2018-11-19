@@ -22,6 +22,11 @@ public class OrbitCamera : MonoBehaviour
     private float fy = 0f;
     private float fDistance = 0;
 
+    [Header("Scroll wheel")]
+    public float mouseWheelSpeed = 2.0f;
+    public float minDistance = 0.5f;
+    public float maxDistance = 50.0f;
+
     void Start()
     {
         Vector3 angles = transform.eulerAngles;
@@ -35,25 +40,25 @@ public class OrbitCamera : MonoBehaviour
 
     void Update()
     {
-        if (Input.touchCount == 2)
-        {
-            // Store both touches.
-            Touch touchZero = Input.GetTouch(0);
-            Touch touchOne = Input.GetTouch(1);
+        //if (Input.touchCount == 2)
+        //{
+        //    // Store both touches.
+        //    Touch touchZero = Input.GetTouch(0);
+        //    Touch touchOne = Input.GetTouch(1);
 
-            // Find the position in the previous frame of each touch.
-            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+        //    // Find the position in the previous frame of each touch.
+        //    Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+        //    Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
 
-            // Find the magnitude of the vector (the distance) between the touches in each frame.
-            float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-            float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+        //    // Find the magnitude of the vector (the distance) between the touches in each frame.
+        //    float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+        //    float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
 
-            // Find the difference in the distances between each frame.
-            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-            fDistance = Mathf.Clamp(distance + deltaMagnitudeDiff * zoomSpeed, distanceMin, distanceMax);
-        }
-        distance = Mathf.Lerp(distance, fDistance, 0.25f);
+        //    // Find the difference in the distances between each frame.
+        //    float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+        //    fDistance = Mathf.Clamp(distance + deltaMagnitudeDiff * zoomSpeed, distanceMin, distanceMax);
+        //}
+        //distance = Mathf.Lerp(distance, fDistance, 0.25f);
     }
 
     void LateUpdate()
@@ -74,13 +79,28 @@ public class OrbitCamera : MonoBehaviour
                 y -= dy * ySpeed * Time.deltaTime;
 
                 y = ClampAngle(y, yMinLimit, yMaxLimit);
+
+               
             }
         }
 
-        fx = Mathf.Lerp(fx, x, 0.2f);
-        fy = Mathf.Lerp(fy, y, 0.2f);
+        //OnMouseWheel();
+
+        fx = Mathf.Lerp(fx,x,0.2f);
+        fy = Mathf.Lerp(fy,y,0.2f);
 
         UpdateRotaAndPos();
+    }
+
+    private void OnMouseWheel()
+    {
+        if(target)
+        {
+            float wheelValue = Input.GetAxis("Mouse ScrollWheel");
+            Vector3 direction = Vector3.Normalize(this.transform.position - target.position);
+            Vector3 offset = direction * wheelValue * mouseWheelSpeed;
+            this.transform.position += offset;
+        }
     }
 
 

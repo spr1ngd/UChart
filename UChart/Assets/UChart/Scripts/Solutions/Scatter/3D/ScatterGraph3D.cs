@@ -19,11 +19,14 @@ namespace UChart.Scatter
         [Range(0,50)]
         public int zCount;
 
-        [Range(0.5f,2.0f)]
-        public float scatterSize = 1.0f;
+        private float scatterSize = 0;
 
-        [Range(0.5f,2.0f)]
-        public float offset = 2f;
+        [Range(0f,1.0f)]
+        public float offset = 0f;
+
+
+        private List<BoxCollider> m_colliders = new List<BoxCollider>();
+
 
         public void Execute()
         {
@@ -44,15 +47,28 @@ namespace UChart.Scatter
             }
         }
 
+        private void Update()
+        {
+            //foreach (BoxCollider boxCollider in m_colliders)
+            //{
+            //    var dis = Vector3.Distance(boxCollider.center, Camera.main.transform.position);
+            //    var value = dis * 0.025f;
+            //    boxCollider.size = new Vector3(value,value,value);
+            //}
+        }
+
         private List<float> size = new List<float>();
 
         private void CreateScatterMesh()
         {
-            /*var*/ meshFilter = this.gameObject.AddComponent<MeshFilter>();
+            scatterSize = material.GetFloat("_PointRadius");
+            meshFilter = this.gameObject.AddComponent<MeshFilter>();
             var meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
 
-            Mesh mesh = new Mesh();
-            mesh.name = "ScatterGraph3D";
+            Mesh mesh = new Mesh
+            {
+                name = "ScatterGraph3D"
+            };
 
             List<Vector3> vertices = new List<Vector3>();
             List<int> indices = new List<int>();
@@ -84,8 +100,7 @@ namespace UChart.Scatter
             mesh.RecalculateBounds();
             meshFilter.mesh = mesh;
             meshRenderer.material = material;
-
-            //meshRenderer.material.SetInt("_PointCount",size.Count);
+           
         }
 
         protected override Scatter CreateScatter(Vector3 position,float size)
@@ -95,7 +110,8 @@ namespace UChart.Scatter
             // todo 受到Shader Quad 和Circle尺寸影响
             scatter.transform.position = position;
             var boxCollider = scatter.AddComponent<BoxCollider>();
-            boxCollider.size = new Vector3(size,size,size) * 36;
+            boxCollider.size = new Vector3(0.1f,0.1f,0.1f);
+            m_colliders.Add(boxCollider);
             var scatter3D = scatter.AddComponent<Scatter3D>();
             scatter3D.Generate(Vector3.one);
             return scatter3D;

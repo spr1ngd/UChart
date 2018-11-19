@@ -79,11 +79,17 @@ namespace UChart
 
         protected virtual void SetColor(Color color){}
 
-        protected virtual void SetAlpha(float alpha){} 
+        protected virtual void SetAlpha(float alpha){}
 
         #endregion
 
         #region Mouse Events
+
+        public virtual UChartObject AddAnimation<T>() where T : AnimationBase, IAnimationEvent
+        {
+            myGameobject.AddComponent<T>();
+            return this;
+        }
 
         protected virtual void OnMouseEnter()
         {

@@ -1,7 +1,7 @@
 
 namespace UChart
 {
-    public class Point3D
+    public class Point3D : Point
     {
         
     }
