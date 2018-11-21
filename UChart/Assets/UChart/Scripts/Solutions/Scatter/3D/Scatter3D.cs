@@ -21,18 +21,6 @@ namespace UChart.Scatter
 
         public override void Generate(Vector3 size)
         {
-            //var meshFilter = myGameobject.AddComponent<MeshFilter>();
-            //m_meshRenderer = myGameobject.AddComponent<MeshRenderer>();
-
-            //Polygon.Polygon mesh = new Cube
-            //{
-            //    size = size,
-            //    anchor = PolygonAnchor.Bottom
-            //};
-            //meshFilter.mesh = mesh.Create("scatter3d_mesh");
-            //meshFilter.mesh = this.mesh;
-            //m_meshRenderer.material = material;
-            //myGameobject.AddComponent<MeshCollider>();
             myGameobject.AddComponent<Anim4Point2D_01>();
         }
 
@@ -40,7 +28,7 @@ namespace UChart.Scatter
 
         protected override void SetColor(Color color)
         {
-            m_meshRenderer.material.SetColor("_Color",color);
+            //m_meshRenderer.material.SetColor("_Color",color);
         }
 
         protected override void SetAlpha(float alpha)
@@ -48,22 +36,30 @@ namespace UChart.Scatter
             //m_meshRenderer.material.SetFloat("_Alpha",alpha);
         }
 
+        protected override void SetSize(float size)
+        {
+            if (null == this.scatterGraph)
+                return;
+            this.scatterGraph.RefreshScatter();
+        }
+
         protected override void OnMouseEnter()
         {
             base.OnMouseEnter();
-            // TODO: trigger the axis event
+            color = new Color(color.r,color.g,color.b,size * 1.5f);
+            this.scatterGraph.RefreshScatter();
         }
 
         protected override void OnMouseExit()
         {
             base.OnMouseExit();
-            // TODO: trigger exit the axis event
+            color = new Color(color.r,color.g,color.b,size);
+            this.scatterGraph.RefreshScatter();
         }
 
         protected override void OnMouseUpAsButton()
         {
             base.OnMouseUpAsButton();
-            // TODO: trigger to show the information tip
         }
 
         #endregion

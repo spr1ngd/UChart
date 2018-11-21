@@ -4,7 +4,7 @@ Shader "UChart/Scatter/Scatter3D"
     Properties
     {
         _MainTex("Main Texture",2D) = "white"{}
-        _Color("Color(RGBA)",COLOR) = (1,1,1,1)
+        _Alpha("Alpha",range(0,1)) = 1
 
         _PointRadius("Point Radius",float) = 1
         [HideInInspector]_PointSize("Point Size",float) = 0.48
@@ -33,7 +33,7 @@ Shader "UChart/Scatter/Scatter3D"
             #define MAXCOUNT 4
             #define SCALE_FACTOR 0.025 // 随相机距离的缩放因子
 
-            fixed4 _Color;
+            float _Alpha;
             float _PointRadius;
             float _PointSize;
             float _FeatherWidth;
@@ -65,8 +65,6 @@ Shader "UChart/Scatter/Scatter3D"
             gIn vert(a2v IN)
             {
                 gIn OUT;
-                // OUT.vertex = UnityObjectToClipPos(IN.vertex);
-                // OUT.vertex =  mul(UNITY_MATRIX_P,mul(UNITY_MATRIX_MV,float4(0,0,0,1)) + float4(IN.vertex.x,IN.vertex.y,0,0));
                 OUT.vertex = IN.vertex;
                 OUT.color = IN.color;
                 return OUT;
@@ -77,10 +75,10 @@ Shader "UChart/Scatter/Scatter3D"
             {
                 float radius = _PointRadius;
                 float vDc = distance(p[0].vertex,_WorldSpaceCameraPos.xyz);
-                _PointRadius = _PointRadius * vDc * SCALE_FACTOR;
+                _PointRadius = _PointRadius * vDc * SCALE_FACTOR * p[0].color.a;
+
                 if( _PointRadius > 1.5 * radius )
                     _PointRadius = radius * 1.5;
-
                 float halfS = _PointRadius;
 
                 float3 up = UNITY_MATRIX_IT_MV[0].xyz;
@@ -123,10 +121,11 @@ Shader "UChart/Scatter/Scatter3D"
             fixed4 frag(v2f IN) : COLOR
             {
                 fixed4 color = tex2D(_MainTex,IN.uv);
-                float dd = sqrt(pow((0.5 - IN.uv.x),2) + pow((0.5 - IN.uv.y) ,2));             
-                float aliasValue = antialias(_PointSize * IN.color.r ,_FeatherWidth,dd);
+                float dd = sqrt(pow((0.5 - IN.uv.x),2) + pow((0.5 - IN.uv.y) ,2));           
+                // TODO: 修复尺寸取于color值得问题  
+                float aliasValue = antialias(_PointSize ,_FeatherWidth,dd);
                 color = lerp(IN.color,_BorderColor,aliasValue);                
-                return fixed4(color.rgb,color.a * _Color.a);
+                return fixed4(color.rgb,color.a * _Alpha);
             }
 
             ENDCG
