@@ -8,7 +8,7 @@ namespace UChart
     {
         #region base components
 
-        protected string uchartId = string.Empty;
+        public string uchartId = string.Empty;
         protected IAnimationEvent animationEvent { get { return (IAnimationEvent)this.GetComponent<AnimationBase>(); } }        
         protected Transform myTransform = null;
         protected GameObject myGameobject = null;

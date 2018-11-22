@@ -1,6 +1,5 @@
 ﻿
 using UnityEngine;
-using UChart.Polygon;
 
 namespace UChart.Scatter
 {
@@ -8,16 +7,11 @@ namespace UChart.Scatter
     {
         private Material m_material;
 
-        [HideInInspector]
         public Material material
         {
             get { return m_material; }
             set { m_material = value; }
         }
-
-        public Mesh mesh = null;
-
-        private MeshRenderer m_meshRenderer = null;
 
         public override void Generate(Vector3 size)
         {
@@ -40,20 +34,23 @@ namespace UChart.Scatter
         {
             if (null == this.scatterGraph)
                 return;
+
             this.scatterGraph.RefreshScatter();
         }
 
         protected override void OnMouseEnter()
         {
-            base.OnMouseEnter();
+            //base.OnMouseEnter();
             color = new Color(color.r,color.g,color.b,size * 1.5f);
+            ((ScatterGraph3D)this.scatterGraph).RefreshMeshData(this.index,color);
             this.scatterGraph.RefreshScatter();
         }
 
         protected override void OnMouseExit()
         {
-            base.OnMouseExit();
+            //base.OnMouseExit();
             color = new Color(color.r,color.g,color.b,size);
+            ((ScatterGraph3D)this.scatterGraph).RefreshMeshData(this.index,color);
             this.scatterGraph.RefreshScatter();
         }
 
