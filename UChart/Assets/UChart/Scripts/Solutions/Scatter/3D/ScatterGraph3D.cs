@@ -30,21 +30,19 @@ namespace UChart.Scatter
         private int[] indicesArray = null;
         private Color[] colorsArray = null;
 
-        private Texture2D m_texture2D = null;
-        private Texture m_mainTex;
-        private RenderTexture m_ouputTex;
+        public Texture texture;
+        public RenderTexture renderTexture;
+        private Rect rect = new Rect(0f,0,200f,200f);
 
-        private void Awake()
+        void Start()
         {
-            //m_mainTex = new Texture();
-            //m_ouputTex = new RenderTexture(Screen.width,Screen.height,24);
+            Graphics.Blit(this.texture,this.renderTexture,Instantiate<Material>(this.material));
         }
-
-        private void Update()
+        
+        void OnGUI()
         {
-            //Graphics.Blit(m_mainTex,m_ouputTex,material);
-            //RenderTexture.active = m_ouputTex;
-            //GameObject.Find("Canvas/RawImage").GetComponent<RawImage>().texture = m_ouputTex;
+            
+            GUI.DrawTexture(this.rect,this.renderTexture);
         }
 
         public void Execute()
@@ -94,7 +92,6 @@ namespace UChart.Scatter
 
             meshFilter.mesh = mesh;
             meshRenderer.material = material;
-            meshRenderer.material.SetTexture("_MainTex",m_mainTex);
         }
 
         public void RefreshMeshData( int index , Color color )

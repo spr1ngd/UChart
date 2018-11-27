@@ -121,6 +121,7 @@ Shader "UChart/Scatter/Scatter3D"
 
         Pass
         {
+            // CULL FRONT
             COLORMASK RGB
             ZWRITE ON
             ZTEST LESS  
@@ -128,47 +129,40 @@ Shader "UChart/Scatter/Scatter3D"
 
             CGPROGRAM
 
-            fixed4 frag(v2f IN):COLOR
+            fixed4 frag(v2f IN):Color
             {
-                float dd = sqrt(pow((0.5 - IN.uv.x),2) + pow((0.5 - IN.uv.y) ,2));           
-                float aliasValue = antialias(_PointSize ,_FeatherWidth,dd);
-                fixed4 color;
-                if( aliasValue > _PointSize )
-                    discard;
-                else
-                    color = lerp(IN.color,_BorderColor,aliasValue);                
-                return fixed4(1,1,0,color.a * _Alpha);
+                return fixed4(1,1,0,0.5);
             }
 
             ENDCG
         }
 
+        // Pass
+        // {
+        //     ZWRITE ON
+        //     ZTEST Always
+        //     Blend ONE ZERO
+
+        //     CGPROGRAM            
+
+        //     fixed4 frag(v2f IN) : COLOR
+        //     {
+        //         return fixed4(1,1,1,0);
+        //     }
+
+        //     ENDCG
+        // }
+
         Pass
         {
+            CULL BACK
             ZWRITE ON
-            ZTEST Always
-            Blend ONe ZERO
-
-            CGPROGRAM            
-
-            fixed4 frag(v2f IN) : COLOR
-            {
-                return fixed4(1,1,1,0);
-            }
-
-            ENDCG
-        }
-
-        Pass
-        {
-            COLORMASK A
-            ZWRITE ON
-            ZTEST Always
+            ZTEST ALWAYS
             Blend SrcAlpha OneMinusSrcAlpha
 
             CGPROGRAM            
 
-            fixed4 frag(v2f IN) : COLOR
+            fixed4 frag(v2f IN) : SV_Target
             {
                 float dd = sqrt(pow((0.5 - IN.uv.x),2) + pow((0.5 - IN.uv.y) ,2));           
                 float aliasValue = antialias(_PointSize ,_FeatherWidth,dd);
