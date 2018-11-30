@@ -12,8 +12,15 @@ namespace UChart
         FADE,
     }
 
+    
+
     public partial class UChart
     {
         public const UChartState uchartState = UChartState.Pixel;
+
+        /// <summary>
+        /// layer of spesical uchart object
+        /// </summary>
+        public const int ucharLayer = 31;
     }
 }

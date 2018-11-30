@@ -1,7 +1,9 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace UChart.Scatter
 {
@@ -11,6 +13,8 @@ namespace UChart.Scatter
         private const float MAXSIZE_FACTOR = 1.2f;
 
         public Material material;
+        public Material pickMaterial;
+
         public MeshFilter meshFilter = null;
         private MeshRenderer meshRenderer = null;
 
@@ -30,19 +34,31 @@ namespace UChart.Scatter
         private int[] indicesArray = null;
         private Color[] colorsArray = null;
 
-        public Texture texture;
-        public RenderTexture renderTexture;
-        private Rect rect = new Rect(0f,0,200f,200f);
+        //private Texture texture = null;
+        private Texture2D tempTex = null;
+        private RenderTexture renderTexture = null;
+        private Camera pickCamera = null;
 
-        void Start()
+        //public RenderTexture pickTexture = null;
+
+        private void Awake()
         {
-            Graphics.Blit(this.texture,this.renderTexture,Instantiate<Material>(this.material));
+            //texture = pickMaterial.mainTexture;
+            tempTex = new Texture2D(Screen.width,Screen.height,TextureFormat.RGB24,false);
         }
-        
-        void OnGUI()
+
+        private void Update()
         {
-            
-            GUI.DrawTexture(this.rect,this.renderTexture);
+            // TODO: 拾取Texture有问题
+            // TODO: 内存泄露
+            if (null == renderTexture)
+                return;
+            RenderTexture.active = renderTexture;
+            tempTex.ReadPixels(new Rect(0,0,renderTexture.width,renderTexture.height),0,0);
+            tempTex.Apply();
+            GameObject.Find("Canvas/RawImage").GetComponent<RawImage>().texture = renderTexture;
+            var c = tempTex.GetPixel((int)Input.mousePosition.x,(int)Input.mousePosition.y);
+            print(c);
         }
 
         public void Execute()
@@ -92,6 +108,42 @@ namespace UChart.Scatter
 
             meshFilter.mesh = mesh;
             meshRenderer.material = material;
+
+            // TODO: 封装重构
+            // TODO: 将其渲染到相机上进行拾取
+
+
+            GameObject pickGameObject = new GameObject("UCHART_PCIK_GAMEOBJECT");
+            //pickGameObject.hideFlags = HideFlags.HideInHierarchy;
+            var pickMesh = pickGameObject.AddComponent<MeshFilter>();
+            pickMesh.mesh = mesh;
+            var pickRender = pickGameObject.AddComponent<MeshRenderer>();
+            pickRender.material = pickMaterial;
+            pickGameObject.layer = UChart.ucharLayer;
+
+            GameObject pickCameraGO = new GameObject("UCHART_PICK_CAMERA");
+            pickCameraGO.transform.position = Camera.main.transform.position;
+            pickCameraGO.transform.eulerAngles = Camera.main.transform.eulerAngles;
+            //pickCameraGO.hideFlags = HideFlags.HideInHierarchy;
+            pickCamera = pickCameraGO.AddComponent<Camera>();
+            pickCamera.cullingMask = 1 << 31;
+            pickCamera.clearFlags = CameraClearFlags.Color;
+            pickCamera.backgroundColor = new Color(0,0,0,1);
+            pickCameraGO.layer = UChart.ucharLayer;
+            renderTexture = new RenderTexture(Screen.width,Screen.height,24);
+            pickCamera.targetTexture = renderTexture;
+
+            print(renderTexture.height+"*"+ renderTexture.width);
+            //tempTex = pickTexture.toTexture2D();
+            //GameObject.Find("Canvas/RawImage").GetComponent<RawImage>().texture = pickTexture;
+            //for (var x = 0; x < tempTex.width; x++)
+            //{
+            //    for (var y = 0; y < tempTex.height; y++)
+            //    {
+            //        var color =  tempTex.GetPixel(x, y);
+            //        print(color);
+            //    }
+            //}
         }
 
         public void RefreshMeshData( int index , Color color )
@@ -113,7 +165,7 @@ namespace UChart.Scatter
         {
             GameObject scatter = new GameObject("scatter3D");
             scatter.layer = 8;
-            //scatter.hideFlags = HideFlags.HideInHierarchy;
+            scatter.hideFlags = HideFlags.HideInHierarchy;
             scatter.transform.position = position;
             var scatter3D = scatter.AddComponent<Scatter3D>();
             scatter3D.size = size;
