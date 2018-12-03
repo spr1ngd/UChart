@@ -36,4 +36,3 @@ public class TestScene : MonoBehaviour
         SceneManager.MoveGameObjectToScene(cube,SceneManager.GetSceneByName("UCHART"));
     }
 }
-
