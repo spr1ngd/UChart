@@ -1,8 +1,6 @@
 ﻿
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace UChart.Scatter
@@ -33,6 +31,7 @@ namespace UChart.Scatter
         private Vector3[] verticesArray = null;
         private int[] indicesArray = null;
         private Color[] colorsArray = null;
+        private Color[] pickColors = null;
 
         //private Texture texture = null;
         private Texture2D tempTex = null;
@@ -40,10 +39,31 @@ namespace UChart.Scatter
         private Camera pickCamera = null;
 
         //public RenderTexture pickTexture = null;
+        private Color pickColor;
+        private int m_pickID = 0;
+
+        private int pickId
+        {
+            set
+            {
+                if (value == m_pickID)
+                    return;
+                if (m_pickID > 0)
+                {
+                    colorsArray[m_pickID] = pickColor;
+                }
+                if (value > 0)
+                {
+                    pickColor = colorsArray[value];
+                    colorsArray[value] = Color.yellow;
+                }
+                mesh.colors = colorsArray;
+                m_pickID = value;
+            }
+        }
 
         private void Awake()
         {
-            //texture = pickMaterial.mainTexture;
             tempTex = new Texture2D(Screen.width,Screen.height,TextureFormat.RGB24,false);
         }
 
@@ -56,10 +76,30 @@ namespace UChart.Scatter
             RenderTexture.active = renderTexture;
             tempTex.ReadPixels(new Rect(0,0,renderTexture.width,renderTexture.height),0,0);
             tempTex.Apply();
-            GameObject.Find("Canvas/RawImage").GetComponent<RawImage>().texture = renderTexture;
-            Color pickColor = tempTex.GetPixel((int)Input.mousePosition.x,(int)Input.mousePosition.y);
-            // TODO 对pickColor进行按位运算，然后作为序号进行对象拾取
-            print(pickColor);
+            //GameObject.Find("Canvas/RawImage").GetComponent<RawImage>().texture = renderTexture;
+            Color pickColorTemp = tempTex.GetPixel((int)Input.mousePosition.x,(int)Input.mousePosition.y);
+            if (pickColorTemp == Color.black)
+            {
+                pickId = 0;
+                return;
+            }
+            for (var i = 0; i < pickColors.Length; i++)
+            {
+                var c = pickColors[i];
+                if (c == pickColorTemp)
+                {
+                    pickId = i;
+                    return;
+                }
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (null == pickCamera)
+                return;
+            pickCamera.transform.position = Camera.main.transform.position;
+            pickCamera.transform.eulerAngles = Camera.main.transform.eulerAngles;
         }
 
         public void Execute()
@@ -89,7 +129,7 @@ namespace UChart.Scatter
                         Color randomColor = new Color(size,size,size,size);
 
                         // TODO: 利用协程处理大量对象创建时产生的卡顿
-                        var scatter = CreateScatter(pos,size);
+                        var scatter = CreateScatter(vertexIndex,pos,size);
                         scatter.color = randomColor;
                         scatter.index = vertexIndex;
 
@@ -113,35 +153,41 @@ namespace UChart.Scatter
             // TODO: 封装重构
             // TODO: 将其渲染到相机上进行拾取
 
+            pickColors = new Color[pointCount];
+            //Color32[] pickColors = new Color32[pointCount];
+            for(int i = 0 ,count = 1; count <= pickColors.Length; i++,count++)
+            {
+                int colorR = 0, colorG = 0, colorB = 0;
+                colorR = count / (256 * 2);
+                colorG = count / 256 % 256;
+                colorB = count % 256;
+                pickColors[i] = new Color(colorR / 255.0f,colorG / 255.0f,colorB / 255.0f,1);
+                //pickColors[i] = new Color32(Convert.ToByte(colorR),Convert.ToByte(colorG),Convert.ToByte(colorB),255);
+            }
+
             var pickMesh = new Mesh(){name = "UCHART_PICKMESH"};
             pickMesh.vertices = verticesArray;
             pickMesh.SetIndices(indicesArray,MeshTopology.Points,0);
-
-            Color[] pickColors = new Color[pointCount];
-            for(int i = 0; i < pickColors.Length; i++)
-            {
-
-                pickColors[i] = new Color();
-            }
-            //pickMesh.colors = colorsArray;
+            pickMesh.colors = pickColors;
+            //pickMesh.colors32 = pickColors;
 
             GameObject pickGameObject = new GameObject("UCHART_PCIK_GAMEOBJECT");
             //pickGameObject.hideFlags = HideFlags.HideInHierarchy;
             var pickMeshFilter = pickGameObject.AddComponent<MeshFilter>();
-            pickMeshFilter.mesh = mesh;
+            pickMeshFilter.mesh = pickMesh;
             var pickRender = pickGameObject.AddComponent<MeshRenderer>();
             pickRender.material = pickMaterial;
-            pickGameObject.layer = UChart.ucharLayer;
+            pickGameObject.layer = UChart.uchartLayer;
 
             GameObject pickCameraGO = new GameObject("UCHART_PICK_CAMERA");
             pickCameraGO.transform.position = Camera.main.transform.position;
             pickCameraGO.transform.eulerAngles = Camera.main.transform.eulerAngles;
             //pickCameraGO.hideFlags = HideFlags.HideInHierarchy;
             pickCamera = pickCameraGO.AddComponent<Camera>();
-            pickCamera.cullingMask = 1 << 31;
+            pickCamera.cullingMask = 1 << UChart.uchartLayer;
             pickCamera.clearFlags = CameraClearFlags.Color;
             pickCamera.backgroundColor = new Color(0,0,0,1);
-            pickCameraGO.layer = UChart.ucharLayer;
+            pickCameraGO.layer = UChart.uchartLayer;
             renderTexture = new RenderTexture(Screen.width,Screen.height,24);
             pickCamera.targetTexture = renderTexture;
         }
@@ -161,13 +207,14 @@ namespace UChart.Scatter
             meshFilter.mesh = mesh;
         }
 
-        protected override Scatter CreateScatter(Vector3 position,float size)
+        protected override Scatter CreateScatter(int scatterID,Vector3 position,float size)
         {
             GameObject scatter = new GameObject("scatter3D");
-            scatter.layer = 8;
+            scatter.layer = UChart.uchartLayer;
             scatter.hideFlags = HideFlags.HideInHierarchy;
             scatter.transform.position = position;
             var scatter3D = scatter.AddComponent<Scatter3D>();
+            scatter3D.index = scatterID;
             scatter3D.size = size;
             scatter3D.scatterGraph = this;
             scatter3D.Generate(Vector3.one);

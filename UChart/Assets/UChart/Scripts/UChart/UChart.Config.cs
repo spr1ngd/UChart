@@ -21,6 +21,6 @@ namespace UChart
         /// <summary>
         /// layer of spesical uchart object
         /// </summary>
-        public const int ucharLayer = 31;
+        public const int uchartLayer = 31;
     }
 }

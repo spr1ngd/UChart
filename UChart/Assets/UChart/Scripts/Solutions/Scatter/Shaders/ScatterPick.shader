@@ -132,8 +132,10 @@ Shader "UChart/Scatter/Scatter3DPick"
             {
                 float dd = sqrt(pow((0.5 - IN.uv.x),2) + pow((0.5 - IN.uv.y) ,2));           
                 float aliasValue = antialias(_PointSize ,_FeatherWidth,dd);
+                if( aliasValue > _PointRadius )
+                    discard;
                 fixed4 color = lerp(IN.color,_BorderColor,aliasValue);    
-                return fixed4(1,0,0,1);
+                return fixed4(IN.color);
             }
 
             ENDCG
