@@ -20,7 +20,7 @@ Line|折线图|:x:|:x:
 Bar|柱状图|:x:|:x:
 Pie|饼图|:x:|:x:
 Radar|雷达图|:x:|:x:
-Scatter|散点图|:x:|:x: 50%
+Scatter|散点图|:x:|:x: 80%
 Map|地图|:x:|:x:
 Candlestick|K线图|:x:|:x:
 Heatmap|热力图|:x:|:x: 40%
