@@ -1,6 +1,4 @@
 ﻿
-
-using UChart.Polygon;
 using UnityEngine;
 
 namespace UChart.Scatter

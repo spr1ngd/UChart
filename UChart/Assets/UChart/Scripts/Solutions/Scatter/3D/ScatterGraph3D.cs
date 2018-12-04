@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -33,14 +34,14 @@ namespace UChart.Scatter
         private Color[] colorsArray = null;
         private Color[] pickColors = null;
 
-        //private Texture texture = null;
         private Texture2D tempTex = null;
         private RenderTexture renderTexture = null;
         private Camera pickCamera = null;
 
-        //public RenderTexture pickTexture = null;
         private Color pickColor;
         private int m_pickID = 0;
+
+        private CBuffer m_cBuffer;
 
         private int pickId
         {
@@ -64,8 +65,13 @@ namespace UChart.Scatter
 
         private void Awake()
         {
+            m_cBuffer = new CBuffer();
             tempTex = new Texture2D(Screen.width,Screen.height,TextureFormat.RGB24,false);
-            new CBuffer();
+        }
+
+        private void OnApplicationQuit()
+        {
+
         }
 
         private void Update()
@@ -150,6 +156,8 @@ namespace UChart.Scatter
             // TODO: 封装重构
             // TODO: 将其渲染到相机上进行拾取
 
+            
+
             pickColors = new Color[pointCount];
             for(int i = 0, count = 1; count <= pickColors.Length; i++, count++)
             {
@@ -165,25 +173,7 @@ namespace UChart.Scatter
             pickMesh.SetIndices(indicesArray,MeshTopology.Points,0);
             pickMesh.colors = pickColors;
 
-            GameObject pickGameObject = new GameObject("UCHART_PCIK_GAMEOBJECT");
-            pickGameObject.hideFlags = HideFlags.HideInHierarchy;
-            var pickMeshFilter = pickGameObject.AddComponent<MeshFilter>();
-            pickMeshFilter.mesh = pickMesh;
-            var pickRender = pickGameObject.AddComponent<MeshRenderer>();
-            pickRender.material = pickMaterial;
-            pickGameObject.layer = UChart.uchartLayer;
-
-            GameObject pickCameraGO = new GameObject("UCHART_PICK_CAMERA");
-            pickCameraGO.transform.position = Camera.main.transform.position;
-            pickCameraGO.transform.eulerAngles = Camera.main.transform.eulerAngles;
-            pickCameraGO.hideFlags = HideFlags.HideInHierarchy;
-            pickCamera = pickCameraGO.AddComponent<Camera>();
-            pickCamera.cullingMask = 1 << UChart.uchartLayer;
-            pickCamera.clearFlags = CameraClearFlags.Color;
-            pickCamera.backgroundColor = new Color(0,0,0,1);
-            pickCameraGO.layer = UChart.uchartLayer;
-            renderTexture = new RenderTexture(Screen.width,Screen.height,24);
-            pickCamera.targetTexture = renderTexture;
+            m_cBuffer.AddRenderer(pickMesh.name,pickMesh,pickMaterial);
         }
 
         public void RefreshMeshData( int index , Color color )

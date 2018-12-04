@@ -1,86 +1,127 @@
 ﻿
-
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace UChart
-{
-    public class LoomParam
+{ 
+    public enum UpdateType
     {
-        public Action<Transform> action;
-        public Transform param;
+        UPDATE,
+        FIXEDUPDATE,
+        LATEUPDATE
     }
 
     public class Loom : MonoBehaviour
     {
         private static Loom m_instance = null;
-        public static Loom Instance { get { return m_instance; } }
-
-        public void Init()
+        public static Loom Instance
         {
-            m_instance = this.gameObject.AddComponent<Loom>();
+            get
+            {
+                if (null == m_instance)
+                {
+                    var loom = new GameObject("__Loom__");
+#if UCHART_DEBUG
+                    loom.hideFlags = HideFlags.HideInHierarchy;
+#endif
+                    m_instance = loom.AddComponent<Loom>();
+                }
+                return m_instance;
+            }
         }
 
-        public void Release()
+        public void OnApplicationQuit()
         {
-            updateDic.Clear();
-            updateParamDic.Clear();
-            updateDic = null;
-            updateParamDic = null;
+            m_updateDic.Clear();
+            m_updateDic = null;
         }
 
-        private IDictionary<int,Action> updateDic = new Dictionary<int,Action>();
-        private IDictionary<int,LoomParam> updateParamDic = new Dictionary<int,LoomParam>();
-
+        private IDictionary<UpdateType, IDictionary<string, Action>> m_updateDic = new Dictionary<UpdateType, IDictionary<string, Action>>();
+ 
         private void Update()
         {
-            if(null != updateDic && updateDic.Count > 0)
+            IDictionary<string,Action> updateDic = null;
+            if(m_updateDic.TryGetValue(UpdateType.UPDATE,out updateDic))
             {
-                foreach(Action update in updateDic.Values)
+                foreach(KeyValuePair<string,Action> pair in updateDic)
                 {
-                    update();
-                }
-            }
-            if(null != updateParamDic && updateParamDic.Count > 0)
-            {
-                foreach(var action in updateParamDic.Values)
-                {
-                    action.action(action.param);
+                    pair.Value();
                 }
             }
         }
 
-        public void InvokeUpdate(Action action)
+        private void FixedUpdate()
         {
-            int hash = action.GetHashCode();
-            if(updateDic.ContainsKey(hash))
-                return;
-            updateDic.Add(hash,action);
+            IDictionary<string,Action> updateDic = null;
+            if(m_updateDic.TryGetValue(UpdateType.FIXEDUPDATE,out updateDic))
+            {
+                foreach(KeyValuePair<string,Action> pair in updateDic)
+                {
+                    pair.Value();
+                }
+            }
         }
 
-        public void InvokeUpdate(Action<Transform> action,Transform param)
+        private void LateUpdate()
         {
-            int hash = action.GetHashCode();
-            var loomParam = new LoomParam() { action = action,param = param };
-            if(updateParamDic.ContainsKey(hash)) updateParamDic[hash] = loomParam;
-            else updateParamDic.Add(hash,loomParam);
+            IDictionary<string,Action> updateDic = null;
+            if(m_updateDic.TryGetValue(UpdateType.LATEUPDATE,out updateDic))
+            {
+                foreach(KeyValuePair<string,Action> pair in updateDic)
+                {
+                    pair.Value();
+                }
+            }
         }
 
-        public void RemoveUpdate(Action action)
+        public void InvokeUdpate( string updateId,Action updateAction,UpdateType updateType = UpdateType.UPDATE)
         {
-            int hash = action.GetHashCode();
-            if(!updateDic.ContainsKey(hash))
+            if (string.IsNullOrEmpty(updateId))
+            {
+                Debug.LogError(string.Format("can't add null udpate id"));
                 return;
-            updateDic.Remove(hash);
+            }
+            if ( null == updateAction )
+            {
+                Debug.LogError(string.Format("can't add null udpate action"));
+                return;
+            }
+            IDictionary<string, Action> updateDic = null;
+            if (!m_updateDic.TryGetValue(updateType, out updateDic))
+            {
+                updateDic = new Dictionary<string, Action>();
+                m_updateDic[updateType] = updateDic;
+            }
+            if (updateDic.ContainsKey(updateId))
+            {
+                Debug.LogWarning(string.Format("can't add same id [{0}] update event.",updateId));
+                return;
+            }
+            m_updateDic[updateType].Add(updateId,updateAction);
         }
 
-        public void RemoveUpdate(Action<Transform> action)
+        public void RemoveUpdate(string updateId,UpdateType updateType = UpdateType.UPDATE)
         {
-            int hash = action.GetHashCode();
-            if(!updateParamDic.ContainsKey(hash))
+            if(string.IsNullOrEmpty(updateId))
+            {
+                Debug.LogError(string.Format("can't add null udpate id"));
                 return;
-            updateParamDic.Remove(hash);
+            }
+            if (m_updateDic.ContainsKey(updateType))
+            {
+                var updateDic = m_updateDic[updateType];
+                if (updateDic.ContainsKey(updateId))
+                    m_updateDic[updateType].Remove(updateId);
+                else
+                {
+                    Debug.LogWarning(string.Format("don't exist update ud [{0}]",updateId));
+                }
+            }
+            else
+            {
+                Debug.LogWarning(string.Format("don't exist [{0}] type update action.",updateType));
+            }
         }
     }
 }
