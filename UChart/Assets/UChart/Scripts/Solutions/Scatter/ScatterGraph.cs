@@ -7,10 +7,5 @@ namespace UChart.Scatter
         {
             throw new UChartException("Please override method in subclass.");
         }
-
-        public virtual void RefreshScatter()
-        {
-            throw new UChartException("Please override method in subclass.");
-        }
     }
 }
