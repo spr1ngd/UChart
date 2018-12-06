@@ -7,9 +7,9 @@ namespace UChart
     public class UChartObject : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
     {
         #region base components
-
+        [HideInInspector]
         public string uchartId = string.Empty;
-        protected IAnimationEvent animationEvent { get { return (IAnimationEvent)this.GetComponent<AnimationBase>(); } }        
+        protected IAnimationEvent animationEvent { get { return (IAnimationEvent)this.GetComponent<AnimationBase>(); } }
         protected Transform myTransform = null;
         protected GameObject myGameobject = null;
 
@@ -97,7 +97,7 @@ namespace UChart
                 return;
             if( null != animationEvent )
                 animationEvent.OnEnterAnimation();
-            Debug.Log(string.Format("<color=green>{0}->{1}</color>","Enter",uchartId));
+            //Debug.Log(string.Format("<color=green>{0}->{1}</color>","Enter",uchartId));
         }
 
         protected virtual void OnMouseExit()
@@ -106,7 +106,7 @@ namespace UChart
                 return;
             if (null != animationEvent)
                 animationEvent.OnExitAnimation();
-            Debug.Log(string.Format("<color=green>{0}->{1}</color>","Exit",uchartId));
+            //Debug.Log(string.Format("<color=green>{0}->{1}</color>","Exit",uchartId));
         }
 
         protected virtual void OnMouseUpAsButton()
@@ -115,7 +115,7 @@ namespace UChart
                 return;
             if (null != animationEvent)
                 animationEvent.OnClickAnimation();
-            Debug.Log(string.Format("<color=green>{0}->{1}</color>","Click",uchartId));
+            //Debug.Log(string.Format("<color=green>{0}->{1}</color>","Click",uchartId));
         }
 
         public virtual void OnPointerEnter(PointerEventData eventData)
@@ -124,7 +124,7 @@ namespace UChart
                 return;
             if (null != animationEvent)
                 animationEvent.OnEnterAnimation();
-            Debug.Log(string.Format("<color=green>{0}->{1}</color>","Enter",uchartId));
+            //Debug.Log(string.Format("<color=green>{0}->{1}</color>","Enter",uchartId));
         }
 
         public virtual void OnPointerExit(PointerEventData eventData)
@@ -133,7 +133,7 @@ namespace UChart
                 return;
             if (null != animationEvent)
                 animationEvent.OnExitAnimation();
-            Debug.Log(string.Format("<color=green>{0}->{1}</color>","Exit",uchartId));
+            //Debug.Log(string.Format("<color=green>{0}->{1}</color>","Exit",uchartId));
         }
 
         public virtual void OnPointerClick(PointerEventData eventData)
@@ -142,7 +142,7 @@ namespace UChart
                 return;
             if (null != animationEvent)
                 animationEvent.OnClickAnimation();
-            Debug.Log(string.Format("<color=green>{0}->{1}</color>","Click",uchartId));
+            //Debug.Log(string.Format("<color=green>{0}->{1}</color>","Click",uchartId));
         }
 
         #endregion
