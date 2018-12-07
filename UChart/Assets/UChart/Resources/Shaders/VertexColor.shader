@@ -45,6 +45,6 @@ Shader "UChart/Vertex/VertexColor"
             }
 
             ENDCG
-            }
+        }
     }
 }
