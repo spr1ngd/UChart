@@ -11,7 +11,7 @@ namespace UChart
         {
             GameObject line3D = new GameObject("Line3D");
 #if UCHART_DEBUG
-            line3D.hideFlags = HideFlags.HideInHierarchy;
+            //line3D.hideFlags = HideFlags.HideInHierarchy;
 #endif
 
             MeshFilter meshFilter = line3D.AddComponent<MeshFilter>();
@@ -35,6 +35,11 @@ namespace UChart
 
             meshFilter.mesh = mesh;
             meshRenderer.material = material;
+        }
+
+        protected override void SetWidth(float width)
+        {
+            base.SetWidth(width);
         }
     }
 }

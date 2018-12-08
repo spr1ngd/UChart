@@ -14,7 +14,7 @@ namespace UChart
             set
             {
                 m_start = value;
-                SetStart();
+                SetStart(value);
             }
         }
 
@@ -27,18 +27,35 @@ namespace UChart
             set
             {
                 m_end = value;
-                SetEnd();
+                SetEnd(value);
             }
         }
 
-        protected virtual void SetStart()
-        {
+        private float m_width = 1.0f;
 
+        public float width
+        {
+            get { return m_width; }
+            set
+            {
+                m_width = value;
+                SetWidth(value);
+            }
         }
 
-        protected virtual void SetEnd()
+        protected virtual void SetStart( Vector3 start )
         {
+            m_start = start;
+        }
 
+        protected virtual void SetEnd( Vector3 end )
+        {
+            m_end = end;
+        }
+
+        protected virtual void SetWidth( float width )
+        {
+            m_width = width;
         }
 
         public virtual void Draw()

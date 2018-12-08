@@ -81,9 +81,9 @@ Shader "UChart/Scatter/Scatter3D"
             float halfS = _PointRadius;
 
             float3 up = UNITY_MATRIX_IT_MV[0].xyz;
-            float3 look = _WorldSpaceCameraPos - p[0].vertex;
-            look.y = 0;
-            look = normalize(look);
+            // float3 look = _WorldSpaceCameraPos - p[0].vertex;
+            // look.y = 0;
+            // look = normalize(look);
             float3 right = UNITY_MATRIX_IT_MV[1].xyz;
 
             float4 v[4];
