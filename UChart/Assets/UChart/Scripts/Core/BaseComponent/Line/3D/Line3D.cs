@@ -20,17 +20,17 @@ namespace UChart
 
             // todo vertices
             // todo color
-            Vector3[] vertices = new Vector3[2];
-            Color[] colors = new Color[2];
+            Vector3[] vertices = new Vector3[3]{Vector3.zero,Vector3.one,new Vector3(10,10,0)};
+            Color[] colors = new Color[3]{Color.red,Color.green,Color.blue};
 
-            vertices[0] = start;
-            vertices[1] = end;
+            // vertices[0] = start;
+            // vertices[1] = end;
 
-            colors[0] = Color.red;
-            colors[1] = Color.green;
+            // colors[0] = Color.red;
+            // colors[1] = Color.green;
 
             mesh.vertices = vertices;
-            mesh.SetIndices(new int[] { 0,1},MeshTopology.Lines,0);
+            mesh.SetIndices(new int[] { 0,1 , 2},MeshTopology.LineStrip,0);
             mesh.colors = colors;
 
             meshFilter.mesh = mesh;
