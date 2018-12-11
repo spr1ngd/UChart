@@ -12,10 +12,9 @@
 
 name | description | 2d status | 3d status
 ----|----|----|----
-Point2D|2D点|:x: 40%|:x:
-Point3D|3D点|:x:|:x: 80%
-Line2D|2D线|:x:|:x:
-Line2D|3D线|:x:|:x:待开发
+Point|点|:x:|:x: 80%
+Line|线|:x:|:x:待开发
+Grid|网格|:x:|:x:30%
 Line|折线图|:x:|:x:
 Bar|柱状图|:x:|:x:
 Pie|饼图|:x:|:x:
