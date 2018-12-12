@@ -7,7 +7,7 @@ namespace UChart
     {
         public override void Draw()
         {
-            Vector3 start = new Vector3(-gridSize / 2.0f,-gridSize / 2.0f,0);
+            Vector3 start = new Vector3(-gridSize / 2.0f,0,-gridSize / 2.0f);
             float cellSize = gridSize / division;
 
             var meshFilter = myGameobject.AddComponent<MeshFilter>();
@@ -23,14 +23,14 @@ namespace UChart
             for( int i = 0 ; i <= division ;i++ )
             {
                 vertices[vertexIndex++] = start + new Vector3(cellSize * i ,0,0);
-                vertices[vertexIndex++] = start + new Vector3(cellSize * i ,gridSize,0);
+                vertices[vertexIndex++] = start + new Vector3(cellSize * i ,0,gridSize);
                 // vertices[vertexIndex++] = Vector3.zero;
                 // vertices[vertexIndex++] = Vector3.zero;
             }
             for( int j = 0 ; j <= division;j++ )
             {
-                vertices[vertexIndex++] = start + new Vector3(0 ,cellSize * j,0);
-                vertices[vertexIndex++] = start + new Vector3(gridSize ,cellSize * j,0);
+                vertices[vertexIndex++] = start + new Vector3(0 ,0,cellSize * j);
+                vertices[vertexIndex++] = start + new Vector3(gridSize ,0,cellSize * j);
                 // vertices[vertexIndex++] = Vector3.zero;
                 // vertices[vertexIndex++] = Vector3.zero;
             }
@@ -46,7 +46,7 @@ namespace UChart
             mesh.SetIndices(indices,MeshTopology.Lines,0);
 
             meshFilter.mesh = mesh;
-            meshRenderer.material = new Material(Shader.Find("UChart/Grid/Grid(Basic)"));
+            meshRenderer.material = new Material(Shader.Find("Standard"));
         }
     }
 }
