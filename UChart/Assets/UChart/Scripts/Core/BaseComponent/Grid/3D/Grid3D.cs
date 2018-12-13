@@ -1,14 +1,20 @@
 
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace UChart
 {
     public class Grid3D : Grid
     {
+        public Color mainColor = new Color(0,0,0,0);
+
+        public Color childColor = Color.gray;
+
         public override void Draw()
         {
             Vector3 start = new Vector3(-gridSize / 2.0f,0,-gridSize / 2.0f);
             float cellSize = gridSize / division;
+            float childSize = cellSize / division;
 
             var meshFilter = myGameobject.AddComponent<MeshFilter>();
             var meshRenderer = myGameobject.AddComponent<MeshRenderer>();
@@ -16,24 +22,61 @@ namespace UChart
             Mesh mesh = new Mesh();
             mesh.name = "__GRID3D__";
 
-            Vector3[] vertices = new Vector3[ (division + 1) * 2 * 2];
-            int[] indices = new int[(division+1) * 2 * 2];
+            // TODO: 修改数组大小
+            var verticesCount = (division + 1) * 4 + division * (division -1) * 4;
+            Vector3[] vertices = new Vector3[ verticesCount];
+            int[] indices = new int[verticesCount];
+            Color[] colors = new Color[verticesCount];
+            Vector2[] uvs = new Vector2[verticesCount];
             
+            Vector2 level1 = new Vector2(0,0);
+            Vector2 level2 = new Vector2(1,0);
+
             int vertexIndex = 0;
             for( int i = 0 ; i <= division ;i++ )
             {
+                colors[vertexIndex] = mainColor;
+                uvs[vertexIndex]  = level1;
                 vertices[vertexIndex++] = start + new Vector3(cellSize * i ,0,0);
+                colors[vertexIndex] = mainColor;
+                uvs[vertexIndex]  = level1;
                 vertices[vertexIndex++] = start + new Vector3(cellSize * i ,0,gridSize);
-                // vertices[vertexIndex++] = Vector3.zero;
-                // vertices[vertexIndex++] = Vector3.zero;
+
+                if( i < division )
+                {
+                    for( int childIndex = 1 ; childIndex < division ; childIndex++ )
+                    {
+                        colors[vertexIndex] = childColor;
+                        uvs[vertexIndex]  = level2;
+                        vertices[vertexIndex++] = start + new Vector3(cellSize * i + childSize * childIndex,0,0);
+                        colors[vertexIndex] = childColor;
+                        uvs[vertexIndex]  = level2;
+                        vertices[vertexIndex++] = start + new Vector3(cellSize * i + childSize * childIndex,0,gridSize);
+                    }
+                }
             }
             for( int j = 0 ; j <= division;j++ )
             {
+                colors[vertexIndex] = mainColor;
+                uvs[vertexIndex]  = level1;
                 vertices[vertexIndex++] = start + new Vector3(0 ,0,cellSize * j);
+                colors[vertexIndex] = mainColor;
+                uvs[vertexIndex]  = level1;
                 vertices[vertexIndex++] = start + new Vector3(gridSize ,0,cellSize * j);
-                // vertices[vertexIndex++] = Vector3.zero;
-                // vertices[vertexIndex++] = Vector3.zero;
+                if( j < division )
+                {
+                    for( int childIndex = 1 ; childIndex < division ; childIndex++ )
+                    {
+                        colors[vertexIndex] = childColor;
+                        uvs[vertexIndex]  = level2;
+                        vertices[vertexIndex++] = start + new Vector3(0 ,0,cellSize * j + childSize * childIndex);
+                        colors[vertexIndex] = childColor;
+                        uvs[vertexIndex]  = level2;
+                        vertices[vertexIndex++] = start + new Vector3(gridSize ,0,cellSize * j  + childSize * childIndex);
+                    }
+                }
             }
+
             // vertices
             mesh.vertices = vertices;
             // indices
@@ -41,12 +84,18 @@ namespace UChart
             {
                 indices[i] = i;
             }
-
-            mesh.vertices = vertices;
-            mesh.SetIndices(indices,MeshTopology.Lines,0);
-
+            mesh.colors = colors;
+            foreach (var item in colors)
+            {
+                print(item);
+            }
+            mesh.SetIndices(indices,MeshTopology.Points,0);
+            mesh.uv = uvs;
             meshFilter.mesh = mesh;
-            meshRenderer.material = new Material(Shader.Find("Standard"));
+
+            // meshRenderer.material = new Material(Shader.Find("Standard"));
+            // meshRenderer.material = new Material(Shader.Find("UChart/Grid/Grid(Basic)"));
+            meshRenderer.material = new Material(Shader.Find("UChart/Vertex/VertexColor"));  
         }
     }
 }

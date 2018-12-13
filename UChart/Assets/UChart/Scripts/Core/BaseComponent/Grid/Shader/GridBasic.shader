@@ -3,8 +3,7 @@ Shader "UChart/Grid/Grid(Basic)"
 {
     Properties
     {
-        _GridSize("Grid Size",float) = 10
-        _Division("Division",int) = 10
+        
     }
 
     SubShader
@@ -16,27 +15,23 @@ Shader "UChart/Grid/Grid(Basic)"
         {
             CGPROGRAM
 
-            #define MAXVERTEXCOUNT 128
-
             #pragma vertex vert
             #pragma geometry geom
             #pragma fragment frag
             #include "UnityCG.cginc"
 
-            float _Division;
-
             struct a2v 
             {
                 float4 vertex : POSITION;
                 float4 color : TEXCOORD0;
-                float2 uv : TEXCOORD1;
+                // float2 uv : TEXCOORD1;
             };
 
             struct v2g
             {
                 float4 vertex : POSITION;
                 float4 color : TEXCOORD0;
-                float2 uv : TEXCOORD1;
+                // float2 uv : TEXCOORD1;
             };
 
             struct g2f
@@ -51,27 +46,33 @@ Shader "UChart/Grid/Grid(Basic)"
                 v2g OUT;
                 OUT.vertex = IN.vertex;
                 OUT.color = IN.color;
-                OUT.uv = IN.uv;
+                // OUT.uv = IN.uv;
                 return OUT;
             }
 
             [maxvertexcount(2)]
             void geom( line v2g p[2] , inout LineStream<g2f> ls )
             {
-                g2f start;
-                g2f end;
+                g2f gOUT;
+                gOUT.vertex = UnityObjectToClipPos(p[0].vertex);
+                if( p[0].color.a > 0.5 )
+                    gOUT.color = float4(1,0,0,1);
+                else
+                    gOUT.color = float4(0,0,0,1);
+                // gOUT.uv = p[0].uv;
+                ls.Append(gOUT);
 
-                start.vertex = UnityObjectToClipPos(p[0].vertex);
-                start.color = p[0].color;
-                end.vertex = UnityObjectToClipPos(p[1].vertex);
-                end.color = p[1].color;
-
-                ls.Append(start);
-                ls.Append(end);
+                gOUT.vertex = UnityObjectToClipPos(p[1].vertex);
+                if( p[1].color.a > 0.5 )
+                    gOUT.color = float4(1,0,0,1);
+                else
+                    gOUT.color = float4(0,0,0,1);
+                // gOUT.uv = p[1].uv;
+                ls.Append(gOUT);
                 ls.RestartStrip();
             }
 
-            fixed4 frag(g2f IN):COLOR
+            fixed4 frag(g2f IN) : COLOR
             {
                 return IN.color;
             }

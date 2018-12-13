@@ -4,16 +4,13 @@ using System.Collections;
 public class OrbitCamera : MonoBehaviour
 {
     public Transform target;
-    public float distance = 8.0f;
+    private float distance = 8.0f;
+
+    [Header("Drag Parameter")]
     public float xSpeed = 70.0f;
     public float ySpeed = 50.0f;
-
     public float yMinLimit = 0f;
-    public float yMaxLimit = 90f;
-
-    public float distanceMin = 8f;
-    public float distanceMax = 15f;
-    public float zoomSpeed = 0.5f;
+    public float yMaxLimit = 90f;   
     
     private float x = 0.0f;
     private float y = 0.0f;
@@ -22,10 +19,11 @@ public class OrbitCamera : MonoBehaviour
     private float fy = 0f;
     private float fDistance = 0;
 
-    [Header("Scroll wheel")]
-    public float mouseWheelSpeed = 2.0f;
+    [Header("ScrollWheel Parameter")]
+    public float zoomSpeed = 0.5f;
     public float minDistance = 0.5f;
     public float maxDistance = 50.0f;
+    private float m_targetDistance = 0;
 
     void Start()
     {
@@ -34,6 +32,7 @@ public class OrbitCamera : MonoBehaviour
         y = angles.x;
         fx = x;
         fy = y; 
+        m_targetDistance = distance;
         UpdateRotaAndPos();
         fDistance = distance;
     }
@@ -79,30 +78,27 @@ public class OrbitCamera : MonoBehaviour
                 y -= dy * ySpeed * Time.deltaTime;
 
                 y = ClampAngle(y, yMinLimit, yMaxLimit);
-
-               
             }
         }
 
-        //OnMouseWheel();
+        OnMouseWheel();
 
         fx = Mathf.Lerp(fx,x,0.2f);
         fy = Mathf.Lerp(fy,y,0.2f);
 
         UpdateRotaAndPos();
-    }
+    }    
 
     private void OnMouseWheel()
     {
         if(target)
         {
             float wheelValue = Input.GetAxis("Mouse ScrollWheel");
-            Vector3 direction = Vector3.Normalize(this.transform.position - target.position);
-            Vector3 offset = direction * wheelValue * mouseWheelSpeed;
-            this.transform.position += offset;
+            m_targetDistance -= wheelValue * zoomSpeed * 400 * Time.deltaTime;
+            m_targetDistance = ClampAngle(m_targetDistance,minDistance,maxDistance);
+            distance = ClampAngle(Mathf.Lerp(distance,m_targetDistance,0.2f),minDistance,maxDistance);
         }
     }
-
 
     void UpdateRotaAndPos()
     {
