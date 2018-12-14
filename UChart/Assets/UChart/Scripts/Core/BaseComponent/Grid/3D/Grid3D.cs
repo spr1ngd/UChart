@@ -8,7 +8,7 @@ namespace UChart
     {
         public Color mainColor = new Color(0,0,0,0);
 
-        public Color childColor = Color.gray;
+        public Color matchColor = Color.gray;
 
         public override void Draw()
         {
@@ -22,7 +22,6 @@ namespace UChart
             Mesh mesh = new Mesh();
             mesh.name = "__GRID3D__";
 
-            // TODO: 修改数组大小
             var verticesCount = (division + 1) * 4 + division * (division -1) * 4;
             Vector3[] vertices = new Vector3[ verticesCount];
             int[] indices = new int[verticesCount];
@@ -46,10 +45,10 @@ namespace UChart
                 {
                     for( int childIndex = 1 ; childIndex < division ; childIndex++ )
                     {
-                        colors[vertexIndex] = childColor;
+                        colors[vertexIndex] = matchColor;
                         uvs[vertexIndex]  = level2;
                         vertices[vertexIndex++] = start + new Vector3(cellSize * i + childSize * childIndex,0,0);
-                        colors[vertexIndex] = childColor;
+                        colors[vertexIndex] = matchColor;
                         uvs[vertexIndex]  = level2;
                         vertices[vertexIndex++] = start + new Vector3(cellSize * i + childSize * childIndex,0,gridSize);
                     }
@@ -67,10 +66,10 @@ namespace UChart
                 {
                     for( int childIndex = 1 ; childIndex < division ; childIndex++ )
                     {
-                        colors[vertexIndex] = childColor;
+                        colors[vertexIndex] = matchColor;
                         uvs[vertexIndex]  = level2;
                         vertices[vertexIndex++] = start + new Vector3(0 ,0,cellSize * j + childSize * childIndex);
-                        colors[vertexIndex] = childColor;
+                        colors[vertexIndex] = matchColor;
                         uvs[vertexIndex]  = level2;
                         vertices[vertexIndex++] = start + new Vector3(gridSize ,0,cellSize * j  + childSize * childIndex);
                     }
@@ -85,17 +84,13 @@ namespace UChart
                 indices[i] = i;
             }
             mesh.colors = colors;
-            foreach (var item in colors)
-            {
-                print(item);
-            }
-            mesh.SetIndices(indices,MeshTopology.Points,0);
+            mesh.SetIndices(indices,MeshTopology.Lines,0);
             mesh.uv = uvs;
             meshFilter.mesh = mesh;
 
-            // meshRenderer.material = new Material(Shader.Find("Standard"));
-            // meshRenderer.material = new Material(Shader.Find("UChart/Grid/Grid(Basic)"));
-            meshRenderer.material = new Material(Shader.Find("UChart/Vertex/VertexColor"));  
+            meshRenderer.material = new Material(Shader.Find("UChart/Grid/Grid(Basic)"));
+            meshRenderer.material.SetVector("_MainColor",new Vector4(mainColor.r,mainColor.g,mainColor.b,mainColor.a));
+            meshRenderer.material.SetVector("_MatchColor",new Vector4(matchColor.r,matchColor.g,matchColor.b,matchColor.a));
         }
     }
 }
