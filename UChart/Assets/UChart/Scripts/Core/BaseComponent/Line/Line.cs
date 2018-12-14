@@ -3,6 +3,14 @@ using UnityEngine;
 
 namespace UChart
 {
+    public enum LineType
+    {
+        ///实线
+        Solid,
+        ///虚线
+        Dotted,
+    }
+
     public class Line : UChartObject
     {
         [SerializeField]
