@@ -43,7 +43,7 @@ namespace UChart
         #endregion
 
         #region uchart interactive 
-
+        [Header("BASE SETTING")]
         public bool interactive = true;
 
         #endregion

@@ -25,7 +25,6 @@ namespace UChart
             var verticesCount = (division + 1) * 4 + division * (division -1) * 4;
             Vector3[] vertices = new Vector3[ verticesCount];
             int[] indices = new int[verticesCount];
-            Color[] colors = new Color[verticesCount];
             Vector2[] uvs = new Vector2[verticesCount];
             
             Vector2 level1 = new Vector2(0,0);
@@ -34,10 +33,8 @@ namespace UChart
             int vertexIndex = 0;
             for( int i = 0 ; i <= division ;i++ )
             {
-                colors[vertexIndex] = mainColor;
                 uvs[vertexIndex]  = level1;
                 vertices[vertexIndex++] = start + new Vector3(cellSize * i ,0,0);
-                colors[vertexIndex] = mainColor;
                 uvs[vertexIndex]  = level1;
                 vertices[vertexIndex++] = start + new Vector3(cellSize * i ,0,gridSize);
 
@@ -45,10 +42,8 @@ namespace UChart
                 {
                     for( int childIndex = 1 ; childIndex < division ; childIndex++ )
                     {
-                        colors[vertexIndex] = matchColor;
                         uvs[vertexIndex]  = level2;
                         vertices[vertexIndex++] = start + new Vector3(cellSize * i + childSize * childIndex,0,0);
-                        colors[vertexIndex] = matchColor;
                         uvs[vertexIndex]  = level2;
                         vertices[vertexIndex++] = start + new Vector3(cellSize * i + childSize * childIndex,0,gridSize);
                     }
@@ -56,20 +51,16 @@ namespace UChart
             }
             for( int j = 0 ; j <= division;j++ )
             {
-                colors[vertexIndex] = mainColor;
                 uvs[vertexIndex]  = level1;
                 vertices[vertexIndex++] = start + new Vector3(0 ,0,cellSize * j);
-                colors[vertexIndex] = mainColor;
                 uvs[vertexIndex]  = level1;
                 vertices[vertexIndex++] = start + new Vector3(gridSize ,0,cellSize * j);
                 if( j < division )
                 {
                     for( int childIndex = 1 ; childIndex < division ; childIndex++ )
                     {
-                        colors[vertexIndex] = matchColor;
                         uvs[vertexIndex]  = level2;
                         vertices[vertexIndex++] = start + new Vector3(0 ,0,cellSize * j + childSize * childIndex);
-                        colors[vertexIndex] = matchColor;
                         uvs[vertexIndex]  = level2;
                         vertices[vertexIndex++] = start + new Vector3(gridSize ,0,cellSize * j  + childSize * childIndex);
                     }
@@ -83,14 +74,23 @@ namespace UChart
             {
                 indices[i] = i;
             }
-            mesh.colors = colors;
             mesh.SetIndices(indices,MeshTopology.Lines,0);
             mesh.uv = uvs;
             meshFilter.mesh = mesh;
 
-            meshRenderer.material = new Material(Shader.Find("UChart/Grid/Grid(Basic)"));
-            meshRenderer.material.SetVector("_MainColor",new Vector4(mainColor.r,mainColor.g,mainColor.b,mainColor.a));
-            meshRenderer.material.SetVector("_MatchColor",new Vector4(matchColor.r,matchColor.g,matchColor.b,matchColor.a));
+            switch(gridType)
+            {
+                case GridType.Basic:
+                    meshRenderer.material = new Material(Shader.Find("UChart/Grid/Grid(Basic)"));
+                break;
+                case GridType.AutoAlpha:
+                    meshRenderer.material = new Material(Shader.Find("UChart/Grid/Grid"));
+                break;
+                default:
+                    throw new UChartException("can't find this kind of grid shader.");
+            }            
+            meshRenderer.material.SetColor("_MainColor",mainColor);
+            meshRenderer.material.SetColor("_MatchColor",matchColor);
         }
     }
 }
