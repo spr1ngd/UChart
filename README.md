@@ -14,6 +14,7 @@ name | description | 2d status | 3d status
 ----|----|----|----
 Point|点|:x:|:x: 80%
 Line|线|:x:|:x:10%
+Axis|坐标轴|:x:|:x: coming soon
 Grid|网格|:x:|:x:50%
 Line|折线图|:x:|:x:
 Bar|柱状图|:x:|:x:
