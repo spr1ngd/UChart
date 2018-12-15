@@ -37,7 +37,7 @@ namespace UChart.Scatter
         private int pickId
         {
             set
-            {
+            { 
                 if(value == m_pickID)
                     return;
                 if(m_pickID >= 0)

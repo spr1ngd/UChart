@@ -6,11 +6,11 @@ namespace UChart
     public class Axis : UChartObject
     {
         [Header("AXIS UNIT SETTING")]
-        public float xUnit = 1;
+        public int xUnit = 1;
 
-        public float yUnit = 1.5f;
+        public int yUnit = 3;
 
-        public float zUnit = 2;
+        public int zUnit = 2;
 
         public float axisLenght = 5.0f;
 

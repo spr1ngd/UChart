@@ -10,7 +10,7 @@ Shader "UChart/Scatter/Scatter3D"
         [HideInInspector]_PointSize("Point Size",float) = 0.48
 
         _FeatherWidth("Feather Width",range(0.001,0.02)) = 0.015
-        _BorderColor("Border Color(RGB)",COLOr) = (1,1,1,0)        
+        _BorderColor("Border Color(RGB)",COLOR) = (1,1,1,0)        
     }
 
     SubShader

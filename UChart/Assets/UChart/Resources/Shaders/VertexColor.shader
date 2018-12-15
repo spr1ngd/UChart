@@ -50,17 +50,35 @@ Shader "UChart/Vertex/VertexColor"
                 return OUT;
             }
 
-            [maxvertexcount(1)]
-            void geom( point v2g p[1] ,inout PointStream<g2f> ps )
+            // point stream
+            // [maxvertexcount(1)]
+            // void geom( point v2g p[1] ,inout PointStream<g2f> ps )
+            // {
+            //     g2f gOUT;
+            //     gOUT.vertex = p[0].vertex;
+            //     gOUT.uv = p[0].uv;
+            //     gOUT.color = p[0].color;
+            //     // if( p[0].uv.x > 0.1 )
+            //     //     gOUT.color = float4(1,0,0,1);
+            //     // else
+            //     //     gOUT.color = float4(0,0,0,1);
+            //     ps.Append(gOUT);
+            // }
+
+            // triangle stream
+            [maxvertexcount(3)]
+            void geom( point v2g p[1] ,inout TriangleStream<g2f> ps )
             {
                 g2f gOUT;
                 gOUT.vertex = p[0].vertex;
                 gOUT.uv = p[0].uv;
-                // OUT.color = p[0].color;
-                if( p[0].uv.x > 0.1 )
-                    gOUT.color = float4(1,0,0,1);
-                else
-                    gOUT.color = float4(0,0,0,1);
+                gOUT.color = float4(1,0,0,1);
+                // if( p[0].uv.x > 0.1 )
+                //     gOUT.color = float4(1,0,0,1);
+                // else
+                //     gOUT.color = float4(0,0,0,1);
+                ps.Append(gOUT);
+                ps.Append(gOUT);
                 ps.Append(gOUT);
             }
 
