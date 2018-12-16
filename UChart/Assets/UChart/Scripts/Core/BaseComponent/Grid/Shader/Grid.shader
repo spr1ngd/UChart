@@ -41,24 +41,23 @@ Shader "UChart/Grid/Grid"
             {
                 float3 horizontal = float3(0,1,0);
                 float3 viewDir = UNITY_MATRIX_IT_MV[2].xyz;
-                float vDoth = clamp(dot(horizontal,viewDir),0.1,0.9);
+                float vDoth = clamp(dot(horizontal,viewDir),0.4,0.9);
                 float vDc = distance(float3(0,0,0),_WorldSpaceCameraPos.xyz);
                 float dAlpha = clamp(1 - clamp((vDc - CAMERAMAXDISTANCE) / CAMERAMAXDISTANCE,0,1),0.1,0.9);
 
                 g2f gOUT;
                 gOUT.vertex = UnityObjectToClipPos(p[0].vertex);
-                if( p[0].uv.x > 0.1 )
-                    gOUT.color = float4(_MatchColor.rgb,vDoth *dAlpha );
-                else
-                    gOUT.color = float4(_MainColor.rgb  , vDoth ); 
+                if( p[0].color.r == _MainColor.r && p[0].color.g == _MainColor.g && p[0].color.b == _MainColor.b && p[0].color.a == _MainColor.a)
+                {
+                    gOUT.color = float4(p[0].color.rgb , vDoth );
+                }else
+                {
+                    gOUT.color = float4(p[0].color.rgb , vDoth*dAlpha );
+                }
                 gOUT.uv = p[0].uv;
                 ls.Append(gOUT);
 
                 gOUT.vertex = UnityObjectToClipPos(p[1].vertex);
-                if( p[1].uv.x > 0.1 )
-                    gOUT.color = float4(_MatchColor.rgb,vDoth * dAlpha  ); 
-                else
-                    gOUT.color = float4(_MainColor.rgb , vDoth );
                 gOUT.uv = p[1].uv;
                 ls.Append(gOUT);
                 ls.RestartStrip();

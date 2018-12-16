@@ -9,28 +9,28 @@
 struct a2v
 {
     float4 vertex : POSITION;
-    float4 color : TEXCOORD0;
+    float4 color : COLOR0;
     float2 uv : TEXCOORD1;
 };
 
 struct v2g
 {
     float4 vertex : POSITION;
-    float4 color : TEXCOORD0;
+    float4 color : COLOR0;
     float2 uv : TEXCOORD1;
 };
 
 struct g2f
 {
     float4 vertex : POSITION;
-    float4 color : TEXCOORD0;
+    float4 color : COLOR0;
     float2 uv : TEXCOORD1;
 };
 
 struct v2f
 {
     float4 vertex : POSITION;
-    float4 color : TEXCOORD0;
+    float4 color : COLOR0;
     float2 uv : TEXCOORD1;
 };
 

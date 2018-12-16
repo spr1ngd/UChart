@@ -39,18 +39,16 @@ Shader "UChart/Grid/Grid(Basic)"
             {
                 g2f gOUT;
                 gOUT.vertex = UnityObjectToClipPos(p[0].vertex);
-                if( p[0].uv.x > 0.1 )
-                    gOUT.color = _MatchColor;
-                else
-                    gOUT.color = _MainColor; 
+                gOUT.color = p[0].color;
                 gOUT.uv = p[0].uv;
                 ls.Append(gOUT);
 
                 gOUT.vertex = UnityObjectToClipPos(p[1].vertex);
-                if( p[0].uv.x > 0.1 )
-                    gOUT.color = _MatchColor;
-                else
-                    gOUT.color = _MainColor; 
+                // if( p[0].uv.x > 0.1 )
+                //     gOUT.color = _MatchColor;
+                // else
+                //     gOUT.color = _MainColor; 
+                gOUT.color = p[0].color;
                 gOUT.uv = p[1].uv;
                 ls.Append(gOUT);
                 ls.RestartStrip();

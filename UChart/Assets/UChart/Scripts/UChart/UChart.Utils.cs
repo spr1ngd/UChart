@@ -39,7 +39,7 @@ namespace UChart
             colorR = intColor / (256 * 2);
             colorG = intColor / 256 % 256;
             colorB = intColor % 256;
-            return new Color(colorR,colorG,colorB,alpha);
+            return new Color(colorR / 255.0f,colorG / 255.0f,colorB / 255.0f,alpha);
         }
     }
 }

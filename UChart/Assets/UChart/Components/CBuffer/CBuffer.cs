@@ -52,6 +52,7 @@ namespace UChart
 
             // get pixel color and set cbuffer value.
             Color pickColor = m_readTexture.GetPixel(pixelX,pixelY);
+            Debug.Log(pickColor);
             foreach(KeyValuePair<string,Color> pair in cbufferDic)
             {
                 if(pair.Value == pickColor)
@@ -131,7 +132,7 @@ namespace UChart
             var pickCamera = pickCameraGO.AddComponent<Camera>();
             pickCamera.cullingMask = 1 << cBufferId;
             pickCamera.clearFlags = CameraClearFlags.Color;
-            pickCamera.backgroundColor = new Color(0,0,0,1);
+            pickCamera.backgroundColor = new Color(0,0,0,0);
             pickCamera.fieldOfView = mainCamera.fieldOfView;
             pickCamera.farClipPlane = mainCamera.farClipPlane;
             pickCamera.nearClipPlane = mainCamera.nearClipPlane;

@@ -23,21 +23,21 @@ Shader "UChart/Vertex/VertexColor"
             struct a2v
             {
                 float4 vertex : POSITION;
-                float4 color : TEXCOORD0;
+                float4 color : COLOR0;
                 float2 uv : TEXCOORD1;
             };
 
             struct v2g
             {
                 float4 vertex : POSITION;
-                float4 color : TEXCOORD0;
+                float4 color : COLOR0;
                 float2 uv : TEXCOORD1;
             };
 
             struct g2f
             {
                 float4 vertex : POSITION;
-                float4 color : TEXCOORD0;
+                float4 color : COLOR0;
                 float2 uv : TEXCOORD1;
             };
 
@@ -50,41 +50,19 @@ Shader "UChart/Vertex/VertexColor"
                 return OUT;
             }
 
-            // point stream
-            // [maxvertexcount(1)]
-            // void geom( point v2g p[1] ,inout PointStream<g2f> ps )
-            // {
-            //     g2f gOUT;
-            //     gOUT.vertex = p[0].vertex;
-            //     gOUT.uv = p[0].uv;
-            //     gOUT.color = p[0].color;
-            //     // if( p[0].uv.x > 0.1 )
-            //     //     gOUT.color = float4(1,0,0,1);
-            //     // else
-            //     //     gOUT.color = float4(0,0,0,1);
-            //     ps.Append(gOUT);
-            // }
-
-            // triangle stream
-            [maxvertexcount(3)]
-            void geom( point v2g p[1] ,inout TriangleStream<g2f> ps )
+            [maxvertexcount(1)]
+            void geom( point v2g p[1] ,inout PointStream<g2f> ps )
             {
                 g2f gOUT;
                 gOUT.vertex = p[0].vertex;
                 gOUT.uv = p[0].uv;
-                gOUT.color = float4(1,0,0,1);
-                // if( p[0].uv.x > 0.1 )
-                //     gOUT.color = float4(1,0,0,1);
-                // else
-                //     gOUT.color = float4(0,0,0,1);
-                ps.Append(gOUT);
-                ps.Append(gOUT);
+                gOUT.color = p[0].color;
                 ps.Append(gOUT);
             }
 
             fixed4 frag( g2f IN ) : COLOR
             {
-                return fixed4(IN.color.rgba);
+                return fixed4(IN.color);
             }
 
             ENDCG

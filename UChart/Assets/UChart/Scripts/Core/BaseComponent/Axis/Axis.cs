@@ -20,11 +20,18 @@ namespace UChart
 
         public Color axisColor = Color.gray;
 
+        public Color meshColor = Color.magenta;
+
         public LineType lineType = LineType.Solid;
 
         public virtual void OnDrawMesh()
         {
 
+        }
+
+        public virtual void OnDrawArrow()
+        {
+            OnDrawMesh();
         }
     }
 }

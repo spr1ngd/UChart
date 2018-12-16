@@ -90,10 +90,12 @@ namespace UChart.Scatter
                 {
                     for(int z = 0; z < zCount; z++)
                     {
-                        Vector3 pos = Vector3.zero + new Vector3(x * scatterSize + x * offset,y * scatterSize + y * offset,z * scatterSize + z * offset);
+                        Vector3 pos = Vector3.zero + new Vector3(x * scatterSize + x * offset,
+                                                                 y * scatterSize + y * offset,
+                                                                 z * scatterSize + z * offset);
                        
                         // TODO : color颜色获取需求变更
-                        float size = Random.Range(0.2f,0.5f);
+                        float size = Random.Range(0.5f,1);
                         Color randomColor = new Color(size,size,size,size);
                         var scatter = CreateScatter(vertexIndex,pos,size);
                         scatter.index = vertexIndex;
@@ -114,12 +116,12 @@ namespace UChart.Scatter
 
             pickColors = new Color[pointCount];
             for(int i = 0, count = 1; count <= pickColors.Length; i++, count++)
-            {
-                int colorR = 0, colorG = 0, colorB = 0;
-                colorR = count / (256 * 2);
-                colorG = count / 256 % 256;
-                colorB = count % 256;
-                pickColors[i] = new Color(colorR / 255.0f,colorG / 255.0f,colorB / 255.0f,1);
+            { 
+                // Color pickColor = UChart.Int2Color(count);
+                Color pickColor = new Color(0.8f,0f,0f,1);
+                // Color pickColor = Color.red;
+                print(pickColor);
+                pickColors[i] = pickColor;
             }
             var pickMesh = new Mesh() { name = "UCHART_PICKMESH" };
             pickMesh.vertices = verticesArray;
