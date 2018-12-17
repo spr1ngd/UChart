@@ -16,7 +16,7 @@ namespace UChart
 
         [Header("AXIS STYLE SETTING")]
 
-        public bool renderArrow = false;
+       
 
         public Color axisColor = Color.gray;
 
@@ -24,14 +24,29 @@ namespace UChart
 
         public LineType lineType = LineType.Solid;
 
+        [Header("ARROW STYLE SETTING")]
+
+        public bool renderArrow = false;
+
+        public float arrowSize = 1.5f;
+
+        [Range(3,15)]
+        public int arrowSmooth = 3;
+
+        public Color xArrowColor = Color.red;
+
+        public Color yArrowColor = Color.green;
+
+        public Color zArrowColor = Color.blue;
+
         public virtual void OnDrawMesh()
         {
-
+            OnDrawArrow();
         }
 
         public virtual void OnDrawArrow()
         {
-            OnDrawMesh();
+            
         }
     }
 }
