@@ -36,73 +36,72 @@ namespace UChart
             aIndices = new int[arrowSmooth * 6 * 3];
 
             Vector3 xBottom = transform.right * axisLenght * 1.1f;
-            Vector3 xTop = xBottom + transform.right * arrowSize;
-            Vector3 yBottom = transform.up * axisLenght * 1.1f;
-            Vector3 yTop = yBottom + transform.up * arrowSize;
-            Vector3 zBottom = transform.forward * axisLenght * 1.1f;      
-            Vector3 zTop = zBottom + transform.forward * arrowSize;
+            Vector3 xTop = xBottom + transform.right * arrowSize * 2;
 
-            DrawCone(Vector3.right,xBottom,xTop,xArrowColor);
-            // DrawCone(Vector3.up,yBottom,yTop,yArrowColor);
-            // DrawCone(Vector3.forward,zBottom,zTop,zArrowColor);
+            Vector3 yBottom = transform.up * axisLenght * 1.1f;
+            Vector3 yTop = yBottom + transform.up * arrowSize * 2;
+
+            Vector3 zBottom = transform.forward * axisLenght * 1.1f;      
+            Vector3 zTop = zBottom + transform.forward * arrowSize * 2;
+
+            DrawCone(transform.right,xBottom,xTop,xArrowColor);
+            DrawCone(transform.up,yBottom,yTop,yArrowColor);
+            DrawCone(transform.forward,zBottom,zTop,zArrowColor);
 
             // vertices
             arrowMesh.vertices = aVertices;
             // colors
             arrowMesh.colors = aColors;
             // indices
-            arrowMesh.SetIndices(aIndices,MeshTopology.Triangles,0);          
-
+            arrowMesh.SetIndices(aIndices,MeshTopology.Triangles,0);
+            arrowMesh.RecalculateNormals();
             meshFilter.mesh = arrowMesh;
-            meshRenderer.material = new Material(Shader.Find("Standard"));
+            meshRenderer.material = new Material(Shader.Find("UChart/Axis/AxisArrow(Basic)"));
             coneIndex = 0;
         }
 
         private void DrawCone( Vector3 direction,Vector3 bottom,Vector3 top ,Color arrowColor )
         {
-            colors[vIndex] = arrowColor;
+            aColors[vIndex] = arrowColor;
             aVertices[vIndex++] = bottom;
-            colors[vIndex] = arrowColor;
+            aColors[vIndex] = arrowColor;
             aVertices[vIndex++] = top;
             float perAngle = 2 * Mathf.PI / arrowSmooth; 
             for( int i = 0 ; i < arrowSmooth;i++ )
             {
                 float angle = i * perAngle;
-                if( angle > Mathf.PI )
-                    angle -= Mathf.PI;
-                colors[vIndex] = arrowColor;
-                if( direction == Vector3.right )
+                aColors[vIndex] = arrowColor;
+                if( direction == transform.right )
                     aVertices[vIndex++] = bottom + new Vector3(0,Mathf.Cos(angle) * arrowSize, Mathf.Sin(angle) * arrowSize);
-                else if(direction == Vector3.up)
+                else if(direction == transform.up)
                     aVertices[vIndex++] = bottom + new Vector3(Mathf.Sin(angle) * arrowSize, 0, Mathf.Cos(angle) * arrowSize);
-                else if(direction == Vector3.right)
+                else if(direction == transform.forward)
                     aVertices[vIndex++] = bottom + new Vector3(Mathf.Sin(angle) * arrowSize,  Mathf.Cos(angle) * arrowSize,0);
             }
-            for( int index = 2 ; index < arrowSmooth + 2 ; index++ ) //arrowSmooth + 2
-            {
-               
+
+            for( int index = 2 + coneIndex * (arrowSmooth + 2); index < (coneIndex+1) * (arrowSmooth + 2) ; index++ ) //arrowSmooth + 2
+            {               
                 aIndices[indicesIndex++] = coneIndex * (arrowSmooth + 2);
-                Debug.Log(aIndices[indicesIndex-1] +":"+ aVertices[aIndices[indicesIndex-1]]);
 
                 var tempIndex = index + 1;
-                if( tempIndex > arrowSmooth + 1)
-                    tempIndex = tempIndex - arrowSmooth;    
+                if( tempIndex > (coneIndex+1) * (arrowSmooth + 2) -1 )
+                    tempIndex = tempIndex - arrowSmooth;
                 aIndices[indicesIndex++] = tempIndex;
-                Debug.Log(aIndices[indicesIndex-1] +":"+ aVertices[aIndices[indicesIndex-1]]);
 
                 aIndices[indicesIndex++] = index;
-                Debug.Log(aIndices[indicesIndex-1] +":"+ aVertices[aIndices[indicesIndex-1]]); 
             }
 
-            // for( int index = 2 ; index < arrowSmooth + 2 ; index++ )
-            // {
-            //     aIndices[indicesIndex++] = coneIndex * (arrowSmooth + 2) + 1;
-            //     var tempIndex = index + 1;
-            //     if( tempIndex > arrowSmooth + 1)
-            //         tempIndex = tempIndex - arrowSmooth;    
-            //     aIndices[indicesIndex++] = tempIndex;
-            //     aIndices[indicesIndex++] = index;
-            // }
+            for( int index = 2 + coneIndex * (arrowSmooth + 2); index < (coneIndex+1) * (arrowSmooth + 2) ; index++ )
+            {
+                aIndices[indicesIndex++] = coneIndex * (arrowSmooth + 2) + 1;  
+
+                aIndices[indicesIndex++] = index;
+                var tempIndex = index + 1;
+                if( tempIndex >  (coneIndex+1) * (arrowSmooth + 2) -1)
+                    tempIndex = tempIndex - arrowSmooth;    
+
+                aIndices[indicesIndex++] = tempIndex;
+            }
             coneIndex++;
         }
 
@@ -130,9 +129,9 @@ namespace UChart
             colors = new Color[vertexCount];
             vertexIndex = 0;
             // vertices 
-            DrawLine(transform.position,transform.right * axisLenght * 1.1f,axisColor);
-            DrawLine(transform.position,transform.up * axisLenght * 1.1f,axisColor);
-            DrawLine(transform.position,transform.forward * axisLenght * 1.1f,axisColor);
+            DrawLine(transform.position,transform.right * axisLenght * 1.1f,xArrowColor);
+            DrawLine(transform.position,transform.up * axisLenght * 1.1f,yArrowColor);
+            DrawLine(transform.position,transform.forward * axisLenght * 1.1f,zArrowColor);
 
             Vector3 origin = Vector3.zero;
 
@@ -171,7 +170,7 @@ namespace UChart
             {
                 Vector3 start = origin + new Vector3(x * xOffset,0,0);
                 Vector3 end = origin + new Vector3(x * xOffset,axisLenght,0);
-               DrawLine(start,end,meshColor);
+                DrawLine(start,end,meshColor);
             }
 
             for( int y = 1 ; y <= yUnit; y++ )
