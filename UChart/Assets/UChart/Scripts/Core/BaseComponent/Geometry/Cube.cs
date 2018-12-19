@@ -1,9 +1,9 @@
 
 using UnityEngine;
 
-namespace UChart.Polygon
+namespace UChart
 {
-    public class Cube : Polygon
+    public class Cube : Geometry
     {
         protected override void CreateMesh(Mesh mesh)
         {
@@ -42,7 +42,7 @@ namespace UChart.Polygon
 
             switch (anchor)
             {
-                case PolygonAnchor.Center:
+                case GeometryAnchor.Center:
                     bottom = -size.y / 2.0f;
                     up = size.y / 2.0f;
                     left = -size.x / 2.0f;
@@ -50,7 +50,7 @@ namespace UChart.Polygon
                     forword = size.z / 2.0f;
                     back = -size.z / 2.0f;
                     break;
-                case PolygonAnchor.Bottom:
+                case GeometryAnchor.Bottom:
                     bottom = 0;
                     up = size.y;
                     left = -size.x / 2.0f;

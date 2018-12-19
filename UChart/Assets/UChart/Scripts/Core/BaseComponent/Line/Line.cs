@@ -11,7 +11,7 @@ namespace UChart
         Dotted,
     }
 
-    public class Line : UChartObject
+    public partial class Line : UChartObject
     {
         [SerializeField]
         private Vector3 m_start;

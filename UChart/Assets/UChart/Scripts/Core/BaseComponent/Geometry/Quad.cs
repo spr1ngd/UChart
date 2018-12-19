@@ -2,9 +2,9 @@
 
 using UnityEngine;
 
-namespace UChart.Polygon
+namespace UChart
 {
-    public class Quad : Polygon
+    public class Quad : Geometry
     {
         protected override void CreateMesh(Mesh mesh)
         {
@@ -30,13 +30,13 @@ namespace UChart.Polygon
 
             switch(anchor)
             {
-                case PolygonAnchor.Center:
+                case GeometryAnchor.Center:
                     left = -size.x / 2.0f;
                     right = size.x / 2.0f;
                     forword = size.z / 2.0f;
                     back = -size.z / 2.0f;
                     break;
-                case PolygonAnchor.Bottom:
+                case GeometryAnchor.Bottom:
                     left = -size.x / 2.0f;
                     right = size.x / 2.0f;
                     forword = size.z / 2.0f;

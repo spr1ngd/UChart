@@ -1,7 +1,7 @@
 ﻿
-namespace UChart.Polygon
+namespace UChart
 {
-    public class PolygonDefines
+    public class GeometryDefines
     {
 
     }
@@ -9,7 +9,7 @@ namespace UChart.Polygon
     /// <summary>
     /// TODO 多边形锚点需要继续细化
     /// </summary>
-    public enum PolygonAnchor 
+    public enum GeometryAnchor 
     {
         Center,
         Bottom,

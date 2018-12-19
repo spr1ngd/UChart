@@ -3,8 +3,9 @@ using UnityEngine;
 
 namespace UChart
 {
+    //TODO: 与GeometryBuffer整合 , 使得模型的绘制代码进一步精简，且避免了array数组长度的计算
     public class Axis3D : Axis
-    {
+    { 
         private MeshFilter m_meshFilter = null;
         private MeshRenderer m_meshRenderer = null;
 
@@ -16,18 +17,23 @@ namespace UChart
         private int indicesIndex = 0;
 
         private int coneIndex = 0 ;
-
+ 
         public override void OnDrawArrow()
         {
             GameObject arrow = new GameObject("__AXISARROW__");
-            // arrow.hideFlags = HideFlags.HideInHierarchy;
+            arrow.hideFlags = HideFlags.HideInHierarchy;
             arrow.transform.SetParent(this.myTransform);
 
             var meshFilter = arrow.AddComponent<MeshFilter>();
             var meshRenderer = arrow.AddComponent<MeshRenderer>();
 
+            GeometryBuffer geometryBuffer = new GeometryBuffer();
+
             Mesh arrowMesh = new Mesh();
             arrowMesh.name = "__AXIS3DARROW__";
+
+            // FIXME:
+            // geometryBuffer.FillMesh(arrowMesh);
 
             vIndex = 0;
             int vertexCount = (arrowSmooth + 2) * 3;
@@ -60,6 +66,7 @@ namespace UChart
             coneIndex = 0;
         }
 
+        // TODO: 绘制部分可以封装到ConeGeometry,方便直接导出模型
         private void DrawCone( Vector3 direction,Vector3 bottom,Vector3 top ,Color arrowColor )
         {
             aColors[vIndex] = arrowColor;

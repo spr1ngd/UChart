@@ -1,21 +1,32 @@
 
 using UnityEngine;
 
-namespace UChart.Polygon
+namespace UChart
 {
-    public class Polygon 
+    public class Geometry : UChartObject
     {
+        protected GeometryBuffer m_geometryBuffer = null;
+        public GeometryBuffer geometryBuffer 
+        {
+            get{return m_geometryBuffer;}
+        }
+
         public Color defaultColor = Color.white;
 
         public Vector3 size = Vector3.one;
 
-        public PolygonAnchor anchor = PolygonAnchor.Center;
+        public GeometryAnchor anchor = GeometryAnchor.Center;
 
         protected Vector3[] vertices = null;
 
         protected int[] triangles = null;
 
         protected Color[] colors = null;
+
+        protected virtual void FillGeometry()
+        {
+
+        }
 
         public Mesh Create(string name)
         {

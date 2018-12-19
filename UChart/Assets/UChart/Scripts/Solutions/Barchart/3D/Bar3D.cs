@@ -1,6 +1,5 @@
 
 using UnityEngine;
-using UChart.Polygon;
 
 namespace UChart.Barchart
 {
@@ -25,7 +24,7 @@ namespace UChart.Barchart
             Cube mesh = new Cube
             {
                 size = size,
-                anchor = PolygonAnchor.Bottom
+                anchor = GeometryAnchor.Bottom
             };
             meshFilter.mesh = mesh.Create("bar3d_mesh");
             m_meshRenderer.material = material;
