@@ -1,5 +1,5 @@
 
-namespace UChart.Barchart
+namespace UChart
 {
     public class Barchart2D
     {

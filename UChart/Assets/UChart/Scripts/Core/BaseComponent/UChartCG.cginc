@@ -6,6 +6,12 @@
 
 #include "UnityCG.cginc"
 
+struct a2v_base
+{
+    float4 vertex : POSITION;
+    float4 color : COLOR0;
+};
+
 struct a2v
 {
     float4 vertex : POSITION;
@@ -21,6 +27,12 @@ struct a2v_full
     float4 normal : TEXCOORD1;
 };
 
+struct v2g_base
+{
+    float4 vertex : POSITION;
+    float4 color : COLOR0;
+};
+
 struct v2g
 {
     float4 vertex : POSITION;
@@ -28,11 +40,23 @@ struct v2g
     float2 uv : TEXCOORD0;
 };
 
+struct g2f_base
+{
+    float4 vertex : POSITION;
+    float4 color : COLOR0;
+};
+
 struct g2f
 {
     float4 vertex : POSITION;
     float4 color : COLOR0;
     float2 uv : TEXCOORD0;
+};
+
+struct v2f_base
+{
+    float4 vertex : POSITION;
+    float4 color : COLOR0;
 };
 
 struct v2f

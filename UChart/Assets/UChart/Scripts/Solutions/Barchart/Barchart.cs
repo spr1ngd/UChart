@@ -1,13 +1,13 @@
 ﻿
 using UnityEngine;
 
-namespace UChart.Barchart
+namespace UChart
 {
     public class Barchart : UChartObject
     {
-        protected virtual void CreateBar(Vector3 position)
-        {
-
-        }
+      public virtual void Draw()
+      {
+        
+      }
     }
 }

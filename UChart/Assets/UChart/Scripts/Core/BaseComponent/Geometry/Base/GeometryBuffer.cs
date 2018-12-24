@@ -6,7 +6,7 @@ namespace UChart
 {
     public class GeometryBuffer
     {
-        private List<int> m_indices = null;
+        private List<int> m_indices = new List<int>();
         public int[] indices 
         {
             get
@@ -17,7 +17,7 @@ namespace UChart
             }
         }
 
-        private List<Vector3> m_vertices = null;
+        private List<Vector3> m_vertices = new List<Vector3>();
         public Vector3[] vertices 
         {
             get
@@ -28,7 +28,7 @@ namespace UChart
             }
         }       
 
-        private List<Color> m_colors = null;
+        private List<Color> m_colors = new List<Color>();
         public Color[] colors
         {
             get
@@ -58,7 +58,9 @@ namespace UChart
 
         public void AddVertex( Vector3 pos ,Color color)
         {
-
+            m_vertices.Add(pos);
+            m_colors.Add(color);
+            m_indices.Add(m_indices.Count);
         }
 
         public void AddVertex( Vector3 pos, Color color ,Vector2 uv, Vector3 normal , Vector4 tangent )

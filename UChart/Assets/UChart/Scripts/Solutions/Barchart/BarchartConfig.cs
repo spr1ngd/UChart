@@ -1,5 +1,5 @@
 
-namespace UChart.Barchart
+namespace UChart
 {
     public enum BarchartAnchor
     {

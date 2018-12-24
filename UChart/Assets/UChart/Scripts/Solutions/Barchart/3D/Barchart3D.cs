@@ -1,49 +1,46 @@
 
 using UnityEngine;
 
-namespace UChart.Barchart
+namespace UChart
 {
-    public class Barchart3D : Barchart
+	public class Barchart3D : Barchart
     {
-        public Material barMaterial = null;
+		[Header("BARCHART SETTING")]
+		public int xCount = 10;
+		public int yCount = 10;
 
-        [Range(1,20)]
-        public int xCount = 10;
+		public float barOffset = 0.0f;
 
-        [Range(1,20)]
-        public int yCount = 10;
+		public float barWidth = 2.0f;
 
-        private float xOffset = 0.8f;
+		[Header("BARCHART STYLE")]
+		public bool drawOutline = false;		
 
-        private float yOffset = 0.8f;
+		public Color barColor = Color.blue;
 
-        private float barWidth = 1.0f;
-        
-        public void Execute()
-        {
-            for( int x = 0 ; x < xCount;x++ )
-            {
-                for( int y = 0 ; y < yCount;y++ )
-                {
-                    Vector3 barPos = Vector3.zero;
-                    barPos += new Vector3(x * barWidth + (x-1)*xOffset,0,y*barWidth + (y -1)*yOffset);
-                    CreateBar(barPos);
-                }
-            }
-        }
+		public override void Draw()
+		{
+			GeometryBuffer buffer = new GeometryBuffer ();
+			var meshFilter = myGameobject.AddComponent<MeshFilter> ();
+			var meshRenderer = myGameobject.AddComponent<MeshRenderer>();
 
-        protected override void CreateBar(Vector3 position)
-        {
-            GameObject bar3D = new GameObject("Bar3D");
-            bar3D.hideFlags = HideFlags.HideInHierarchy;
-            bar3D.transform.position = position;
-            var bar = bar3D.AddComponent<Bar3D>();
-            bar.material = this.barMaterial;
-            bar.barWidth = this.barWidth;
-            float value = Random.Range(0, 5);
-            bar.Generate(new Vector3(barWidth,value,barWidth));
-            bar.color = Color.green * Mathf.Abs(5 - value) / 5 + Color.red * value / 5;
-            bar.alpha = 0.5f;
-        }
+			float halfWidth = barWidth / 2.0f;
+
+			for( int x = 0 ; x < xCount; x++ )
+			{
+				for( int y = 0 ; y < yCount;y++ )
+				{
+					var pos = new Vector3( halfWidth + (x-1) * barWidth,0, halfWidth + (y-1)*barWidth );
+					buffer.AddVertex(pos,barColor);
+				}
+			}
+
+			var mesh = new Mesh();
+			mesh.name = "BARCHRAT";
+
+			buffer.FillMesh(mesh,MeshTopology.Points);
+			meshFilter.mesh = mesh;
+			meshRenderer.material = new Material(Shader.Find("UChart/Vertex/VertexColor"));
+		}
     }
 }

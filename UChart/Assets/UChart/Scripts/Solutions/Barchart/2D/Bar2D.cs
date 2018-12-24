@@ -1,7 +1,7 @@
 
 using UnityEngine.EventSystems;
 
-namespace UChart.Barchart
+namespace UChart
 {
     public class Bar2D : Bar
     {

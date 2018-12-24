@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-namespace UChart.Barchart
+namespace UChart
 {
     public class Bar3D : Bar
     {
