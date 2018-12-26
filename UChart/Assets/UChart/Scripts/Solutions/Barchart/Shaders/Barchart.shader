@@ -18,7 +18,7 @@ Shader "UChart/Barchart/Barchart(Basic)"
 			// #pragma fragment frag
 			// #include "UnityCG.cginc"
 			// #include "../../../Core/BaseComponent/UChartCG.cginc"
-
+			
 
 			ENDCG
 		}

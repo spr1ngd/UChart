@@ -16,7 +16,7 @@ namespace UChart
 
         public int smoothness;
 
-        protected override void FillGeometry()
+        public override void FillGeometry()
         {
             // TODO: 添加Bottom
             var bottomVertex = new VertexBuffer();

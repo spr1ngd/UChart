@@ -53,7 +53,8 @@ namespace UChart
 
         public void AddVertex( VertexBuffer vertexBuffer )
         {
-
+            m_vertices.Add(vertexBuffer.pos);
+            m_colors.Add(vertexBuffer.color);
         }
 
         public void AddVertex( Vector3 pos ,Color color)
@@ -75,7 +76,8 @@ namespace UChart
 
         public void AddTriangle( int[] triangleIndices )
         {
-            
+            for( var i = 0 ;i < triangleIndices.Length;i++ )
+                m_indices.Add(triangleIndices[i]);
         }
 
         public void FillMesh( Mesh mesh , MeshTopology topology )

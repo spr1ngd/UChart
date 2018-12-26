@@ -5,7 +5,7 @@ namespace UChart
 {
     public class Geometry : UChartObject
     {
-        protected GeometryBuffer m_geometryBuffer = null;
+        protected GeometryBuffer m_geometryBuffer = new GeometryBuffer();
         public GeometryBuffer geometryBuffer 
         {
             get{return m_geometryBuffer;}
@@ -23,7 +23,7 @@ namespace UChart
 
         protected Color[] colors = null;
 
-        protected virtual void FillGeometry()
+        public virtual void FillGeometry()
         {
 
         }
