@@ -75,6 +75,21 @@ namespace UChart
 
         #endregion
 
+        #region uchart style share
+
+        public virtual void ImportStyle( string styleJson )
+        {
+            var uchartStyle = LitJson.JsonMapper.ToObject(styleJson);
+            // TODO:  Reference uchart style to UChart.Component
+        }
+
+        public virtual string ExportStyle( )
+        {
+            return LitJson.JsonMapper.ToJson(this);
+        }
+
+        #endregion
+
         #region uchart properties methods
 
         protected virtual void SetColor(Color color){}

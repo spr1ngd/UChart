@@ -15,33 +15,22 @@ namespace UChart
         }
 
         private MeshRenderer m_meshRenderer = null;
-
+    
         public void Generate(Vector3 size)
         {
-            var meshFilter = myGameobject.AddComponent<MeshFilter>();
-            m_meshRenderer = myGameobject.AddComponent<MeshRenderer>();
-
-            Cube mesh = new Cube
-            {
-                size = size,
-                anchor = GeometryAnchor.Bottom
-            };
-            meshFilter.mesh = mesh.Create("bar3d_mesh");
-            m_meshRenderer.material = material;
-            myGameobject.AddComponent<MeshCollider>();
-            myGameobject.AddComponent<Anim4Point2D_01>();
+            
         }
 
         #region properties && events
 
         protected override void SetColor(Color color)
         {
-            m_meshRenderer.material.SetColor("_Color", color);
+            // m_meshRenderer.material.SetColor("_Color", color);
         }
 
         protected override void SetAlpha(float alpha)
         {
-            m_meshRenderer.material.SetFloat("_Alpha",alpha);
+            // m_meshRenderer.material.SetFloat("_Alpha",alpha);
         }
 
         protected override void OnMouseEnter()
