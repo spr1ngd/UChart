@@ -46,58 +46,63 @@ namespace UChart
             var tThird = center + new Vector3(-halfLength,halfHeight,-halfWidth)+ offset;
             var tFouth = center + new Vector3(-halfLength,halfHeight,halfWidth)+ offset;
 
+            Vector2 uvLB = new Vector2(0,0);
+            Vector2 uvLT = new Vector2(0,1);
+            Vector2 uvRB = new Vector2(1,0);
+            Vector2 uvRT = new Vector2(1,1);
+
             // bottom
             geometryBuffer.AddQuad(new VertexBuffer[]
             {
-                new VertexBuffer(){pos = bFirst,color = color},
-                new VertexBuffer(){pos = bSecond,color = color},
-                new VertexBuffer(){pos = bThird,color = color},
-                new VertexBuffer(){pos = bFouth,color = color},
+                new VertexBuffer(){pos = bFirst,color = color,uv = uvRB},
+                new VertexBuffer(){pos = bSecond,color = color,uv = uvRT},
+                new VertexBuffer(){pos = bThird,color = color,uv = uvLB},
+                new VertexBuffer(){pos = bFouth,color = color,uv = uvLT},
             });
 
             // up
             geometryBuffer.AddQuad(new VertexBuffer[]
             {
-                new VertexBuffer(){pos = tFouth,color = color},
-                new VertexBuffer(){pos = tThird,color = color},
-                new VertexBuffer(){pos = tSecond,color = color},
-                new VertexBuffer(){pos = tFirst,color = color},
+                new VertexBuffer(){pos = tFouth,color = color,uv = uvRB},
+                new VertexBuffer(){pos = tThird,color = color,uv = uvRT},
+                new VertexBuffer(){pos = tSecond,color = color,uv = uvLB},
+                new VertexBuffer(){pos = tFirst,color = color,uv = uvLT},
             });
 
             // right
             geometryBuffer.AddQuad(new VertexBuffer[]
             {
-                new VertexBuffer(){pos = tFirst,color = color},
-                new VertexBuffer(){pos = tSecond,color = color},
-                new VertexBuffer(){pos = bSecond,color = color},
-                new VertexBuffer(){pos = bFirst,color = color}               
+                new VertexBuffer(){pos = tFirst,color = color,uv = uvRB},
+                new VertexBuffer(){pos = tSecond,color = color,uv = uvRT},
+                new VertexBuffer(){pos = bSecond,color = color,uv = uvLB},
+                new VertexBuffer(){pos = bFirst,color = color,uv = uvLT}               
             });
 
             // left
             geometryBuffer.AddQuad(new VertexBuffer[]
             {
-                new VertexBuffer(){pos = tThird,color = color},
-                new VertexBuffer(){pos = tFouth,color = color},                
-                new VertexBuffer(){pos = bFouth,color = color},
-                new VertexBuffer(){pos = bThird,color = color}                  
+                new VertexBuffer(){pos = tThird,color = color,uv = uvRB},
+                new VertexBuffer(){pos = tFouth,color = color,uv = uvRT},                
+                new VertexBuffer(){pos = bFouth,color = color,uv = uvLB},
+                new VertexBuffer(){pos = bThird,color = color,uv = uvLT}                  
             });
 
             // forward
             geometryBuffer.AddQuad(new VertexBuffer[]
             {
-                new VertexBuffer(){pos = tFouth,color = color},
-                new VertexBuffer(){pos = tFirst,color = color},
-                new VertexBuffer(){pos = bFirst,color = color},
-                new VertexBuffer(){pos = bFouth,color = color},
+                new VertexBuffer(){pos = tFouth,color = color,uv = uvRB},
+                new VertexBuffer(){pos = tFirst,color = color,uv = uvRT},
+                new VertexBuffer(){pos = bFirst,color = color,uv = uvLB},
+                new VertexBuffer(){pos = bFouth,color = color,uv = uvLT},
             });
 
             // back 
             geometryBuffer.AddQuad(new VertexBuffer[]
             {
-                new VertexBuffer(){pos = tSecond,color = color},
-                new VertexBuffer(){pos = tThird,color = color},
-                new VertexBuffer(){pos = bThird,color = color},
-                new VertexBuffer(){pos = bSecond,color = color},
+                new VertexBuffer(){pos = tSecond,color = color,uv = uvRB},
+                new VertexBuffer(){pos = tThird,color = color,uv = uvRT},
+                new VertexBuffer(){pos = bThird,color = color,uv = uvLB},
+                new VertexBuffer(){pos = bSecond,color = color,uv = uvLT},
             });
         }
     }

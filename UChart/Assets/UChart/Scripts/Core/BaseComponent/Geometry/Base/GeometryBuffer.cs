@@ -39,11 +39,11 @@ namespace UChart
             }
         }
 
-        // private List<Vector2> m_uvs = null;
-        // public List<Vector2> uvs 
-        // {
-        //     get{return m_uvs;}
-        // }
+        private List<Vector2> m_uvs = new List<Vector2>();
+        public List<Vector2> uvs 
+        {
+            get{return m_uvs;}
+        }
 
         // private List<Vector3> m_normals = null;
         // public List<Vector3> normal
@@ -55,6 +55,7 @@ namespace UChart
         {
             m_vertices.Add(vertexBuffer.pos);
             m_colors.Add(vertexBuffer.color);
+            m_uvs.Add(vertexBuffer.uv);
         }
 
         public void AddVertex( Vector3 pos ,Color color)
@@ -62,16 +63,6 @@ namespace UChart
             m_vertices.Add(pos);
             m_colors.Add(color);
         }
-
-        // public void AddVertex( Vector3 pos, Color color ,Vector2 uv, Vector3 normal , Vector4 tangent )
-        // {
-
-        // }
-
-        // public void AddLine( VertexBuffer[] vertexBuffers )
-        // {
-            
-        // }
 
         public void AddQuad( VertexBuffer[] vertexBuffers )
         {
@@ -100,11 +91,12 @@ namespace UChart
         public void AddTriangle( int[] triangleIndices )
         {
             for( var i = 0 ;i < triangleIndices.Length;i++ )
-            {
                 m_indices.Add(triangleIndices[i]);
-            }
         }
 
+        /// <summary>
+        /// FillMesh : add submesh for current mesh.
+        /// </summary>
         public void FillMesh( Mesh mesh , MeshTopology topology , int subMesh = 0)
         {
             if( null == mesh )
@@ -112,18 +104,36 @@ namespace UChart
             UnityEngine.Debug.Log("<color=red>Vertices : ["+this.vertices.Length+"] </color><color=green>Indices : ["+this.indices.Length+"]</color>");
             mesh.vertices = this.vertices;
             mesh.colors = this.colors;
-            // TODO: 确定mesh是否与指定mesh融合 还是单独占用一个新的mesh序号
             mesh.subMeshCount = ++mesh.subMeshCount;
             mesh.SetIndices(this.indices,topology,subMesh);
         }
 
+        /// <summary>
+        /// CombineMesh : conbine destination mesh into current mesh.
+        /// <summary>
         public void CombineGeometry( Mesh mesh , MeshTopology topology )
         {
             if( null == mesh )
                 throw new UChartGeometryException("mesh is null.");
-            // TODO: 将数据导出加入到当前GeometryBuffer
+            var vertices = mesh.vertices;
+            var colors = mesh.colors;
+            var indices = mesh.GetIndices(0);
+            var uvs = mesh.uv;
+
+            int vertexIndexHead = m_vertices.Count;
+            foreach( var vertex in vertices )
+                this.m_vertices.Add(vertex);
+            foreach( var color in colors )
+                this.m_colors.Add(color);      
+            foreach( var uv in uvs )
+                this.m_uvs.Add(uv);     
+            for( var i = 0; i < indices.Length;i++ )
+                this.m_indices.Add(vertexIndexHead + indices[i]);           
         }
 
+        /// <summary>
+        /// CombineMesh : conbine destination mesh into current mesh.
+        /// <summary>
         public void CombineGeometry( GeometryBuffer geometryBuffer )
         {
             if( null == geometryBuffer )
@@ -133,6 +143,8 @@ namespace UChart
                 this.m_vertices.Add(vertex);
             foreach( var color in geometryBuffer.colors )
                 this.m_colors.Add(color);           
+            foreach( var uv in geometryBuffer.uvs )
+                this.m_uvs.Add(uv);     
             for( var i = 0; i < geometryBuffer.indices.Length;i++ )
                 this.m_indices.Add(vertexIndexHead + geometryBuffer.indices[i]);
         }
