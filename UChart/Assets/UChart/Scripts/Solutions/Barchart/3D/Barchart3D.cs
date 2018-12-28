@@ -16,7 +16,7 @@ namespace UChart
 
 		[Header("BARCHART STYLE")]
 		public bool drawOutline = false;		
-		public Color barColor = Color.blue;
+		public Color outlineColor = Color.blue;
 
 		public override void Draw()
 		{
@@ -30,7 +30,7 @@ namespace UChart
 			{
 				for( int y = 0 ; y < yCount;y++ )
 				{
-					var pos = new Vector3( halfWidth + (x-1) * barWidth,0, halfWidth + (y-1)*barWidth );
+					var pos = new Vector3( halfWidth + (x-1) * barWidth + (x-1) * barOffset,0, halfWidth + (y-1)*barWidth + (y-1) * barOffset);
 
 					float height = Random.Range(1,10);
 					CubeGeometry cube = new CubeGeometry();
@@ -55,14 +55,15 @@ namespace UChart
 
 			var mesh = new Mesh();
 			mesh.name = "BARCHRAT";
-
 			buffer.FillMesh(mesh,MeshTopology.Triangles);
 			meshFilter.mesh = mesh;
 			// meshRenderer.material = new Material(Shader.Find("UChart/Barchart/Barchart(Basic)"));
 
 			if( drawOutline )
 			{
-				this.DrawOutline();
+				// this.DrawOutline();
+				buffer.FillMesh(mesh,MeshTopology.Lines,1);
+				meshFilter.mesh = mesh;
 			}
 		}
 
@@ -80,7 +81,7 @@ namespace UChart
 			mesh.vertices = sharedMesh.vertices;
 			mesh.colors = sharedMesh.colors;
 			for( int i = 0 ; i < mesh.colors.Length;i++ )
-				mesh.colors[i] = Color.black;
+				mesh.colors[i] = outlineColor;
 			mesh.SetIndices(sharedMesh.GetIndices(0),MeshTopology.Lines,0);
 			meshFileter.mesh = mesh;
 			meshRenderer.material = new Material(Shader.Find("UChart/Barchart/Barchart(Basic)"));
