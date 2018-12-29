@@ -1,101 +1,99 @@
 
 using UnityEngine;
+using System.Collections;
 
 namespace UChart
 {
-	[RequireComponent(typeof(MeshFilter),typeof(MeshRenderer))]
 	public class Barchart3D : Barchart
     {
-		public const float F_BAR_MAXCOUNT = 40.0f;
-		public const int I_BAR_MAXCOUNT = 40;
+		public const float F_BAR_MAXCOUNT = 50.0f;
+		public const int I_BAR_MAXCOUNT = 50;
 
 		[Header("BARCHART SETTING")]
-		public int xCount = 10;
-		public int yCount = 10;
 
 		public float barOffset = 0.0f;
-
 		public float barWidth = 2.0f;
 
 		[Header("BARCHART STYLE")]
 		public bool drawOutline = false;		
 		public Color outlineColor = Color.blue;
 
+		public Material mainMaterial = null;
+		public Material outlineMaterial = null;
+
 		public override void Draw()
 		{
-			GeometryBuffer buffer = new GeometryBuffer ();
-			var meshFilter = myGameobject.GetComponent<MeshFilter> ();
-			var meshRenderer = myGameobject.GetComponent<MeshRenderer>();
+			base.DataCheck();
+			// TODO: 撤出随机数
+			// TODO: 由二维数组驱动显示
+			// TODO: 添加鼠标交互事件(附带动画，信息展示)
+			// TODO: 添加纵轴数据显示(由三维数组展示)
+			// TODO: 照片驱动显示
+			
+			outlineMaterial.SetColor("_Color",outlineColor);
+			StartCoroutine(drawSubmeshPart());
+		}
 
-			// TODO: 处理大量柱状图时需要处理顶点拆分为多个 submesh
-			// TODO: 默认处理40*40
-
+		private IEnumerator drawSubmeshPart()
+		{
 			int xSubmeshCount = Mathf.CeilToInt(xCount / F_BAR_MAXCOUNT);
 			int ySubmeshCount = Mathf.CeilToInt(yCount / F_BAR_MAXCOUNT);
 
-			int submeshIndex = 0;
-			for( int x = 0 ; x < xSubmeshCount ; x++ )
+			for( int x = 1 ; x <= xSubmeshCount ; x++ )
 			{
-				for( int y = 0; y < ySubmeshCount; y++ )
+				for( int y = 1 ,summeshIndex = 0; y <= ySubmeshCount; y++ ,summeshIndex++)
 				{
-					var xNumber = x * I_BAR_MAXCOUNT;
-					var yNumber = y * I_BAR_MAXCOUNT;
-					// var startPos = new Vector3( x  );
-					this.DrawPerBarchart(xNumber , yNumber ,Vector3.zero, submeshIndex,ref buffer);
+					GameObject submeshPart = new GameObject("submesh_part"+summeshIndex);
+					submeshPart.hideFlags = HideFlags.HideInHierarchy;
+					submeshPart.transform.SetParent(this.myTransform);
+					var meshFilter = submeshPart.AddComponent<MeshFilter>();
+					var meshRenderer = submeshPart.AddComponent<MeshRenderer>();
+					meshRenderer.sharedMaterials = new Material[]{mainMaterial,outlineMaterial};
+
+					var xNumber = I_BAR_MAXCOUNT;
+					var yNumber = I_BAR_MAXCOUNT;
+					if( x == xSubmeshCount  ) xNumber = xCount - (x -1)*I_BAR_MAXCOUNT;
+					if( y == ySubmeshCount ) yNumber = yCount - (y -1)*I_BAR_MAXCOUNT;
+					var startPos = new Vector3( (x -1)* I_BAR_MAXCOUNT *(barOffset+barWidth),0,(y-1)* I_BAR_MAXCOUNT *(barOffset + barWidth));
+					this.DrawPerBarchart(xNumber , yNumber , (x-1)*I_BAR_MAXCOUNT,(y-1)*I_BAR_MAXCOUNT ,startPos, meshFilter);
+					yield return null;
 				}
-			}
-
-			var mesh = new Mesh();
-			mesh.name = "BARCHRAT";
-			buffer.FillMesh(mesh,MeshTopology.Triangles);
-			meshFilter.mesh = mesh;
-			mesh.RecalculateNormals();
-			mesh.RecalculateTangents();
-
-			if( drawOutline )
-			{
-				buffer.FillMesh(mesh,MeshTopology.Lines,1);			
-				meshFilter.mesh = mesh;
 			}
 		}
 
-		private void DrawPerBarchart( int xCount ,int yCount ,Vector3 startPos , int submeshIndex,ref GeometryBuffer buffer)
+		private void DrawPerBarchart( int xCount ,int yCount ,int xArrayIndex,int yArrayIndex ,Vector3 startPos ,MeshFilter meshFilter)
 		{
 			float halfWidth = barWidth / 2.0f;
 
+			Mesh mesh = new Mesh();
+			mesh.name = "__submesh__";
+
+			GeometryBuffer buffer = new GeometryBuffer();
 			for( int x = 0 ; x < xCount; x++ )
 			{
 				for( int y = 0 ; y < yCount;y++ )
 				{
 					var pos = startPos + new Vector3( halfWidth + (x-1) * barWidth + (x-1) * barOffset,0, halfWidth + (y-1)*barWidth + (y-1) * barOffset);
 
-					float height = Random.Range(1,10);
 					CubeGeometry cube = new CubeGeometry();
 					cube.center = pos;
 					cube.length = barWidth;
 					cube.width = barWidth;
-					cube.height = height;
-					cube.anchor = GeometryAnchor.Bottom;
-					cube.color = Color.blue;
-
-					if ( height > 5 && height < 8 )
-					{
-						cube.color = Color.yellow;
-					}
-					if(height >= 8)
-					{
-						cube.color = Color.red;
-					}					
+					cube.height = datas[xArrayIndex+x,yArrayIndex+y]; 
+					cube.anchor = GeometryAnchor.Bottom;				
 
 					cube.FillGeometry();
 					buffer.CombineGeometry(cube.geometryBuffer);
 				}
 			}
-		}
-
-		public override void DrawOutline()
-		{
-			
+			buffer.FillMesh(mesh,MeshTopology.Triangles);
+			mesh.RecalculateNormals();
+			mesh.RecalculateTangents();
+			if( drawOutline )
+			{
+				buffer.FillMesh(mesh,MeshTopology.Lines);
+			}
+			meshFilter.mesh = mesh;	
 		}
     }
 }

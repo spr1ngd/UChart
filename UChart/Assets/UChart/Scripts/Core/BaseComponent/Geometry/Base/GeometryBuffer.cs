@@ -51,6 +51,11 @@ namespace UChart
         //     get{return m_normals;}
         // }
 
+        public GeometryBuffer()
+        {
+
+        }
+
         public void AddVertex( VertexBuffer vertexBuffer )
         {
             m_vertices.Add(vertexBuffer.pos);
@@ -97,15 +102,15 @@ namespace UChart
         /// <summary>
         /// FillMesh : add submesh for current mesh.
         /// </summary>
-        public void FillMesh( Mesh mesh , MeshTopology topology , int subMesh = 0)
+        public void FillMesh( Mesh mesh , MeshTopology topology )
         {
             if( null == mesh )
                 throw new UChartGeometryException("mesh is null.");
             UnityEngine.Debug.Log("<color=red>Vertices : ["+this.vertices.Length+"] </color><color=green>Indices : ["+this.indices.Length+"]</color>");
             mesh.vertices = this.vertices;
             mesh.colors = this.colors;
-            mesh.subMeshCount = ++mesh.subMeshCount;
-            mesh.SetIndices(this.indices,topology,subMesh);
+            mesh.SetIndices(this.indices,topology,mesh.subMeshCount-1);
+            mesh.subMeshCount++;           
         }
 
         /// <summary>

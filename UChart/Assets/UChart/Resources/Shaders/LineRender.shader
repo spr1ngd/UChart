@@ -3,7 +3,7 @@ Shader "UChart/Line/LineRender(RGBA)"
 {
     Properties
     {
-        _LineColor("Line Color(RGBA)",COLOR) = (0,0,0,1)
+        _Color("Line Color(RGBA)",COLOR) = (0,0,0,1)
     }
 
     SubShader
@@ -18,7 +18,7 @@ Shader "UChart/Line/LineRender(RGBA)"
             #pragma vertex vert
             #pragma fragment frag
 
-            float4 _LineColor;
+            float4 _Color;
 
             struct a2v
             {
@@ -39,7 +39,7 @@ Shader "UChart/Line/LineRender(RGBA)"
 
             fixed4 frag( v2f IN ) : COLOR
             {
-                return _LineColor;
+                return _Color;
             }
 
             ENDCG
