@@ -35,38 +35,38 @@ Gauge|仪表图|:x:|--
 
     - case 1 : 
   
-    [01_barchart](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Barchart/01_barchart.png)
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Barchart/01_barchart.png)
 
     - case 2 : 
   
-    [02_barchart](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Barchart/02_barchart.png)
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Barchart/02_barchart.png)
 
     - case 3 : 
   
-    [03_barchart](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Barchart/03_barchart.png)
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Barchart/03_barchart.png)
 
 - Grid
 
     - case 1 :
   
-    [01_grid](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Grid/01_grid.png)
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Grid/01_grid.png)
 
     - case 2 : 
   
-    [02_grid](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Grid/02_grid.png)
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Grid/02_grid.png)
 
 - Heatmap
 
     - case 1 :
   
-    [01_heatmap](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/01_heatmap.png)
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/01_heatmap.png)
 
 - Scatter
 
     - case 1 :
   
-    [01_scatter](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/01_scatter.png)
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/01_scatter.png)
 
     - case 2 : 
   
-    [02_scatter](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/02_scatter.png)
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/02_scatter.png)
