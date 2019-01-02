@@ -40,7 +40,7 @@ namespace UChart
                 // barchart.datas = datas;
                 // barchart.Draw();
 
-    textureBarchart.Draw();
+                textureBarchart.Draw();
             }
         }
     }

@@ -6,6 +6,7 @@ namespace UChart
     public class Barchart : UChartObject
     {
         public float[,] datas = null;
+        public Color[,] colors = null;
 
         protected int xCount = 10;
 		protected int yCount = 10;

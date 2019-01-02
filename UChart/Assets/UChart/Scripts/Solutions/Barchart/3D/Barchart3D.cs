@@ -11,6 +11,8 @@ namespace UChart
 
 		[Header("BARCHART SETTING")]
 
+		[Range(0,100)]
+		public float baseHeight = 2.0f;
 		public float barOffset = 0.0f;
 		public float barWidth = 2.0f;
 
@@ -24,12 +26,8 @@ namespace UChart
 		public override void Draw()
 		{
 			base.DataCheck();
-			// TODO: 撤出随机数
-			// TODO: 由二维数组驱动显示
 			// TODO: 添加鼠标交互事件(附带动画，信息展示)
-			// TODO: 添加纵轴数据显示(由三维数组展示)
-			// TODO: 照片驱动显示
-			
+			// TODO: 添加纵轴数据显示(由三维数组展示)			
 			outlineMaterial.SetColor("_Color",outlineColor);
 			StartCoroutine(drawSubmeshPart());
 		}
@@ -79,7 +77,8 @@ namespace UChart
 					cube.center = pos;
 					cube.length = barWidth;
 					cube.width = barWidth;
-					cube.height = datas[xArrayIndex+x,yArrayIndex+y]; 
+					cube.color = colors[xArrayIndex+x,yArrayIndex+y]; 
+					cube.height = baseHeight + datas[xArrayIndex+x,yArrayIndex+y]; 
 					cube.anchor = GeometryAnchor.Bottom;				
 
 					cube.FillGeometry();
