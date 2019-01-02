@@ -77,7 +77,8 @@ namespace UChart
 					cube.center = pos;
 					cube.length = barWidth;
 					cube.width = barWidth;
-					cube.color = colors[xArrayIndex+x,yArrayIndex+y]; 
+					if( null != colors )
+						cube.color = colors[xArrayIndex+x,yArrayIndex+y]; 
 					cube.height = baseHeight + datas[xArrayIndex+x,yArrayIndex+y]; 
 					cube.anchor = GeometryAnchor.Bottom;				
 
