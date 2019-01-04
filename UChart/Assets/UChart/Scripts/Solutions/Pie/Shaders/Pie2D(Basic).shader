@@ -5,7 +5,7 @@ Shader "UChart/Pie/2D(Basic)"
     {
         _Percent ("Percent",range(0,1)) = 1
 
-        _MainColor ("Main Color(RGB)",COLOR) = (1,1,1,1)
+        _MainColor ("Main Color(remapUVB)",COLOR) = (1,1,1,1)
         _Alpha ("Alpha",range(0,1)) = 0.5
 
         _Radius ("Pie Radius Percent",range(0,0.5)) = 0.5
@@ -77,31 +77,8 @@ Shader "UChart/Pie/2D(Basic)"
 
             half4 frag( v2f IN ) : COLOR
             {
-                float angle = dot(float4(0,1,0,0),normalize(float4(abs(IN.uv.x - 0.5),abs(IN.uv.y - 0.5),0,0))) * 90;
-                if( IN.uv.x > 0.5 )
-                {
-                    if(IN.uv.y > 0.5)
-                    {
-                        angle = angle + 270;
-                    }
-                    else
-                    {
-                        angle = 270 - angle;
-                    }
-                }
-                else
-                {
-                    if(IN.uv.y > 0.5)
-                    {
-                        angle = 90 - angle;
-                    }
-                    else
-                    {
-                        angle = angle + 90;
-                    }
-                }
-                if( angle > _Percent * 360 )
-                    discard;
+                
+
 
                 float dis = sqrt(pow(0.5-IN.uv.x,2) + pow(0.5-IN.uv.y ,2));
                 half4 color = half4(0,0,0,0);
@@ -121,7 +98,13 @@ Shader "UChart/Pie/2D(Basic)"
                     float rate = antialias1(_HollowRadius,_BorderWidth,dis);
                     color = lerp(IN.color,_BorderColor,rate);
                 }
-                return half4(color.r,color.g,color.b,_Alpha * color.a);
+
+                float2 remapUV = IN.uv *2.0 + -1.0;
+                float aTan = ceil((atan2(remapUV.g,remapUV.r) / (3.1415926 *2) + 0.5) - _Percent); 
+                // float substrct = aTan - _Percent;
+                // float value = 1.0 - ceil(substrct);
+                // clip(((1.0 - ceil((((atan2(remapUV.g,remapUV.r)/6.28318530718)+0.5)-_Percent)))*floor((_HollowRadius+length(remapUV)))*(1.0 - floor(length(remapUV)))) - 0.5);
+                return half4(color.r,color.g,color.b,_Alpha * color.a * aTan);
             }
 
             ENDCG
