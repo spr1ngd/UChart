@@ -3,12 +3,14 @@ Shader "UChart/Pie/2D(Basic)"
 {
     Properties
     {
+        _Percent ("Percent",range(0,1)) = 1
+
         _MainColor ("Main Color(RGB)",COLOR) = (1,1,1,1)
         _Alpha ("Alpha",range(0,1)) = 0.5
 
-        _Radius ("Pie Radius Percent",range(0,1)) = 0.5
+        _Radius ("Pie Radius Percent",range(0,0.5)) = 0.5
         _HollowRadius ("Hollow Radius",range(0,0.5)) = 0.2
-        _BorderWidth ("Border Width",range(0,0.2)) = 0.05
+        _BorderWidth ("Border Width",range(0.0001,0.02)) = 0.01
         _BorderColor ("Border Color",COLOR) = (0.1,0.1,0.1,0.1)
     }
 
@@ -22,6 +24,8 @@ Shader "UChart/Pie/2D(Basic)"
         #pragma vertex vert
         #pragma fragment frag
         #include "UnityCG.cginc"
+
+        float _Percent;
 
         float4 _MainColor;
         float _Alpha;
@@ -48,12 +52,12 @@ Shader "UChart/Pie/2D(Basic)"
 
         float antialias( float radius,float bordersize,float distance )
         {
-            return smoothstep(radius - bordersize,radius+bordersize,distance);
+            return smoothstep(radius - bordersize,radius + bordersize,distance);
         }
 
         float antialias1( float radius,float bordersize,float distance )
         {
-            return smoothstep(radius + bordersize,radius-bordersize,distance);
+            return smoothstep(radius + bordersize,radius - bordersize,distance);
         }
 
         v2f vert( a2v IN)
@@ -66,7 +70,6 @@ Shader "UChart/Pie/2D(Basic)"
         }
 
         ENDCG 
-      
 
         Pass
         {
@@ -74,52 +77,54 @@ Shader "UChart/Pie/2D(Basic)"
 
             half4 frag( v2f IN ) : COLOR
             {
-                float dis = sqrt(pow(0.5-IN.uv.x,2) + pow(0.5-IN.uv.y ,2));
-                half4 color = half4(0,0,0,0);
-                // 最外圈抗锯齿虚化
-                if( dis > _Radius ) 
+                float angle = dot(float4(0,1,0,0),normalize(float4(abs(IN.uv.x - 0.5),abs(IN.uv.y - 0.5),0,0))) * 90;
+                if( IN.uv.x > 0.5 )
                 {
-                    // float rate = antialias(_Radius,_BorderWidth,dis);
-                    // color = lerp(IN.color,_BorderColor,rate);
+                    if(IN.uv.y > 0.5)
+                    {
+                        angle = angle + 270;
+                    }
+                    else
+                    {
+                        angle = 270 - angle;
+                    }
                 }
-
-                // 最内圈抗锯齿虚化 
-                else if(dis < _HollowRadius)
-                {
-                    // float rate = antialias1(_HollowRadius,_BorderWidth,dis);
-                    // color = lerp(IN.color,_BorderColor,rate);
-                }
-                // 中间部分，两端虚化// TODO: 异常
                 else
                 {
-                    float rate1 = antialias(_Radius,_BorderWidth,dis);
-                    float4 c1 = lerp(IN.color,_BorderColor,rate1) ;
-                    float rate2 = antialias(_HollowRadius,_BorderWidth,dis);
-                    float4 c2 = lerp(IN.color,_BorderColor,rate2) ;
-                    color = c1+c2;
+                    if(IN.uv.y > 0.5)
+                    {
+                        angle = 90 - angle;
+                    }
+                    else
+                    {
+                        angle = angle + 90;
+                    }
+                }
+                if( angle > _Percent * 360 )
+                    discard;
+
+                float dis = sqrt(pow(0.5-IN.uv.x,2) + pow(0.5-IN.uv.y ,2));
+                half4 color = half4(0,0,0,0);
+                half circleHalf = (_Radius+_HollowRadius)*.5;
+                if( dis > _Radius ) 
+                {
+                    float rate = antialias(_Radius,_BorderWidth,dis);
+                    color = lerp(IN.color,_BorderColor,rate);
+                }
+                else if(dis > circleHalf && dis < _Radius )
+                {
+                    float rate = antialias(_Radius,_BorderWidth,dis);
+                    color = lerp(IN.color,_BorderColor,rate);
+                }
+                else
+                {
+                    float rate = antialias1(_HollowRadius,_BorderWidth,dis);
+                    color = lerp(IN.color,_BorderColor,rate);
                 }
                 return half4(color.r,color.g,color.b,_Alpha * color.a);
             }
 
             ENDCG
         }
-        //  Pass
-        // {
-        //     CGPROGRAM
-
-        //     half4 frag(v2f IN ):COLOR
-        //     {
-        //         float dis = sqrt(pow(0.5-IN.uv.x,2) + pow(0.5-IN.uv.y ,2));
-        //         half4 color = half4(0,0,0,0);
-
-        //         if( dis > _HollowRadius && dis < _Radius)
-        //         {
-        //             color = IN.color;
-        //         }              
-        //         return half4(color.r,color.g,color.b,_Alpha * color.a);
-        //     }
-
-        //     ENDCG
-        // }
     }
 }
