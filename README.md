@@ -75,4 +75,4 @@ Gauge|仪表图|:x:|--
 
     - case 1 :
 
-    !(image)[https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/01_pie.png]
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/01_Pie.png)
