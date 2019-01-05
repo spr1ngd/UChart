@@ -70,3 +70,9 @@ Gauge|仪表图|:x:|--
     - case 2 : 
   
     ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/02_scatter.png)
+
+- Pie
+
+    - case 1 :
+
+    !(image)[https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/01_pie.png]
