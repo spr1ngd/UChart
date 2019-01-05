@@ -1,5 +1,5 @@
 
-Shader "UChart/Pie/2D(Basic)"
+Shader "UChart/Pie/2D(Outline)"
 {
     Properties
     {
@@ -13,6 +13,9 @@ Shader "UChart/Pie/2D(Basic)"
         _HollowRadius ("Hollow Radius",range(0,0.5)) = 0.2
         _BorderWidth ("Border Width",range(0.0001,0.02)) = 0.01
         _BorderColor ("Border Color",COLOR) = (0.1,0.1,0.1,0.1)
+
+        _OutlineThinkness ("Outline Thinkness",range(0.1,1)) = 0.2
+        _OutlineWidth ("Outline Width Percent",range(0.8,1.0)) = 0.8
     }
 
     SubShader
@@ -37,6 +40,9 @@ Shader "UChart/Pie/2D(Basic)"
 
         float _BorderWidth;
         float4 _BorderColor;
+
+        float _OutlineThinkness;
+        float _OutlineWidth;
 
         struct a2v
         {
@@ -91,12 +97,18 @@ Shader "UChart/Pie/2D(Basic)"
                 else if(dis > circleHalf && dis < _Radius )
                 {
                     float rate = antialias(_Radius,_BorderWidth,dis);
-                    color = lerp(IN.color,_BorderColor,rate);
+                    color = lerp(IN.color ,_BorderColor,rate);
+                    if( dis > _OutlineWidth * _Radius )
+                        color = half4(color.rgb * (1.0 + _OutlineThinkness) ,color.a);
                 }
                 else
                 {
                     float rate = antialias1(_HollowRadius,_BorderWidth,dis);
                     color = lerp(IN.color,_BorderColor,rate);
+                    if( dis < _HollowRadius * (2.0 - _OutlineWidth) && dis > _HollowRadius)
+                    {
+                        color = half4(color.rgb * (1.0 - _OutlineThinkness) ,color.a);
+                    }
                 }
 
                 float2 remapUV = IN.uv *2.0 + -1.0;

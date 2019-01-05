@@ -1,12 +1,13 @@
 
-Shader "UChart/Pie/2D(Basic)"
+Shader "UChart/Pie/2D(Texture)"
 {
     Properties
     {
-        [Toggle(OUTLINE)] _Outline ("Outline", Int) = 1
+        [Toggle(ANIMATE)] _Animate ("Animate", Int) = 1
         _Value ("Percent",range(0,1)) = 1
 
         _Color ("Main Color(remapUVB)",COLOR) = (1,1,1,1)
+        _Texture ("Texture",2D) = "white"{}
         _Alpha ("Alpha",range(0,1)) = 0.5
 
         _Radius ("Pie Radius Percent",range(0,0.5)) = 0.5
@@ -25,10 +26,12 @@ Shader "UChart/Pie/2D(Basic)"
         #pragma vertex vert
         #pragma fragment frag
         #include "UnityCG.cginc"
-        #pragma shader_feature OUTLINE
+        #pragma shader_feature ANIMATE
 
         float _Value;
 
+        sampler2D _Texture;
+        float4 _Texture_ST;
         float4 _Color;
         float _Alpha;
 
@@ -42,14 +45,14 @@ Shader "UChart/Pie/2D(Basic)"
         {
             float4 vertex : POSITION;
             float4 color : COLOR;
-            float4 uv : TEXCOORD0;
+            float2 uv : TEXCOORD0;
         };
 
         struct v2f
         {
             float4 vertex : POSITION;
             float4 color : COLOR;
-            float4 uv : TEXCOORD0;
+            float2 uv : TEXCOORD0;
         };
 
         float antialias( float radius,float bordersize,float distance )
@@ -67,7 +70,7 @@ Shader "UChart/Pie/2D(Basic)"
             v2f OUT;
             OUT.vertex = UnityObjectToClipPos(IN.vertex);
             OUT.color = IN.color;
-            OUT.uv = IN.uv;
+            OUT.uv = TRANSFORM_TEX(IN.uv,_Texture);
             return OUT;
         }
 
@@ -81,8 +84,8 @@ Shader "UChart/Pie/2D(Basic)"
             {
                 float dis = sqrt(pow(0.5-IN.uv.x,2) + pow(0.5-IN.uv.y ,2));
                 half4 color = half4(0,0,0,0);
-                half circleHalf = (_Radius+_HollowRadius)*.5;
                 
+                half circleHalf = (_Radius+_HollowRadius)*.5;
                 if( dis > _Radius ) 
                 {
                     float rate = antialias(_Radius,_BorderWidth,dis);
@@ -101,7 +104,11 @@ Shader "UChart/Pie/2D(Basic)"
 
                 float2 remapUV = IN.uv *2.0 + -1.0;
                 float percent = 1 - ceil((atan2(remapUV.g,remapUV.r) / (3.1415926 *2) + 0.5) - _Value); 
-                return half4( color.r * _Color.r, color.g * _Color.g,color.b * _Color.b,_Alpha * color.a * percent);
+                float4 texColor = tex2D(_Texture,IN.uv);
+                return half4( color.r * _Color.r * texColor.r, 
+                            color.g * _Color.g * texColor.g,
+                            color.b * _Color.b * texColor.b,
+                            _Alpha * color.a * percent * texColor.a);
             }
 
             ENDCG
