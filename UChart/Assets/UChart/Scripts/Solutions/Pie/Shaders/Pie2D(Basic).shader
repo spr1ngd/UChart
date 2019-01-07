@@ -3,7 +3,6 @@ Shader "UChart/Pie/2D(Basic)"
 {
     Properties
     {
-        [Toggle(OUTLINE)] _Outline ("Outline", Int) = 1
         _Value ("Percent",range(0,1)) = 1
 
         _Color ("Main Color(remapUVB)",COLOR) = (1,1,1,1)
@@ -25,7 +24,6 @@ Shader "UChart/Pie/2D(Basic)"
         #pragma vertex vert
         #pragma fragment frag
         #include "UnityCG.cginc"
-        #pragma shader_feature OUTLINE
 
         float _Value;
 
@@ -101,7 +99,7 @@ Shader "UChart/Pie/2D(Basic)"
 
                 float2 remapUV = IN.uv *2.0 + -1.0;
                 float percent = 1 - ceil((atan2(remapUV.g,remapUV.r) / (3.1415926 *2) + 0.5) - _Value); 
-                return half4( color.r * _Color.r, color.g * _Color.g,color.b * _Color.b,_Alpha * color.a * percent);
+                return color =  half4( color.r * _Color.r, color.g * _Color.g,color.b * _Color.b,_Alpha * color.a * percent);
             }
 
             ENDCG

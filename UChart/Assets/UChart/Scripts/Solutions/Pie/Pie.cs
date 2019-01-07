@@ -1,17 +1,16 @@
 
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UChart
 {
     public class Pie : UChartObject
     {
-        public const string PIE_COUNT = "_PieCount";
-        public const string PIE_VALUES = "_PieValues";
-        public const string PIE_COLORS = "_PieColors";
-        // 默认饼图上限数量10个
-
         public float[] pieValues;
         public Color[] pieColors;
+
+        [Header("ADVANCED SETTING")]
+        public bool antiAliasingEnable = true;
 
         public virtual void DataCheck()
         {
@@ -22,6 +21,32 @@ namespace UChart
         public virtual void Draw()
         {
             DataCheck();
+        }
+    }
+
+    public class PieItem : UChartObject
+    {
+        private float m_value = 0;
+        public float value 
+        {
+            get{return m_value;}
+            set
+            {
+                m_value = value;
+                SetValue();
+            }
+        }
+        public int index {get;set;}
+        public Material pieMaterial;
+
+        public virtual void DrawPieItem( int index ,float angle ,Material material , Color color )
+        {
+
+        }
+
+        protected virtual void SetValue()
+        {
+
         }
     }
 }
