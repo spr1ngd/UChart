@@ -38,6 +38,22 @@ namespace UChart.Test
                 meshFilter.mesh = mesh;
                 meshRenderer.material = new Material(Shader.Find("Standard"));
             }
+
+            if( GUILayout.Button("Generate Rounded Cylinder"))
+            {
+                var meshFilter = this.GetComponent<MeshFilter>();
+                var meshRenderer = this.GetComponent<MeshRenderer>();
+
+                Mesh mesh = new Mesh();
+                mesh.name = "Rounded Cylinder";
+
+                RoundedCylinderGeometry rCylinder = new RoundedCylinderGeometry();
+                rCylinder.FillGeometry();
+                rCylinder.geometryBuffer.FillMesh(mesh,MeshTopology.Triangles);
+
+                meshFilter.mesh = mesh;
+                meshRenderer.material = new Material(Shader.Find("Standard"));
+            }
         }
     }
 }

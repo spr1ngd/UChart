@@ -162,5 +162,44 @@ namespace UChart
             // m_uvs.Clear();
             // m_normals.Clear();
         }
+
+#region 关于GeometyBuffer额外的拓展
+
+        public void AddCircle( Vector3 center,float radius,int smoothness ,Vector3 normal)
+        {
+            // Debug.Log(center);
+            // TODO: 先默认平面垂直于y轴
+            float perRadian = Mathf.PI * 2 / smoothness;
+            this.AddVertex(center,Color.red);
+
+            for( int i = 0 ; i < smoothness ; i++)
+            {
+                float radian = perRadian * i;
+                Vector3 first = new Vector3(Mathf.Sin( radian) * radius ,
+                                            0,
+                                            Mathf.Cos( radian) * radius ) + center;
+                Debug.Log(first);
+                this.AddVertex(first,Color.red);
+            }
+
+            for( int i = 1 ; i <= smoothness ; i++)
+            {
+                int start = i;
+                int end = i + 1;
+                if( end > smoothness )
+                    end = end - smoothness;
+                if( normal == -Vector3.up )
+                    this.AddTriangle(new int[]{i,0,end});
+                if( normal == Vector3.up )
+                    this.AddTriangle(new int[]{end,0,i});
+            }
+        }
+
+        // private Vector3 getVertex( int index, float ra, float r, Vector3 c)
+        // {
+        //     return new Vector3( Mathf.Sin( index + ra) * r ,0, Mathf.Cos(ra) * r ) + c;
+        // }
+
+#endregion
     }
 }   
