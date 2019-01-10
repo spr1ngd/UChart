@@ -7,7 +7,7 @@ namespace UChart
     public class RoundedCylinderGeometry : CylinderGeometry
     {
         [Header("Rounded Setting")]
-        public int smoothDegree = 2;
+        public int smoothDegree = 5;
         public float smoothRadius = 0.1f; // percent of cylinder's radius
 
         public bool topRounded = true;
@@ -15,6 +15,9 @@ namespace UChart
 
         public override void FillGeometry()
         {
+            float realTopSmoothRadius = smoothRadius * topRadius;
+            float realBottomSmoothRadius = smoothRadius * bottomRadius;
+
             int smoothnessCount = (int)(percent * smoothness);
             int iterationCount = smoothnessCount;
             if(percent < 1)
@@ -39,24 +42,38 @@ namespace UChart
             {
                 int start = i;
                 int end = i + 1;
-                if(end >= smoothnessCount + smoothnessCount + 2)
+                if(end >= smoothnessCount * 2 + 2)
                     end = end - smoothnessCount;
                 geometryBuffer.AddTriangle(new int[] { end,1,start });
             }
 
-            // TODO: 重新计算圆柱上线的点高
-            //for(int i = 0, index = 2; i < iterationCount; i++, index++)
-            //{
-            //    var topStart = index;
-            //    var topEnd = index + 1;
-            //    if(topEnd >= smoothnessCount + 2)
-            //        topEnd = topEnd - smoothnessCount;
-            //    var bottomStart = topStart + smoothnessCount;
-            //    var bottomEnd = topEnd + smoothnessCount;
+            // 新的圆周侧壁
+            geometryBuffer.AddCircle(Vector3.zero + new Vector3(0,smoothRadius * bottomRadius,0) ,bottomRadius,smoothness,Vector3.down,percent);
+            geometryBuffer.AddCircle(Vector3.zero + new Vector3(0,height - smoothRadius * topRadius,0),topRadius,smoothness,Vector3.up,percent);
 
-            //    geometryBuffer.AddTriangle(new int[] { topStart,topEnd,bottomEnd });
-            //    geometryBuffer.AddTriangle(new int[] { bottomEnd,bottomStart,topStart });
-            //}
+            for(int i = 2 + smoothnessCount * 2, count = 0; count < iterationCount; i++, count++)
+            {
+                int start = i;
+                int end = i + 1;
+                if(end >= smoothnessCount * 3 + 2)
+                    end = end - smoothnessCount;
+                geometryBuffer.AddTriangle(new int[] { start,0,end });
+            }
+
+            for(int i = 2 + smoothnessCount * 3, count = 0; count < iterationCount; i++, count++)
+            {
+                int start = i;
+                int end = i + 1;
+                if(end >= smoothnessCount * 4 + 2)
+                    end = end - smoothnessCount;
+                geometryBuffer.AddTriangle(new int[] { end,1,start });
+            }
+
+            // TODO: 导入圆滑弧面
+            for( int i = 0 ; i < smoothDegree ;i++ )
+            {
+                
+            }
 
             // TODO: 截面弥补
             //if(percent < 1)
