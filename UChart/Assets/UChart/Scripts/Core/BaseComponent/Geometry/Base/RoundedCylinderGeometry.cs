@@ -57,7 +57,7 @@ namespace UChart
                 int end = i + 1;
                 if(end >= smoothnessCount * 3 + 2)
                     end = end - smoothnessCount;
-                geometryBuffer.AddTriangle(new int[] { start,0,end });
+				geometryBuffer.AddTriangle (new int[]{start,end,start+smoothnessCount});
             }
 
             for(int i = 2 + smoothnessCount * 3, count = 0; count < iterationCount; i++, count++)
@@ -66,13 +66,27 @@ namespace UChart
                 int end = i + 1;
                 if(end >= smoothnessCount * 4 + 2)
                     end = end - smoothnessCount;
-                geometryBuffer.AddTriangle(new int[] { end,1,start });
+				geometryBuffer.AddTriangle (new int[]{start,end - smoothnessCount ,end});
             }
 
-            // TODO: 导入圆滑弧面
+			// TODO: bottom radius triangles
+			for( int i = 0 ;i < smoothDegree ;i++ )
+			{
+				for (int y = 0; y < iterationCount; y++) 
+				{
+					// add vertices
+					// triangles
+				}
+			}
+
+            // TODO: top radius triangles
             for( int i = 0 ; i < smoothDegree ;i++ )
             {
-                
+				for (int y = 0; y < iterationCount; y++) 
+				{
+					// add vertices
+					// triangles
+				}
             }
 
             // TODO: 截面弥补
