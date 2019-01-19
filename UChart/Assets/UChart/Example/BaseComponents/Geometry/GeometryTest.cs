@@ -55,6 +55,7 @@ namespace UChart.Test
                 mesh.RecalculateTangents();
                 meshFilter.mesh = mesh;
                 meshRenderer.material = new Material(Shader.Find("Standard"));
+                //meshRenderer.material = new Material(Shader.Find("UChart/Vertex/VertexColor"));
             }
 
             if( GUILayout.Button("Generate Cylinder"))

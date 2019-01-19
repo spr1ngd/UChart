@@ -94,11 +94,24 @@ namespace UChart
         }
 
         /// <summary>
+        /// add quad triangle indices for geometry
+        /// </summary>
+        /// <param name="quadIndices"></param>
+        public void AddQuad( int[] quadIndices )
+        {
+            if(quadIndices.Length != 4)
+                throw new UChartException("quadIndices length mush be 4.");
+            //Debug.Log(string.Format("ADD QUAD [{0},{1},{2},{3}]",quadIndices[0],quadIndices[1],quadIndices[2],quadIndices[3]));
+            AddTriangle(new int[] { quadIndices[0],quadIndices[1],quadIndices[2]});
+            AddTriangle(new int[] { quadIndices[2],quadIndices[3],quadIndices[0] });
+        }
+
+        /// <summary>
         /// Add a triangle indices for geometry.
         /// </summary>
         public void AddTriangle( int[] triangleIndices )
         {
-            // Debug.Log("add triangle : " + triangleIndices[0] + "," + triangleIndices[1] +"," + triangleIndices[2] );
+            Debug.Log("add triangle : " + triangleIndices[0] + "," + triangleIndices[1] +"," + triangleIndices[2] );
             for( var i = 0 ;i < triangleIndices.Length;i++ )
                 m_indices.Add(triangleIndices[i]);
         }
@@ -177,10 +190,11 @@ namespace UChart
             for( int i = 0 ; i < smoothnessCount; i++)
             {
                 float radian = perRadian * i;
-                Vector3 first = new Vector3(Mathf.Sin( radian) * radius ,
+                Vector3 vertex = new Vector3(Mathf.Sin( radian) * radius ,
                                             0,
                                             Mathf.Cos( radian) * radius ) + center;
-                this.AddVertex(first,Color.red);
+                //Debug.Log(string.Format("CENTER :[{0}] RADIUS [{1}] POSITION :[{2}]",center,radius,vertex));
+                this.AddVertex(vertex,Color.red);
             }
         }
 
