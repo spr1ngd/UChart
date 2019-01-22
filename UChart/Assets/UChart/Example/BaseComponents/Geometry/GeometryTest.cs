@@ -66,14 +66,43 @@ namespace UChart.Test
                 Mesh mesh = new Mesh();
                 mesh.name = "Cylinder";
 
-                CylinderGeometry cylinder = this.GetComponent<Cylinder>().cylinder;
+                cylinder = this.GetComponent<Cylinder>().cylinder;
+                percent = cylinder.percent;
                 cylinder.FillGeometry();
                 cylinder.geometryBuffer.FillMesh(mesh,MeshTopology.Triangles);
-
                 mesh.RecalculateNormals();
                 mesh.RecalculateTangents();
                 meshFilter.mesh = mesh;
                 meshRenderer.material = new Material(Shader.Find("Standard"));
+            }
+        }
+
+        private CylinderGeometry cylinder = null;
+        private int percent = 0;
+
+        private void Update()
+        {
+            if(null != cylinder)
+            {
+                if(cylinder.percent != percent)
+                {
+                    var meshFilter = this.GetComponent<MeshFilter>();
+                    var meshRenderer = this.GetComponent<MeshRenderer>();
+
+                    Mesh mesh = new Mesh();
+                    mesh.name = "Cylinder";
+
+                    cylinder = this.GetComponent<Cylinder>().cylinder;
+                    cylinder.geometryBuffer.Clear();
+                    cylinder.FillGeometry();
+                    cylinder.geometryBuffer.FillMesh(mesh,MeshTopology.Triangles);
+                    mesh.RecalculateNormals();
+                    mesh.RecalculateTangents();
+                    meshFilter.mesh = mesh;
+                    meshRenderer.material = new Material(Shader.Find("Standard"));
+
+                    percent = cylinder.percent;
+                }
             }
         }
     }

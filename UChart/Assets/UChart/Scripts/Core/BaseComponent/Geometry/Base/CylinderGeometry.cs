@@ -11,8 +11,8 @@ namespace UChart
         public float topRadius = 1f;
         public float bottomRadius = 1f;
 
-        [Range(1,100)] public int percent = 90;
-        [Range(3,100)] public int smoothness = 100;
+
+        [Range(1,360)] public int percent = 360;
 
         [Header("CYLINDER STYLE SETTIGN")]
         public Color color = Color.white;
@@ -20,63 +20,134 @@ namespace UChart
 
         public override void FillGeometry()
         {
-            Debug.Log((90 * 1.0f/100 ));
-            int smoothnessCount = (int)(percent * smoothness);
-            int iterationCount = smoothnessCount;
+            // TODO: æå‡é¥¼å›¾çš„ç²¾åº¦ å¯æ‰‹åŠ¨è®¾ç½®é¥¼å›¾å¹³å‡æ¯æœ€å°ä»½çš„å¼§åº¦(æœ€å°å¼§åº¦ç”±é¥¼å—çš„æ•°é‡å†³å®š)
+            // TODO: æ‰‹åŠ¨è®¡ç®—æ¯å—é¥¼å›¾çš„æœ€åä¸€ä¸ªç»†åˆ†Meshçš„é¡¶ç‚¹ä¿¡æ¯,ç¡®ä¿å¤šå—é¥¼å›¾å¯å®Œç¾æ‹¼åˆ
+            // TODO: åç»­è€ƒè™‘æ˜¯å¦ç‚¹æ•°é‡è¶Šç•Œï¼Œè‡ªåŠ¨åˆ‡åˆ†é¥¼å›¾mesh
+            Vector3 bottom = Vector3.zero;
+            Vector3 top = bottom + new Vector3(0,height,0);
 
-            // avoid head and trim connection. 
-            if(percent < 1)
-                iterationCount--;
+            int vertexCount = percent + 1;
+            if(percent >= 360)
+                vertexCount = 360;
+            int iterationCount = percent;
+            float perRadian = Mathf.PI * 2 / 360.0f;
             Debug.Log("<color=yellow>ITERATION COUNT: " + iterationCount + "</color>");
 
-            // TODO: Ó¦¸ÃÖ÷¶¯Çó³öÄ©¶Ë¶¥µãµÄÎ»ÖÃ ÒÔÈ·±£±ıÍ¼µÄ¾«¶È
-            // TODO: Ö÷¶¯¸²¸Ç×îºóÒ»¸ö¶¥µãµÄÎ»ÖÃÊı¾İ
+            geometryBuffer.AddVertex(bottom,color);
+            geometryBuffer.AddVertex(top,color);
 
-            geometryBuffer.AddVertex(Vector3.zero,color);
-            geometryBuffer.AddVertex(Vector3.zero + new Vector3(0,height,0),color);
+            // bottom
+            for(int i = 0; i < vertexCount; i++)
+            {
+                float radian = i * perRadian;
+                geometryBuffer.AddVertex(bottom + new Vector3(Mathf.Cos(radian),0,Mathf.Sin(radian)),color);
+            }
 
-            geometryBuffer.AddCircle(Vector3.zero,bottomRadius,smoothness,Vector3.down,percent);
-            geometryBuffer.AddCircle(Vector3.zero + new Vector3(0,height,0),topRadius,smoothness,Vector3.up,percent);
-
+            // bottom triangles
             for(int i = 2, count = 0; count < iterationCount; i++, count++)
             {
                 int start = i;
                 int end = i + 1;
-                if(end >= smoothnessCount + 2)
-                    end = end - smoothnessCount;
-                geometryBuffer.AddTriangle(new int[] { start,0,end });
+                if(end >= 2 + vertexCount)
+                    end -= vertexCount;
+                geometryBuffer.AddTriangle(new int[] { end,0,start });
             }
 
-            for(int i = 2 + smoothnessCount, count = 0; count < iterationCount; i++, count++)
+            // top 
+            for(int i = 0; i < vertexCount; i++)
+            {
+                float radian = i * perRadian;
+                geometryBuffer.AddVertex(top + new Vector3(Mathf.Cos(radian),0,Mathf.Sin(radian)),color);
+            }
+
+            // top triangles
+            for(int i = 2 + vertexCount, count = 0; count < iterationCount; i++, count++)
             {
                 int start = i;
                 int end = i + 1;
-                if(end >= smoothnessCount + smoothnessCount + 2)
-                    end = end - smoothnessCount;
-                geometryBuffer.AddTriangle(new int[] { end,1,start });
+                if(end >= 2 + vertexCount * 2)
+                    end -= vertexCount;
+                geometryBuffer.AddTriangle(new int[] { start,1,end });
             }
 
-            for(int i = 0, index = 2; i < iterationCount; i++, index++)
+            // side triangles
+            for(int i = 0; i < iterationCount; i++)
             {
-                var topStart = index;
-                var topEnd = index + 1;
-                if(topEnd >= smoothnessCount + 2)
-                    topEnd = topEnd - smoothnessCount;
-                var bottomStart = topStart + smoothnessCount;
-                var bottomEnd = topEnd + smoothnessCount;
-
-                geometryBuffer.AddTriangle(new int[] { topStart,topEnd,bottomEnd });
-                geometryBuffer.AddTriangle(new int[] { bottomEnd,bottomStart,topStart });
+                int bl = i + 2;
+                int br = bl + 1;
+                if(percent == 360 && br >= 2 + vertexCount)
+                    br -= vertexCount;
+                int tl = bl + vertexCount;
+                int tr = br + vertexCount;
+                if(percent == 360 && tr >= 2 + vertexCount * 2)
+                    tr -= vertexCount;
+                geometryBuffer.AddQuad(new int[] { bl,tl,tr,br });
             }
 
-            //if(percent < 1)
-            //{
-            //    geometryBuffer.AddTriangle(new int[] { 1,0,2 });
-            //    geometryBuffer.AddTriangle(new int[] { 2,2 + smoothnessCount,1 });
+            // section triangles
+            if(percent < 360)
+            {
+                geometryBuffer.AddTriangle(new int[] { 0,1,2 + vertexCount });
+                geometryBuffer.AddTriangle(new int[] { 2 + vertexCount,2,0 });
 
-            //    geometryBuffer.AddTriangle(new int[] { 1,2 + smoothnessCount + smoothnessCount -1 ,2 + smoothnessCount -1 });
-            //    geometryBuffer.AddTriangle(new int[] { 2 + smoothnessCount - 1,0,1 });
+                geometryBuffer.AddTriangle(new int[] { 2 + vertexCount * 2 - 1,1,0 });
+                geometryBuffer.AddTriangle(new int[] { 0,vertexCount + 2 - 1,2 + vertexCount * 2 - 1 });
+            }
+
+            //// bottom
+            //for(int i = 0; i < vertexCount; i++)
+            //{
+            //    float radian = i * perRadian;
+            //    geometryBuffer.AddVertex(bottom + new Vector3(Mathf.Cos(radian),0,Mathf.Sin(radian)),color);
             //}
+
+            //// bottom triangles
+            //for(int i = 2, count = 0; count < iterationCount; i++, count++)
+            //{
+            //    int start = i;
+            //    int end = i + 1;
+            //    geometryBuffer.AddTriangle(new int[] { end,0,start });
+            //}
+
+            //// top 
+            //for(int i = 0; i < vertexCount; i++)
+            //{
+            //    float radian = i * perRadian;
+            //    geometryBuffer.AddVertex(top + new Vector3(Mathf.Cos(radian),0,Mathf.Sin(radian)),color);
+            //}
+
+            //// top triangles
+            //for(int i = 2 + vertexCount, count = 0; count < iterationCount; i++, count++)
+            //{
+            //    int start = i;
+            //    int end = i + 1;
+            //    geometryBuffer.AddTriangle(new int[] { start,1,end});
+            //}
+
+            //// side triangles
+            //for(int i = 0; i < iterationCount; i++)
+            //{
+            //    int bl = i + 2;
+            //    int br = bl + 1;
+            //    int tl = bl + vertexCount;
+            //    int tr = br + vertexCount;
+            //    geometryBuffer.AddQuad(new int[] { bl,tl,tr,br });
+            //}
+
+            //// section triangles
+            //if(percent < 360)
+            //{
+            //    geometryBuffer.AddTriangle(new int[] { 0,1,2 + vertexCount });
+            //    geometryBuffer.AddTriangle(new int[] { 2 + vertexCount,2,0 });
+
+            //    geometryBuffer.AddTriangle(new int[] { 2 + vertexCount * 2 - 1,1,0 });
+            //    geometryBuffer.AddTriangle(new int[] { 0,vertexCount + 2 - 1,2 + vertexCount * 2 - 1 });
+            //}
+        }
+
+        private void AddCircle( int iterationCount )
+        {
+            
         }
     }
 }

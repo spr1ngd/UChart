@@ -111,7 +111,7 @@ namespace UChart
         /// </summary>
         public void AddTriangle( int[] triangleIndices )
         {
-            Debug.Log("add triangle : " + triangleIndices[0] + "," + triangleIndices[1] +"," + triangleIndices[2] );
+            //Debug.Log("add triangle : " + triangleIndices[0] + "," + triangleIndices[1] + "," + triangleIndices[2]);
             for( var i = 0 ;i < triangleIndices.Length;i++ )
                 m_indices.Add(triangleIndices[i]);
         }
@@ -126,6 +126,11 @@ namespace UChart
             UnityEngine.Debug.Log("<color=red>Vertices : ["+this.vertices.Length+"] </color><color=green>Indices : ["+this.indices.Length+"]</color>");
             mesh.vertices = this.vertices;
             mesh.colors = this.colors;
+            if(topology == MeshTopology.Points)
+            {
+                for(int i = 0; i < this.vertices.Length; i++)
+                    m_indices.Add(i);
+            }
             mesh.SetIndices(this.indices,topology,mesh.subMeshCount-1);
             mesh.subMeshCount++;           
         }

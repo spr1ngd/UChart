@@ -15,42 +15,42 @@ namespace UChart
 
         public override void FillGeometry()
         {
-            Vector3 bottomCenter = Vector3.zero;
-            Vector3 topCenter = Vector3.zero + new Vector3(0,height,0);
+            //Vector3 bottomCenter = Vector3.zero;
+            //Vector3 topCenter = Vector3.zero + new Vector3(0,height,0);
 
-            float realTopSmoothRadius = smoothRadius * topRadius;
-            float realBottomSmoothRadius = smoothRadius * bottomRadius;
+            //float realTopSmoothRadius = smoothRadius * topRadius;
+            //float realBottomSmoothRadius = smoothRadius * bottomRadius;
 
-            int smoothnessCount = (int)(percent * smoothness);
-            int iterationCount = smoothnessCount;
-            if(percent < 1)
-                iterationCount++;
-            Debug.Log("<color=yellow>ITERATION COUNT: " + iterationCount+"</color>");
+            //int smoothnessCount = (int)(percent * smoothness);
+            //int iterationCount = smoothnessCount;
+            //if(percent < 1)
+            //    iterationCount++;
+            //Debug.Log("<color=yellow>ITERATION COUNT: " + iterationCount+"</color>");
 
-            geometryBuffer.AddVertex(bottomCenter,color);
-            geometryBuffer.AddVertex(topCenter,color);
+            //geometryBuffer.AddVertex(bottomCenter,color);
+            //geometryBuffer.AddVertex(topCenter,color);
 
-            geometryBuffer.AddCircle(bottomCenter,bottomRadius * (1- smoothRadius),smoothness,Vector3.down,percent);
-            geometryBuffer.AddCircle(topCenter,topRadius * (1- smoothRadius),smoothness,Vector3.up,percent);
+            //geometryBuffer.AddCircle(bottomCenter,bottomRadius * (1- smoothRadius),smoothness,Vector3.down,percent);
+            //geometryBuffer.AddCircle(topCenter,topRadius * (1- smoothRadius),smoothness,Vector3.up,percent);
 
-            for(int i = 2, count = 0; count < iterationCount; i++, count++)
-            {
-                int start = i;
-                int end = i + 1;
-                if(end >= smoothnessCount + 2)
-                    end = end - smoothnessCount;
-                geometryBuffer.AddTriangle(new int[] { start,0,end });
-            }
+            //for(int i = 2, count = 0; count < iterationCount; i++, count++)
+            //{
+            //    int start = i;
+            //    int end = i + 1;
+            //    if(end >= smoothnessCount + 2)
+            //        end = end - smoothnessCount;
+            //    geometryBuffer.AddTriangle(new int[] { start,0,end });
+            //}
 
-            // FIX : 断面后这里会出现bug
-            for(int i = 2 + smoothnessCount, count = 0; count < iterationCount; i++, count++)
-            {
-                int start = i;
-                int end = i + 1;
-                if(end >= smoothnessCount * 2 + 2)
-                    end = end - smoothnessCount;
-                geometryBuffer.AddTriangle(new int[] { end,1,start });
-            }
+            //// FIX : 断面后这里会出现bug
+            //for(int i = 2 + smoothnessCount, count = 0; count < iterationCount; i++, count++)
+            //{
+            //    int start = i;
+            //    int end = i + 1;
+            //    if(end >= smoothnessCount * 2 + 2)
+            //        end = end - smoothnessCount;
+            //    geometryBuffer.AddTriangle(new int[] { end,1,start });
+            //}
 
             // 新的圆周侧壁
     //        geometryBuffer.AddCircle(Vector3.zero + new Vector3(0,smoothRadius * bottomRadius,0) ,bottomRadius,smoothness,Vector3.down,percent);
@@ -74,9 +74,9 @@ namespace UChart
 				//geometryBuffer.AddTriangle (new int[]{start,end - smoothnessCount ,end});
     //        }
 
-            float topRoundedRadius = topRadius * smoothRadius;
-            float bottomRoundedRadius = bottomRadius * smoothRadius;
-            float perRadian = Mathf.PI * 0.5f / smoothDegree;
+            //float topRoundedRadius = topRadius * smoothRadius;
+            //float bottomRoundedRadius = bottomRadius * smoothRadius;
+            //float perRadian = Mathf.PI * 0.5f / smoothDegree;
 
             // BOTTOM
             //for(int i = 0; i <= smoothDegree; i++)
