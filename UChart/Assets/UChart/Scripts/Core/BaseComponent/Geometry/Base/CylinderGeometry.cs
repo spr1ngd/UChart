@@ -28,7 +28,7 @@ namespace UChart
 
         public override void FillGeometry()
         {
-            List<VertexBuffer> sectionVertices = new List<VertexBuffer>();
+            int turns = 0;
 
             Vector3 bottom = Vector3.zero;
             Vector3 top = bottom + new Vector3(0,height,0);
@@ -45,11 +45,7 @@ namespace UChart
 
             // bottom vertices
             float bottomRealRadius = bottomRadius - roundedWidth;
-            for(int i = 0; i < vertexCount; i++)
-            {
-                float radian = i * perRadian;
-                geometryBuffer.AddVertex(bottom + new Vector3(Mathf.Cos(radian),0,Mathf.Sin(radian))*bottomRealRadius,color);
-            }
+            this.AddTurn(bottom,vertexCount,perRadian,bottomRealRadius);
 
             // bottom triangles
             for(int i = 2, count = 0; count < iterationCount; i++, count++)
@@ -60,65 +56,125 @@ namespace UChart
                     end -= vertexCount;
                 geometryBuffer.AddTriangle(new int[] { end,0,start });
             }
+            turns++;
 
-            // top vertices
-            float topRealRadius = topRadius - roundedWidth;
-            for(int i = 0; i < vertexCount; i++)
+            // bottom rounded triangles
+            if(rounded && bottomRounded)
             {
-                float radian = i * perRadian;
-                geometryBuffer.AddVertex(top + new Vector3(Mathf.Cos(radian),0,Mathf.Sin(radian)) * topRealRadius,color);
+                float perRad = Mathf.PI /2.0f / tessellation;
+                for(int i = 1; i <= tessellation; i++)
+                {
+                    Vector3 center = bottom + new Vector3(0,(1 - Mathf.Cos(perRad * i)) *roundedWidth,0);
+                    float radius = bottomRealRadius + Mathf.Sin(perRad * i) * roundedWidth;
+                    AddTurn(center,vertexCount,perRadian,radius);
+                    for(int x = 2 + vertexCount * (turns - 1) , count = 0; count < iterationCount; x++,count++)
+                    {
+                        int bl = x;
+                        int br = x + 1;
+                        if(percent == 360 && br >= 2 + vertexCount * turns)
+                            br -= vertexCount;
+                        int tl = bl + vertexCount;
+                        int tr = br + vertexCount;
+                        if(percent == 360 && tr >= 2 + vertexCount * (turns + 1))
+                            tr -= vertexCount;
+                        geometryBuffer.AddQuad(new int[] { bl,tl,tr,br});
+                    }
+                    turns++;
+                }
             }
+            
+            // top rounded triangles
+            float topRealRadius = topRadius - roundedWidth;
+            if(rounded && topRounded)
+            {
+                float perRad = Mathf.PI / 2.0f / tessellation;                
+                for(int i = tessellation; i > 0; i--)
+                {
+                    Vector3 center = top - new Vector3(0,(1-Mathf.Cos(perRad*i)) * roundedWidth,0);
+                    float radius = topRealRadius + Mathf.Sin(perRad * i) * roundedWidth;
+                    AddTurn(center,vertexCount,perRadian,radius);
+                }
+
+                // TODO: 强插一层有问题
+                for(int x = 2 + vertexCount * (turns - 1), count = 0; count < iterationCount; x++, count++)
+                {
+                    int bl = x;
+                    int br = x + 1;
+                    if(percent == 360 && br >= 2 + vertexCount * turns)
+                        br -= vertexCount;
+                    int tl = bl + vertexCount;
+                    int tr = br + vertexCount;
+                    if(percent == 360 && tr >= 2 + vertexCount * (turns + 1))
+                        tr -= vertexCount;
+                    geometryBuffer.AddQuad(new int[] { bl,tl,tr,br });
+                }
+                turns++;
+
+                for(int i = tessellation ; i > 0; i--)
+                {
+                    for(int x = 2 + vertexCount * (turns - 1), count = 0; count < iterationCount; x++, count++)
+                    {
+                        int bl = x;
+                        int br = x + 1;
+                        if(percent == 360 && br >= 2 + vertexCount * turns)
+                            br -= vertexCount;
+                        int tl = bl + vertexCount;
+                        int tr = br + vertexCount;
+                        if(percent == 360 && tr >= 2 + vertexCount * (turns + 1))
+                            tr -= vertexCount;
+                        geometryBuffer.AddQuad(new int[] { bl,tl,tr,br });
+                    }
+                    turns++;
+                }
+            }
+            this.AddTurn(top,vertexCount,perRadian,topRealRadius);
 
             // top triangles
-            for(int i = 2 + vertexCount, count = 0; count < iterationCount; i++, count++)
+            for(int i = 2 + vertexCount * (turns-1), count = 0; count < iterationCount; i++, count++)
             {
                 int start = i;
                 int end = i + 1;
-                if(end >= 2 + vertexCount * 2)
+                if(end >= 2 + vertexCount * turns)
                     end -= vertexCount;
                 geometryBuffer.AddTriangle(new int[] { start,1,end });
             }
-
-            // bottom rounded triangles
-            if( rounded && bottomRounded )
-            {
-                for( int i = 0 ; i < tessellation;i++ )
-                {
-
-                }
-            }
-
-            // side triangles
-            for(int i = 0; i < iterationCount; i++)
-            {
-                int bl = i + 2;
-                int br = bl + 1;
-                if(percent == 360 && br >= 2 + vertexCount)
-                    br -= vertexCount;
-                int tl = bl + vertexCount;
-                int tr = br + vertexCount;
-                if(percent == 360 && tr >= 2 + vertexCount * 2)
-                    tr -= vertexCount;
-                geometryBuffer.AddQuad(new int[] { bl,tl,tr,br });
-            }
-
-            // top rounded triangles
-            if( rounded && topRounded)
-            {
-                for( int i = 0 ; i < tessellation;i++ )
-                {
-                    
-                }
-            }
+            turns++;
 
             // section triangles
             if(percent < 360)
             {
-                geometryBuffer.AddTriangle(new int[] { 0,1,2 + vertexCount });
-                geometryBuffer.AddTriangle(new int[] { 2 + vertexCount,2,0 });
+                List<int> start = new List<int>();
+                start.Add(0);
+                int sectionVerticesCount = 4;
+                if(rounded)
+                {
+                    if(bottomRounded)
+                        sectionVerticesCount += tessellation;
+                    if(topRounded)
+                        sectionVerticesCount += tessellation;
+                }
+                for(int i = 0; i < sectionVerticesCount - 2; i++)
+                    start.Add(2 + i * vertexCount);
+                start.Add(1);
+                for(int i = 1; i < start.Count - 1; i++)
+                    geometryBuffer.AddTriangle(new int[] { 0,start[i + 1],start[i] });
 
-                geometryBuffer.AddTriangle(new int[] { 2 + vertexCount * 2 - 1,1,0 });
-                geometryBuffer.AddTriangle(new int[] { 0,vertexCount + 2 - 1,2 + vertexCount * 2 - 1 });
+                List<int> end = new List<int>();
+                end.Add(0);
+                for(int i = 0; i < sectionVerticesCount - 2; i++)
+                    end.Add(2 + i * vertexCount + iterationCount - 1);
+                end.Add(1);
+                for(int i = 1; i < end.Count - 1; i++)
+                    geometryBuffer.AddTriangle(new int[] { 0,end[i],end[i + 1] });
+            }
+        }
+
+        private void AddTurn( Vector3 center,int vertexCount,float perRadian,float radius )
+        {
+            for(int i = 0; i < vertexCount; i++)
+            {
+                float radian = i * perRadian;
+                geometryBuffer.AddVertex(center + new Vector3(Mathf.Cos(radian),0,Mathf.Sin(radian)) * radius,color);
             }
         }
     }
