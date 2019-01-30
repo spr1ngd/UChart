@@ -44,7 +44,9 @@ namespace UChart
             geometryBuffer.AddVertex(top,color);
 
             // bottom vertices
-            float bottomRealRadius = bottomRadius - roundedWidth;
+            float bottomRealRadius = bottomRadius;
+            if(rounded && bottomRounded)
+                bottomRealRadius -= roundedWidth;
             this.AddTurn(bottom,vertexCount,perRadian,bottomRealRadius);
 
             // bottom triangles
@@ -84,7 +86,10 @@ namespace UChart
             }
             
             // top rounded triangles
-            float topRealRadius = topRadius - roundedWidth;
+            float topRealRadius = topRadius;
+            if(rounded && topRounded)
+                topRealRadius -= roundedWidth;
+            turns++;
             if(rounded && topRounded)
             {
                 float perRad = Mathf.PI / 2.0f / tessellation;                
@@ -93,25 +98,7 @@ namespace UChart
                     Vector3 center = top - new Vector3(0,(1-Mathf.Cos(perRad*i)) * roundedWidth,0);
                     float radius = topRealRadius + Mathf.Sin(perRad * i) * roundedWidth;
                     AddTurn(center,vertexCount,perRadian,radius);
-                }
 
-                // TODO: 强插一层有问题
-                for(int x = 2 + vertexCount * (turns - 1), count = 0; count < iterationCount; x++, count++)
-                {
-                    int bl = x;
-                    int br = x + 1;
-                    if(percent == 360 && br >= 2 + vertexCount * turns)
-                        br -= vertexCount;
-                    int tl = bl + vertexCount;
-                    int tr = br + vertexCount;
-                    if(percent == 360 && tr >= 2 + vertexCount * (turns + 1))
-                        tr -= vertexCount;
-                    geometryBuffer.AddQuad(new int[] { bl,tl,tr,br });
-                }
-                turns++;
-
-                for(int i = tessellation ; i > 0; i--)
-                {
                     for(int x = 2 + vertexCount * (turns - 1), count = 0; count < iterationCount; x++, count++)
                     {
                         int bl = x;
@@ -128,6 +115,27 @@ namespace UChart
                 }
             }
             this.AddTurn(top,vertexCount,perRadian,topRealRadius);
+
+            // side triangles
+            // TODO: 计算上下两层turn序号
+            int sideTurn = 1;
+            if(rounded)
+            {
+                if(bottomRounded)
+                    sideTurn += tessellation;
+            }
+            for(int x = 2 + vertexCount * (sideTurn - 1), count = 0; count < iterationCount; x++, count++)
+            {
+                int bl = x;
+                int br = x + 1;
+                if(percent == 360 && br >= 2 + vertexCount * sideTurn)
+                    br -= vertexCount;
+                int tl = bl + vertexCount;
+                int tr = br + vertexCount;
+                if(percent == 360 && tr >= 2 + vertexCount * (sideTurn + 1))
+                    tr -= vertexCount;
+                geometryBuffer.AddQuad(new int[] { bl,tl,tr,br });
+            }
 
             // top triangles
             for(int i = 2 + vertexCount * (turns-1), count = 0; count < iterationCount; i++, count++)
@@ -162,7 +170,7 @@ namespace UChart
                 List<int> end = new List<int>();
                 end.Add(0);
                 for(int i = 0; i < sectionVerticesCount - 2; i++)
-                    end.Add(2 + i * vertexCount + iterationCount - 1);
+                    end.Add(2 + i * vertexCount + iterationCount);
                 end.Add(1);
                 for(int i = 1; i < end.Count - 1; i++)
                     geometryBuffer.AddTriangle(new int[] { 0,end[i],end[i + 1] });
