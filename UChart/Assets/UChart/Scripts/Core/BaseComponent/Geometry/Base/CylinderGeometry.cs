@@ -165,7 +165,16 @@ namespace UChart
                     start.Add(2 + i * vertexCount);
                 start.Add(1);
                 for(int i = 1; i < start.Count - 1; i++)
-                    geometryBuffer.AddTriangle(new int[] { 0,start[i + 1],start[i] });
+                {
+                    //geometryBuffer.AddTriangle(new int[] { 0,start[i + 1],start[i] });
+                    geometryBuffer.AddTriangle(new VertexBuffer[] 
+                    {
+                        new VertexBuffer(){ pos = geometryBuffer.vertices[0]},
+                        new VertexBuffer(){ pos = geometryBuffer.vertices[start[i + 1]]},
+                        new VertexBuffer(){ pos = geometryBuffer.vertices[start[i]]},
+                    });
+                }
+
 
                 List<int> end = new List<int>();
                 end.Add(0);
@@ -173,7 +182,15 @@ namespace UChart
                     end.Add(2 + i * vertexCount + iterationCount);
                 end.Add(1);
                 for(int i = 1; i < end.Count - 1; i++)
-                    geometryBuffer.AddTriangle(new int[] { 0,end[i],end[i + 1] });
+                {
+                    //geometryBuffer.AddTriangle(new int[] { 0,end[i],end[i + 1] });
+                    geometryBuffer.AddTriangle(new VertexBuffer[]
+                   {
+                        new VertexBuffer(){ pos = geometryBuffer.vertices[0]},
+                        new VertexBuffer(){ pos = geometryBuffer.vertices[end[i]]},
+                        new VertexBuffer(){ pos = geometryBuffer.vertices[end[i + 1]]},
+                   });
+                }
             }
         }
 

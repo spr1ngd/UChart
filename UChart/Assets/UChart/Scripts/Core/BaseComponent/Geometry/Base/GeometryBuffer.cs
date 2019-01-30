@@ -69,6 +69,24 @@ namespace UChart
             m_colors.Add(color);
         }
 
+        public void AddTriangle( VertexBuffer[] vertexBuffers )
+        {
+            if( vertexBuffers.Length != 3 )
+                throw new UChartGeometryException("Triangle mush be 3 vertex,but you provide " + vertexBuffers.Length + " vertex");
+            int vertexIndexHead = m_vertices.Count;
+            for(var i = 0; i < vertexBuffers.Length; i++)
+            {
+                VertexBuffer vertexBuffer = vertexBuffers[i];
+                this.AddVertex(vertexBuffer);
+            }
+            this.AddTriangle(new int[] 
+            {
+                0+vertexIndexHead,
+                1+vertexIndexHead,
+                2+vertexIndexHead
+            });
+        }
+
         public void AddQuad( VertexBuffer[] vertexBuffers )
         {
             if( vertexBuffers.Length != 4 )

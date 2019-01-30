@@ -99,7 +99,7 @@ namespace UChart.Test
                     mesh.RecalculateNormals();
                     mesh.RecalculateTangents();
                     meshFilter.mesh = mesh;
-                    meshRenderer.material = new Material(Shader.Find("Standard"));
+                    //meshRenderer.material = new Material(Shader.Find("Standard"));
 
                     percent = cylinder.percent;
                 }

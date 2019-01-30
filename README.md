@@ -80,6 +80,10 @@ Gauge|仪表图|:x:|--
     - case 2 :
     
     ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/02_pie.jpg)
+
+    - case 3 :
+
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/03_pie.png)
     
 
 ## License
