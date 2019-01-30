@@ -1,6 +1,8 @@
 # UChart
 
-**data chart for untiy3d**
+> **website : [uchart.club](http://uchart.club/)**
+
+> **data chart for untiy3d**
 
 ## Features
 
@@ -18,7 +20,7 @@ Axis|坐标轴|:x:|:x: 20%
 Grid|网格|:x:|:x: 50%
 Line|折线图|:x:|:x:
 Bar|柱状图|:x:|:x: 80%
-Pie|饼图|30%|:x: cooming soon
+Pie|饼图|50%|50%
 Radar|雷达图|:x:|:x:
 Scatter|散点图|:x:|:x: 80%
 Map|地图|:x:|:x:
