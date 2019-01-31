@@ -60,6 +60,10 @@ namespace UChart
             }
             turns++;
 
+            // fixed : add same bottom vertice avoid vertex's normal in wrong direction
+            this.AddTurn(bottom,vertexCount,perRadian,bottomRealRadius);
+            turns++;
+
             // bottom rounded triangles
             if(rounded && bottomRounded)
             {
@@ -114,11 +118,11 @@ namespace UChart
                     turns++;
                 }
             }
+
             this.AddTurn(top,vertexCount,perRadian,topRealRadius);
 
             // side triangles
-            // TODO: 计算上下两层turn序号
-            int sideTurn = 1;
+            int sideTurn = 2;
             if(rounded)
             {
                 if(bottomRounded)
@@ -137,6 +141,10 @@ namespace UChart
                 geometryBuffer.AddQuad(new int[] { bl,tl,tr,br });
             }
 
+            // fixed : add same bottom vertice avoid vertex's normal in wrong direction
+            this.AddTurn(top,vertexCount,perRadian,topRealRadius);
+            turns++;
+
             // top triangles
             for(int i = 2 + vertexCount * (turns-1), count = 0; count < iterationCount; i++, count++)
             {
@@ -151,9 +159,10 @@ namespace UChart
             // section triangles
             if(percent < 360)
             {
+                // TODO: 刷新侧面顶点序号
                 List<int> start = new List<int>();
                 start.Add(0);
-                int sectionVerticesCount = 4;
+                int sectionVerticesCount = 6;
                 if(rounded)
                 {
                     if(bottomRounded)
@@ -167,7 +176,7 @@ namespace UChart
                 for(int i = 1; i < start.Count - 1; i++)
                 {
                     //geometryBuffer.AddTriangle(new int[] { 0,start[i + 1],start[i] });
-                    geometryBuffer.AddTriangle(new VertexBuffer[] 
+                    geometryBuffer.AddTriangle(new VertexBuffer[]
                     {
                         new VertexBuffer(){ pos = geometryBuffer.vertices[0]},
                         new VertexBuffer(){ pos = geometryBuffer.vertices[start[i + 1]]},

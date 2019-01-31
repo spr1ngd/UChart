@@ -4,6 +4,8 @@ namespace UChart.Test
 {
     public class GeometryTest : MonoBehaviour
     {
+        public Material pie3dMaterial;
+
         private void OnGUI()
         {
             if( GUILayout.Button("Generate CONE"))
@@ -73,7 +75,7 @@ namespace UChart.Test
                 mesh.RecalculateNormals();
                 mesh.RecalculateTangents();
                 meshFilter.mesh = mesh;
-                meshRenderer.material = new Material(Shader.Find("Standard"));
+                meshRenderer.material = GameObject.Instantiate<Material>(pie3dMaterial);
             }
         }
 
