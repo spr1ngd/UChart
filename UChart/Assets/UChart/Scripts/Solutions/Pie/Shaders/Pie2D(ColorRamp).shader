@@ -84,7 +84,7 @@ Shader "UChart/Pie/2D(ColorRamp)"
 
         ENDCG 
 
-        // draw start point.
+        // draw start & end point.
         Pass
         {
             Blend SrcAlpha OneMinusSrcAlpha
@@ -150,7 +150,8 @@ Shader "UChart/Pie/2D(ColorRamp)"
                     }
                 }
 
-                return startColor + endColor;
+                half4 col = startColor + endColor;
+                return half4(col.rgb,_Alpha * col.a * IN.color.a);
             }
 
             ENDCG
@@ -191,7 +192,7 @@ Shader "UChart/Pie/2D(ColorRamp)"
                 float percent = 1- ceil( at2 - _Percent);
               
                 float4 _Color = lerp(_StartColor,_EndColor,at2 / _Percent );
-                return color =  half4( color.r * _Color.r, color.g * _Color.g,color.b * _Color.b,_Alpha * color.a * percent );
+                return color = half4( color.r * _Color.r, color.g * _Color.g,color.b * _Color.b,_Alpha * color.a * percent );
             }
 
             ENDCG
