@@ -41,25 +41,6 @@ namespace UChart.Test
                 meshRenderer.material = new Material(Shader.Find("Standard"));
             }
 
-            if( GUILayout.Button("Generate Rounded Cylinder"))
-            {
-                var meshFilter = this.GetComponent<MeshFilter>();
-                var meshRenderer = this.GetComponent<MeshRenderer>();
-
-                Mesh mesh = new Mesh();
-                mesh.name = "Rounded Cylinder";
-
-                RoundedCylinderGeometry rCylinder = this.GetComponent<RoundedCylinder>().roundedCylinder;
-                rCylinder.FillGeometry();
-                rCylinder.geometryBuffer.FillMesh(mesh,MeshTopology.Triangles);
-
-                mesh.RecalculateNormals();
-                mesh.RecalculateTangents();
-                meshFilter.mesh = mesh;
-                meshRenderer.material = new Material(Shader.Find("Standard"));
-                //meshRenderer.material = new Material(Shader.Find("UChart/Vertex/VertexColor"));
-            }
-
             if( GUILayout.Button("Generate Cylinder"))
             {
                 var meshFilter = this.GetComponent<MeshFilter>();
