@@ -12,7 +12,7 @@
 
 ## Solution
 
-name | description | 2d status | 3d status
+name | description | 2d | 3d
 ----|----|----|----
 Point|点|:x:|:x: 80%
 Line|线|:x:|:x: 10%
@@ -20,7 +20,7 @@ Axis|坐标轴|:x:|:x: 20%
 Grid|网格|:x:|:x: 50%
 Line|折线图|:x:|:x:
 Bar|柱状图|:x:|:x: 80%
-Pie|饼图|50%|50%
+Pie|饼图|:x:60%|:x:50%
 Radar|雷达图|:x:|:x:
 Scatter|散点图|:x:|:x: 80%
 Map|地图|:x:|:x:
