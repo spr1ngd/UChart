@@ -15,7 +15,7 @@ Shader "UChart/Pie/2D(ColorRamp)"
         _StartColor ("Start Color",COLOR) = (0.2,0.1,1,1)
         _EndColor ("End Color",COLOR) = (0.2,1,1,1)
 
-        _UVRotation ("UV Rotation",range(0,360)) = 90
+        _UVRotation ("UV Rotation",float) = 0
     }
 
     SubShader
@@ -74,10 +74,10 @@ Shader "UChart/Pie/2D(ColorRamp)"
             v2f OUT;
             OUT.vertex = UnityObjectToClipPos(IN.vertex);
             OUT.color = IN.color;
-            _UVRotation = _UVRotation / 180 * PI;
+            float angle = (_UVRotation + 90)/ 180 * PI;
             IN.uv.xy -= 0.5;
-            float2x2 rMatrix = float2x2(cos(_UVRotation),-sin(_UVRotation),
-                                        sin(_UVRotation),cos(_UVRotation));
+            float2x2 rMatrix = float2x2(cos(angle),-sin(angle),
+                                        sin(angle),cos(angle));
             OUT.uv.xy = mul(rMatrix,IN.uv.xy) + 0.5;
             return OUT;
         }
