@@ -20,10 +20,10 @@ Axis|坐标轴|:x:|:x: 20%
 Grid|网格|:x:|:x: 50%
 Line|折线图|:x:|:x:
 Bar|柱状图|:x:|:x: 80%
-Pie|饼图|:x:60%|:x:50%
+Pie|饼图|:x:60%(快速完善上线)|:x:50%
 Radar|雷达图|:x:|:x:
 Scatter|散点图|:x:|:x: 80%
-Map|地图|:x:|:x:
+Map|地图|:x:|:x:0%
 Candlestick|K线图|:x:|:x:
 Heatmap|热力图|:x:|:x: 40%
 Graph|关系图|:x:|:x:
