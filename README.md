@@ -6,7 +6,7 @@
 
 ## Features
 
-- Easy
+- Easy(Only Shader)
 - Standard
 - Mini Assets
 
