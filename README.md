@@ -21,6 +21,7 @@ Grid|网格|:x:|:x: 50%
 Line|折线图|:x:|:x:
 Bar|柱状图|:x:|:x: 80%
 Pie|饼图|:x:60%(快速完善上线)|:x:50%
+Process|进度图|:x:80%| :x:
 Radar|雷达图|:x:|:x:
 Scatter|散点图|:x:|:x: 80%
 Map|地图|:x:|:x:0%
@@ -32,6 +33,36 @@ Tree|树图|:x:|--
 Treemap|矩形占比图|:x:|--
 Sunburst|旭日图|:x:|--
 Gauge|仪表图|:x:|--
+
+- Scatter
+
+    - case 1 :
+  
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/01_scatter.png)
+
+    - case 2 : 
+  
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/02_scatter.png)
+
+- Pie
+
+    - case 1 :
+
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/01_Pie.jpg)
+    
+    - case 2 :
+    
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/02_pie.jpg)
+
+    - case 3 :
+
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/03_pie.png)
+
+- Process
+
+    - case 1 :
+
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Process/01_process.jpg)
 
 - Barchart
 
@@ -62,31 +93,6 @@ Gauge|仪表图|:x:|--
     - case 1 :
   
     ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/01_heatmap.png)
-
-- Scatter
-
-    - case 1 :
-  
-    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/01_scatter.png)
-
-    - case 2 : 
-  
-    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/02_scatter.png)
-
-- Pie
-
-    - case 1 :
-
-    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/01_Pie.jpg)
-    
-    - case 2 :
-    
-    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/02_pie.jpg)
-
-    - case 3 :
-
-    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/03_pie.png)
-    
 
 ## License
 
