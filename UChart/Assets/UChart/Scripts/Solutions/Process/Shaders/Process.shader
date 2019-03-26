@@ -2,11 +2,15 @@
 {
 	Properties
 	{
+		[Toggle(UVCorrection)]
+		_CorrectUV ("FIXED UV",float) = 1
+
+		_Percent ("Percent",range(0,1)) = 0.8
 		_Width ("Width",float) = 400.0
 		_Height ("Height",float) = 20.0
 
 		_BorderWidth ("BorderWidth" ,range(0,0.1)) = 0.001
-		_BorderColor ("BorderColor" ,COLOR) = (0.1,0.1,0.1,0)
+		_BorderColor ("BorderColor" ,COLOR) = (0.1,0.1,0.1,0.3)
 		_StartColor ("StartColor",COLOR) = (1,0,0,1)
 		_EndColor ("EndColor",COLOR) = (0,1,0,1)
 		_Alpha ("Alpha",range(0,1)) = 1.0
@@ -25,10 +29,12 @@
 
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma shader_feature UVCorrection
 
 			float4 _StartColor;
 			float4 _EndColor;
 			float _Alpha;
+			float _Percent;
 
 			float _Width;
 			float _Height;
@@ -64,16 +70,36 @@
 			{
 				fixed4 color = fixed4(0,0,0,0);
 				float lwRatio = _Height / _Width;
-				float radius = lwRatio * 0.5;
+				float radius = lwRatio * 0.5; // 圆角半径（单位是UV）
+
+				float2 remapUV = float2(IN.uv.x / lwRatio,IN.uv.y );
+				float limitX = radius / lwRatio;
 
 				float2 leftCenter = float2(radius,0.5);
-				float2 rightCenter = float2(1 - radius,0.5);
+				float2 rightCenter = float2(radius,0.5);
+				if( remapUV.x > limitX )
+				{
+					if( _Percent > lwRatio )
+						rightCenter = float2(1 * _Percent - radius,0.5);
+					else
+						rightCenter = float2(radius,0.5);
+				}
+				else
+				{
+					rightCenter = float2(radius,0.5);
+				}
+				// 用于色彩过渡的uv值
+				float remapUVx = IN.uv.x; 
+				#ifdef UVCorrection
+					if( _Percent > 0 )
+						remapUVx = IN.uv.x / _Percent;
+				#endif
 				if( IN.uv.x > leftCenter.x && IN.uv.x < rightCenter.x )
 				{
-					color = lerp(_StartColor,_EndColor,IN.uv.x);
+					color = lerp(_StartColor,_EndColor,remapUVx);
 					fixed4 color1;
 					fixed4 color2;
-					if( IN.uv.y > 0.5  )
+					if( IN.uv.y > 0.5 )
 					{
 						float rate = antialias(1,_BorderWidth,IN.uv.y);							
 						color = lerp(color,_BorderColor,rate);
@@ -86,15 +112,19 @@
 				}
 				else
 				{
-					float2 transferXY = float2(IN.uv.x / lwRatio,IN.uv.y ) ;
 					float dis;
 					if( IN.uv.x < leftCenter.x )
-						dis = distance(transferXY,float2(leftCenter.x / lwRatio,0.5));
+						dis = distance(remapUV,float2(leftCenter.x / lwRatio,0.5));
 					if( IN.uv.x > rightCenter.x )
-						dis = distance(transferXY,float2(rightCenter.x/lwRatio,0.5));
-					color = lerp(_StartColor,_EndColor,IN.uv.x);
+						dis = distance(remapUV,float2(rightCenter.x / lwRatio,0.5));
+					color = lerp(_StartColor,_EndColor,remapUVx);
 					float rate = antialias(0.5,_BorderWidth,dis);							
 					color = lerp(color,_BorderColor,rate);
+					if( _Percent < lwRatio )
+					{
+						if( IN.uv.x > _Percent )
+							discard;
+					}
 				}
 				return fixed4(color.rgb, color.a*_Alpha);
 			}
