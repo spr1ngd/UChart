@@ -1,13 +1,19 @@
-
+Ôªø
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UChart.HeatMap
+namespace UChart
 {
-    public class Heatmap2D : Image
+    [ExecuteInEditMode]
+    public class RoundedRectangle : Image
     {
+        public float percent = 1.0f;
+        public Color startColor = Color.white;
+        public Color endColor = new Color32(255,147,0,255);
+
         private Material instanceMaterial;
         private static Sprite m_emptySprite;
+
         private Sprite emptySprite
         {
             get
@@ -28,7 +34,7 @@ namespace UChart.HeatMap
         {
             this.sprite = emptySprite;
             if(null == instanceMaterial)
-                instanceMaterial = GameObject.Instantiate<Material>(new Material(Shader.Find("UChart/HeatMap/HeatMap2D")));
+                instanceMaterial = GameObject.Instantiate<Material>(new Material(Shader.Find("UChart/Process/Process2D")));
             this.material = instanceMaterial;
         }
 
@@ -40,7 +46,11 @@ namespace UChart.HeatMap
         public override Material GetModifiedMaterial(Material baseMaterial)
         {
             Material mat = baseMaterial;
-            // TODO :  Ù–‘∏≥÷µ
+            mat.SetColor("_StartColor",startColor);
+            mat.SetColor("_EndColor",endColor);
+            var size = this.GetComponent<RectTransform>().sizeDelta;
+            mat.SetFloat("_Width",size.x);
+            mat.SetFloat("_Height",size.y);
             return base.GetModifiedMaterial(baseMaterial);
         }
 
