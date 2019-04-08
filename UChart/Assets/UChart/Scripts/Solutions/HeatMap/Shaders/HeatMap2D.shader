@@ -57,41 +57,41 @@ Shader "UChart/HeatMap/HeatMap2D"
 		ENDCG
 
 		// x axis
-		Pass
-		{
-			Blend SrcAlpha OneMinusSrcAlpha
-			CGPROGRAM
+		// Pass
+		// {
+		// 	Blend SrcAlpha OneMinusSrcAlpha
+		// 	CGPROGRAM
 
-			float4 frag( v2f IN ) : COLOR
-			{
-				float4 color = float4(0,0,0,0);
-				float2 remapUV = IN.remapUV;
-				// for(int x=0; x<remapUV.x; x++)
-				// {
-				// 	float2 uv = float2(IN.uv.x*_Width,IN.uv.y*_Height);
-				// 	float xMin = x + _LineWidth ;
-				// 	float xMax = x + 1 - _LineWidth ;
-				// 	if( uv.x > x && uv.x < x + 1)
-				// 	{
-				// 		if( uv.x < xMin || uv.x > xMax)
-				// 		{
-				// 			color = _LineColor;
-				// 		}
-				// 	}
-				// }
-				for( int x = 0; x < remapUV.x ;x++ )
-				{
-					float xMin = -halfWidth + x;
-					float xMax = halfWidth + x;
-					float2 uv = float2(IN.uv.x * _Width,IN.uv.y * _Height);
-					if( uv.x > xMin && uv.x < xMax )
-						color = _LineColor;
-				}
-				return color;
-			}
+		// 	float4 frag( v2f IN ) : COLOR
+		// 	{
+		// 		float4 color = float4(0,0,0,0);
+		// 		float2 remapUV = IN.remapUV;
+		// 		// for(int x=0; x<remapUV.x; x++)
+		// 		// {
+		// 		// 	float2 uv = float2(IN.uv.x*_Width,IN.uv.y*_Height);
+		// 		// 	float xMin = x + _LineWidth ;
+		// 		// 	float xMax = x + 1 - _LineWidth ;
+		// 		// 	if( uv.x > x && uv.x < x + 1)
+		// 		// 	{
+		// 		// 		if( uv.x < xMin || uv.x > xMax)
+		// 		// 		{
+		// 		// 			color = _LineColor;
+		// 		// 		}
+		// 		// 	}
+		// 		// }
+		// 		for( int x = 0; x < remapUV.x ;x++ )
+		// 		{
+		// 			float xMin = -halfWidth + x;
+		// 			float xMax = halfWidth + x;
+		// 			float2 uv = float2(IN.uv.x * _Width,IN.uv.y * _Height);
+		// 			if( uv.x > xMin && uv.x < xMax )
+		// 				color = _LineColor;
+		// 		}
+		// 		return color;
+		// 	}
 
-			ENDCG
-		}
+		// 	ENDCG
+		// }
 
 		// y axis
 		// Pass
@@ -124,12 +124,24 @@ Shader "UChart/HeatMap/HeatMap2D"
 
 		Pass
 		{
-			Blend ONE ONE
+			Blend SrcAlpha OneMinusSrcAlpha
 			CGPROGRAM
 
 			float4 frag( v2f IN ) : COLOR
 			{
-				return fixed4(IN.uv.xy,0,_Alpha);
+				float2 remapUV = float2(IN.uv.x * _Width,IN.uv.y *_Height);
+				fixed4 color = _LineColor;
+				for( int x = 0 ;x < 1;x ++ )
+				{
+					for( int y = 0; y < _Height;y++ )
+					{
+						float xMin = _LineWidth + x;
+						float yMin = _LineWidth + y;
+						if( remapUV.x > xMin  ) 
+							color = fixed4(1,0,0,1);
+					}
+				} 
+				return color;
 			}
 
 			ENDCG
