@@ -64,7 +64,7 @@ Gauge|仪表图|:x:|--
 
     ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Process/01_process.jpg)
 
-- Heatmap
+- Heatmap2d
 
     - case 1 :
     
