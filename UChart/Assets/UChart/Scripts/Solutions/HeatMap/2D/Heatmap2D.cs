@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 namespace UChart.HeatMap
 {
+    [ExecuteInEditMode]
     public class Heatmap2D : Image
     {
         private Material instanceMaterial;
@@ -17,6 +18,11 @@ namespace UChart.HeatMap
                 return m_emptySprite;
             }
         }
+
+        [Header("SETTING")]
+        [SerializeField] public Color lineColor = Color.white;
+        [SerializeField] [Range(2,200)] public int width = 20;
+        [SerializeField] [Range(2,200)] public int height = 20;
 
         protected override void OnEnable()
         {
@@ -40,8 +46,13 @@ namespace UChart.HeatMap
         public override Material GetModifiedMaterial(Material baseMaterial)
         {
             Material mat = baseMaterial;
-            // TODO :  Ù–‘∏≥÷µ
-            return base.GetModifiedMaterial(baseMaterial);
+            mat.SetColor("_LineColor",lineColor);
+            mat.SetInt("_Width",width);
+            mat.SetInt("_Height",height);
+            var size = this.GetComponent<RectTransform>().sizeDelta;
+            mat.SetInt("_TextureWidth",(int)size.x);
+            mat.SetInt("_TextureHeight",(int)size.y);
+            return base.GetModifiedMaterial(mat);
         }
 
         Sprite OnePixelWhiteSprite()

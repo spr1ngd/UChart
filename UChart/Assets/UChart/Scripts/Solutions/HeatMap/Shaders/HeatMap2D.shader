@@ -8,6 +8,8 @@ Shader "UChart/HeatMap/HeatMap2D"
 		_Width ("Width",range(0,200)) = 200
 		_Height ("Height",range(0,200)) = 100
 
+		_TextureWidth("Texture Width",int) = 600
+		_TextureHeight("Texture Height",int) = 600
 		_LineWidth ("Line Width",range(0.01,0.5)) = 0.02
 		_LineColor ("Line Color",COLOR) = (0.9,0.9,0.9,1)
 	}
@@ -56,72 +58,6 @@ Shader "UChart/HeatMap/HeatMap2D"
 
 		ENDCG
 
-		// x axis
-		// Pass
-		// {
-		// 	Blend SrcAlpha OneMinusSrcAlpha
-		// 	CGPROGRAM
-
-		// 	float4 frag( v2f IN ) : COLOR
-		// 	{
-		// 		float4 color = float4(0,0,0,0);
-		// 		float2 remapUV = IN.remapUV;
-		// 		// for(int x=0; x<remapUV.x; x++)
-		// 		// {
-		// 		// 	float2 uv = float2(IN.uv.x*_Width,IN.uv.y*_Height);
-		// 		// 	float xMin = x + _LineWidth ;
-		// 		// 	float xMax = x + 1 - _LineWidth ;
-		// 		// 	if( uv.x > x && uv.x < x + 1)
-		// 		// 	{
-		// 		// 		if( uv.x < xMin || uv.x > xMax)
-		// 		// 		{
-		// 		// 			color = _LineColor;
-		// 		// 		}
-		// 		// 	}
-		// 		// }
-		// 		for( int x = 0; x < remapUV.x ;x++ )
-		// 		{
-		// 			float xMin = -halfWidth + x;
-		// 			float xMax = halfWidth + x;
-		// 			float2 uv = float2(IN.uv.x * _Width,IN.uv.y * _Height);
-		// 			if( uv.x > xMin && uv.x < xMax )
-		// 				color = _LineColor;
-		// 		}
-		// 		return color;
-		// 	}
-
-		// 	ENDCG
-		// }
-
-		// y axis
-		// Pass
-		// {
-		// 	Blend ONE OneMinusSrcAlpha
-		// 	CGPROGRAM
-
-		// 	float4 frag( v2f IN ) : COLOR
-		// 	{
-		// 		float4 color = float4(0,0,0,0);
-		// 		float2 remapUV = IN.remapUV;
-		// 		for(int y=0; y<remapUV.y; y++)
-		// 		{
-		// 			float2 uv = float2(IN.uv.x*_Width,IN.uv.y*_Height);
-		// 			float yMin = y + _LineWidth ;
-		// 			float yMax = y + 1 - _LineWidth ;
-		// 			if( uv.y > y && uv.y < y + 1)
-		// 			{
-		// 				if( uv.y < yMin || uv.y > yMax)
-		// 				{
-		// 					color = _LineColor;
-		// 				}
-		// 			}
-		// 		}
-		// 		return color;
-		// 	}
-
-		// 	ENDCG
-		// }
-
 		Pass
 		{
 			Blend SrcAlpha OneMinusSrcAlpha
@@ -131,16 +67,21 @@ Shader "UChart/HeatMap/HeatMap2D"
 			{
 				float2 remapUV = float2(IN.uv.x * _Width,IN.uv.y *_Height);
 				fixed4 color = _LineColor;
-				for( int x = 0 ;x < 1;x ++ )
+				int xIndex = remapUV.x / 1;
+				int yIndex = remapUV.y / 1;
+				if( remapUV.x > xIndex && remapUV.x < xIndex + 1 && remapUV.y > yIndex && remapUV.y < yIndex + 1)
 				{
-					for( int y = 0; y < _Height;y++ )
-					{
-						float xMin = _LineWidth + x;
-						float yMin = _LineWidth + y;
-						if( remapUV.x > xMin  ) 
-							color = fixed4(1,0,0,1);
-					}
-				} 
+					fixed4 c = fixed4(xIndex/_Width,yIndex/_Height,0.3,1);
+					if( 
+						remapUV.x > xIndex + _LineWidth &&
+					 	remapUV.x < xIndex + 1 - _LineWidth &&
+					 	remapUV.y > yIndex + _LineWidth &&
+					 	remapUV.y < yIndex + 1- _LineWidth 
+						)
+						color = c;
+					else 
+						color = c * 0.5;
+				}
 				return color;
 			}
 
