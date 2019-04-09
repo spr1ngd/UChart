@@ -64,6 +64,12 @@ Gauge|仪表图|:x:|--
 
     ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Process/01_process.jpg)
 
+- Heatmap
+
+    - case 1 :
+    
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_01.jpg)
+
 - Barchart
 
     - case 1 : 
