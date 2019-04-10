@@ -31,7 +31,7 @@ Shader "UChart/HeatMap/HeatMap2D"
 		float _LineWidth;
 		float4 _LineColor;
 		uniform int _FactorCount = 100;
-		uniform float3 _Factors[100];
+		uniform float2 _Factors[100];
 		uniform float2 _FactorProperties[100];
 
 		struct a2v
@@ -78,7 +78,23 @@ Shader "UChart/HeatMap/HeatMap2D"
 					 	remapUV.y > yIndex + _LineWidth &&
 					 	remapUV.y < yIndex + 1- _LineWidth 
 						)
-						color = c;
+					{
+						//color = c;
+						float heat;
+						float2 pos = float2(remapUV.x,remapUV.y);
+						for( int i = 0 ; i < _FactorCount ;i++)
+						{
+							float2 hp = _Factors[i];
+							float radius = _FactorProperties[i].x;
+							float intensity = _FactorProperties[i].y;
+							float dis = distance(hp,pos);
+							float ratio = 1 - saturate(dis / radius);
+							heat += intensity * ratio;
+							heat = clamp(heat,0.05,0.95);
+						}
+						//color = tex2D(_ColorRamp,float2(heat,0.5));
+						color = fixed4(heat,0,0,1);
+					}
 					else 
 						color = c * 0.5;
 				}
