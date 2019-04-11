@@ -12,6 +12,9 @@ Shader "UChart/HeatMap/HeatMap2D"
 		_TextureHeight("Texture Height",int) = 600
 		_LineWidth ("Line Width",range(0.01,0.5)) = 0.02
 		_LineColor ("Line Color",COLOR) = (0.9,0.9,0.9,1)
+
+		_Radius("Impact Factor Radius",float) = 1
+		_Intensity ("Impact Factor Intensity",float) = 1
 	}
 
 	SubShader
@@ -30,6 +33,10 @@ Shader "UChart/HeatMap/HeatMap2D"
 		float _Height;
 		float _LineWidth;
 		float4 _LineColor;
+
+		float _Radius;
+		float _Intensity;
+
 		uniform int _FactorCount = 100;
 		uniform float2 _Factors[100];
 		uniform float2 _FactorProperties[100];
@@ -72,14 +79,8 @@ Shader "UChart/HeatMap/HeatMap2D"
 				if( remapUV.x > xIndex && remapUV.x < xIndex + 1 && remapUV.y > yIndex && remapUV.y < yIndex + 1)
 				{
 					fixed4 c = fixed4(xIndex/_Width,yIndex/_Height,0.3,1);
-					if( 
-						remapUV.x > xIndex + _LineWidth &&
-					 	remapUV.x < xIndex + 1 - _LineWidth &&
-					 	remapUV.y > yIndex + _LineWidth &&
-					 	remapUV.y < yIndex + 1- _LineWidth 
-						)
+					if( remapUV.x > xIndex + _LineWidth && remapUV.x < xIndex + 1 - _LineWidth && remapUV.y > yIndex + _LineWidth && remapUV.y < yIndex + 1- _LineWidth )
 					{
-						//color = c;
 						float heat;
 						float2 pos = float2(remapUV.x,remapUV.y);
 						for( int i = 0 ; i < _FactorCount ;i++)
@@ -87,16 +88,19 @@ Shader "UChart/HeatMap/HeatMap2D"
 							float2 hp = _Factors[i];
 							float radius = _FactorProperties[i].x;
 							float intensity = _FactorProperties[i].y;
+							// TODO: 距离运算利用UV运算
 							float dis = distance(hp,pos);
-							float ratio = 1 - saturate(dis / radius);
-							heat += intensity * ratio;
-							heat = clamp(heat,0.05,0.95);
+							float ratio = 1 - saturate(dis / _Radius);
+							heat += 1 * ratio;
 						}
-						//color = tex2D(_ColorRamp,float2(heat,0.5));
-						color = fixed4(heat,0,0,1);
+						heat = clamp(heat,0.05,0.95);
+						color = tex2D(_ColorRamp,float2(heat,0.5));
+						//color = fixed4(heat,0,0,1);
 					}
 					else 
+					{
 						color = c * 0.5;
+					}
 				}
 				return color;
 			}
