@@ -61,6 +61,7 @@ namespace UChart.HeatMap
             {
                 HeatmapHotspot hotspot = hotspots[i];
                 pos[i] = new Vector2(hotspot.transform.localPosition.x,hotspot.transform.localPosition.y) + size * 0.5f;
+                // pos[i] = new Vector2(pos[i].x / width,pos[i].y / height);
                 properties[i] = new Vector2(hotspot.radius,hotspot.intensity);
             }
             mat.SetInt("_FactorCount",hotspots.Length);

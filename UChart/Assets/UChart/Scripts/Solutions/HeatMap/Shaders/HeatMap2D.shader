@@ -95,7 +95,6 @@ Shader "UChart/HeatMap/HeatMap2D"
 						}
 						heat = clamp(heat,0.05,0.95);
 						color = tex2D(_ColorRamp,float2(heat,0.5));
-						//color = fixed4(heat,0,0,1);
 					}
 					else 
 					{
