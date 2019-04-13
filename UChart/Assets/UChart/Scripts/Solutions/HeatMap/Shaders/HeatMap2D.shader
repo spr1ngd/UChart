@@ -3,8 +3,11 @@ Shader "UChart/HeatMap/HeatMap2D"
 {
 	Properties
 	{
-		[Toggle(DISCRETE)]
+		[Toggle(BOOL_DISCRETE)]
 		_Discrete("Discrete",int) = 1
+
+		[Toggle(BOOL_DRAWLINE)]
+		_DrawLine("DrawLine",int) = 1
 
 		_ColorRamp ("Color Ramp",2D) = "white"{}
 		_Alpha ("Alpha",range(0,1)) = 1.0
@@ -13,7 +16,6 @@ Shader "UChart/HeatMap/HeatMap2D"
 
 		_TextureWidth("Texture Width",int) = 600
 		_TextureHeight("Texture Height",int) = 600
-		_LineWidth ("Line Width",range(0.01,0.5)) = 0.02
 		_LineColor ("Line Color",COLOR) = (0.9,0.9,0.9,1)
 	}
 
@@ -26,13 +28,15 @@ Shader "UChart/HeatMap/HeatMap2D"
 
 		#pragma vertex vert
 		#pragma fragment frag
-		#pragma shader_feature DISCRETE
+		#pragma shader_feature BOOL_DISCRETE
+		#pragma shader_feature BOOL_DRAWLINE
 
 		sampler2D _ColorRamp;
 		float _Alpha;
 		float _Width;
 		float _Height;
-		float _LineWidth;
+		float _TextureWidth;
+		float _TextureHeight;
 		float4 _LineColor;
 
 		uniform int _FactorCount = 100;
@@ -76,44 +80,48 @@ Shader "UChart/HeatMap/HeatMap2D"
 				int yIndex = remapUV.y / 1;
 				if( remapUV.x > xIndex && remapUV.x < xIndex + 1 && remapUV.y > yIndex && remapUV.y < yIndex + 1)
 				{
-					fixed4 c = fixed4(xIndex/_Width,yIndex/_Height,0.3,1);
-					if( remapUV.x > xIndex + _LineWidth && remapUV.x < xIndex + 1 - _LineWidth && remapUV.y > yIndex + _LineWidth && remapUV.y < yIndex + 1- _LineWidth )
+					float heat;
+					float4 heatColor;
+					#ifdef BOOL_DISCRETE
+					for( int i = 0 ; i < _FactorCount ;i++)
 					{
-						float heat;
-						#ifdef DISCRETE
-						for( int i = 0 ; i < _FactorCount ;i++)
-						{
-							float2 hp = _Factors[i];
-							float radius = _FactorProperties[i].x;
-							float intensity = _FactorProperties[i].y;
-							// TODO: 计算出当前方块的中心位置，计算出统一的颜色值
-							float2 center = float2(xIndex/_Width,yIndex/_Height);
-							float dis = distance(hp,center);
-							float ratio = 1 - saturate(dis /radius );
-							heat += intensity * ratio;
-						}
-						// heat = clamp(heat,0.05,0.95);
-						color = tex2D(_ColorRamp,float2(heat,0.5));
-						#else
-						for( int i = 0 ; i < _FactorCount ;i++)
-						{
-							float2 hp = _Factors[i];
-							float radius = _FactorProperties[i].x;
-							float intensity = _FactorProperties[i].y;
-							float dis = distance(hp,IN.uv.xy);
-							float ratio = 1 - saturate(dis /radius );
-							heat += intensity * ratio;
-						}
-						// heat = clamp(heat,0.05,0.95);
-						color = tex2D(_ColorRamp,float2(heat,0.5));
-						#endif
+						float2 hp = _Factors[i];
+						float radius = _FactorProperties[i].x;
+						float intensity = _FactorProperties[i].y;
+						float2 center = float2(xIndex/_Width,yIndex/_Height);
+						float dis = distance(hp,center);
+						float ratio = 1 - saturate(dis /radius );
+						heat += intensity * ratio;
+					}
+					heatColor = tex2D(_ColorRamp,float2(heat,0.5));
+					#else
+					for( int i = 0 ; i < _FactorCount ;i++)
+					{
+						float2 hp = _Factors[i];
+						float radius = _FactorProperties[i].x;
+						float intensity = _FactorProperties[i].y;
+						float dis = distance(hp,IN.uv.xy);
+						float ratio = 1 - saturate(dis /radius );
+						heat += intensity * ratio;
+					}
+					heatColor = tex2D(_ColorRamp,float2(heat,0.5));
+					#endif
+					float lineWidth = (_Width /2) / _TextureWidth; 
+					float lineHeight = (_Height /2) / _TextureHeight;
+					if( remapUV.x > xIndex + lineWidth && remapUV.x < xIndex + 1 - lineWidth && remapUV.y > yIndex + lineHeight && remapUV.y < yIndex + 1- lineHeight )
+					{
+						color = heatColor;
 					}
 					else 
 					{
-						color = c * 0.5;
+						#ifdef BOOL_DRAWLINE
+						color = lerp(_LineColor,heatColor,0.8);
+						#else
+					    color = heatColor;
+						#endif
 					}
 				}
-				return color;
+				return fixed4(color.rgb,_Alpha);
 			}
 
 			ENDCG
