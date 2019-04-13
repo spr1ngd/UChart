@@ -3,6 +3,9 @@ Shader "UChart/HeatMap/HeatMap2D"
 {
 	Properties
 	{
+		[Toggle(DISCRETE)]
+		_Discrete("Discrete",int) = 1
+
 		_ColorRamp ("Color Ramp",2D) = "white"{}
 		_Alpha ("Alpha",range(0,1)) = 1.0
 		_Width ("Width",range(0,200)) = 200
@@ -12,9 +15,6 @@ Shader "UChart/HeatMap/HeatMap2D"
 		_TextureHeight("Texture Height",int) = 600
 		_LineWidth ("Line Width",range(0.01,0.5)) = 0.02
 		_LineColor ("Line Color",COLOR) = (0.9,0.9,0.9,1)
-
-		_Radius("Impact Factor Radius",float) = 1
-		_Intensity ("Impact Factor Intensity",float) = 1
 	}
 
 	SubShader
@@ -26,6 +26,7 @@ Shader "UChart/HeatMap/HeatMap2D"
 
 		#pragma vertex vert
 		#pragma fragment frag
+		#pragma shader_feature DISCRETE
 
 		sampler2D _ColorRamp;
 		float _Alpha;
@@ -33,9 +34,6 @@ Shader "UChart/HeatMap/HeatMap2D"
 		float _Height;
 		float _LineWidth;
 		float4 _LineColor;
-
-		float _Radius;
-		float _Intensity;
 
 		uniform int _FactorCount = 100;
 		uniform float2 _Factors[100];
@@ -82,19 +80,33 @@ Shader "UChart/HeatMap/HeatMap2D"
 					if( remapUV.x > xIndex + _LineWidth && remapUV.x < xIndex + 1 - _LineWidth && remapUV.y > yIndex + _LineWidth && remapUV.y < yIndex + 1- _LineWidth )
 					{
 						float heat;
-						float2 pos = float2(remapUV.x,remapUV.y);
+						#ifdef DISCRETE
 						for( int i = 0 ; i < _FactorCount ;i++)
 						{
 							float2 hp = _Factors[i];
 							float radius = _FactorProperties[i].x;
 							float intensity = _FactorProperties[i].y;
-							// TODO: 距离运算利用UV运算
-							float dis = distance(hp,pos);
-							float ratio = 1 - saturate(dis / _Radius);
-							heat += 1 * ratio;
+							// TODO: 计算出当前方块的中心位置，计算出统一的颜色值
+							float2 center = float2(xIndex/_Width,yIndex/_Height);
+							float dis = distance(hp,center);
+							float ratio = 1 - saturate(dis /radius );
+							heat += intensity * ratio;
 						}
-						heat = clamp(heat,0.05,0.95);
+						// heat = clamp(heat,0.05,0.95);
 						color = tex2D(_ColorRamp,float2(heat,0.5));
+						#else
+						for( int i = 0 ; i < _FactorCount ;i++)
+						{
+							float2 hp = _Factors[i];
+							float radius = _FactorProperties[i].x;
+							float intensity = _FactorProperties[i].y;
+							float dis = distance(hp,IN.uv.xy);
+							float ratio = 1 - saturate(dis /radius );
+							heat += intensity * ratio;
+						}
+						// heat = clamp(heat,0.05,0.95);
+						color = tex2D(_ColorRamp,float2(heat,0.5));
+						#endif
 					}
 					else 
 					{

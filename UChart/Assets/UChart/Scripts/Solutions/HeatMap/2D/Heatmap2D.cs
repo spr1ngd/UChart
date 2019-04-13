@@ -48,8 +48,8 @@ namespace UChart.HeatMap
             Material mat = baseMaterial;
             mat.SetColor("_LineColor",lineColor);
             mat.SetInt("_Width",width);
-
             mat.SetInt("_Height",height);
+            // mat.SetTexture("_ColorRamp",Resources.Load<Texture>("HeatMapSample_Cyan2Red"));
             var size = this.GetComponent<RectTransform>().sizeDelta;
             mat.SetInt("_TextureWidth",(int)size.x);
             mat.SetInt("_TextureHeight",(int)size.y);
@@ -61,7 +61,7 @@ namespace UChart.HeatMap
             {
                 HeatmapHotspot hotspot = hotspots[i];
                 pos[i] = new Vector2(hotspot.transform.localPosition.x,hotspot.transform.localPosition.y) + size * 0.5f;
-                // pos[i] = new Vector2(pos[i].x / width,pos[i].y / height);
+                pos[i] = new Vector2(pos[i].x / size.x,pos[i].y / size.y);
                 properties[i] = new Vector2(hotspot.radius,hotspot.intensity);
             }
             mat.SetInt("_FactorCount",hotspots.Length);
