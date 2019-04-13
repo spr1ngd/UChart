@@ -68,7 +68,15 @@ Gauge|仪表图|:x:|--
 
     - case 1 :
     
-    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_01.jpg)
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_01.png)
+    
+    - case 2 :
+    
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_02.png)
+    
+    - case 3 :
+    
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_03.png)
 
 - Barchart
 
