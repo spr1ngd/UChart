@@ -20,7 +20,7 @@ Axis|坐标轴|:x:|:x: 20%
 Grid|网格|:x:|:x: 50%
 Line|折线图|:x:|:x:
 Bar|柱状图|:x:|:x: 80%
-Pie|饼图|:x:60%(快速完善上线)|:x:50%
+Pie|饼图|:x:60%|:x:50%
 Process|进度图|:x:80%| :x:
 Radar|雷达图|:x:|:x:
 Scatter|散点图|:x:|:x: 80%
@@ -28,11 +28,25 @@ Map|地图|:x:|:x:0%
 Candlestick|K线图|:x:|:x:
 Heatmap|热力图|100%|:x: 40%
 Graph|关系图|:x:|:x:
-Path|路径图|:x:|:x:
+Path|路径图|:x:0%|:x:
 Tree|树图|:x:|--
 Treemap|矩形占比图|:x:|--
 Sunburst|旭日图|:x:|--
 Gauge|仪表图|:x:|--
+
+- Heatmap2d
+
+    - case 1 :
+    
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_01.jpg)
+    
+    - case 2 :
+    
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_02.jpg)
+    
+    - case 3 :
+    
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_03.jpg)
 
 - Scatter
 
@@ -64,19 +78,7 @@ Gauge|仪表图|:x:|--
 
     ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Process/01_process.jpg)
 
-- Heatmap2d
 
-    - case 1 :
-    
-    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_01.jpg)
-    
-    - case 2 :
-    
-    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_02.jpg)
-    
-    - case 3 :
-    
-    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_03.jpg)
 
 - Barchart
 
