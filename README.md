@@ -33,6 +33,7 @@ Tree|树图|:x:|--
 Treemap|矩形占比图|:x:|--
 Sunburst|旭日图|:x:|--
 Gauge|仪表图|:x:|--
+ProceduralLandmass|程序生成地图|:x:|:x:
 
 - Heatmap2d
 
