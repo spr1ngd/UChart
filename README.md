@@ -49,15 +49,6 @@ ProceduralLandmass|程序生成地图|:x:|:x:
     
     ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Heatmap/heatmap2d_03.jpg)
 
-- Scatter
-
-    - case 1 :
-  
-    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/01_scatter.png)
-
-    - case 2 : 
-  
-    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/02_scatter.png)
 
 - Pie
 
@@ -72,6 +63,17 @@ ProceduralLandmass|程序生成地图|:x:|:x:
     - case 3 :
 
     ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Pie/03_pie.png)
+
+    
+- Scatter
+
+    - case 1 :
+  
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/01_scatter.png)
+
+    - case 2 : 
+  
+    ![image](https://github.com/springd5211/UChart/blob/master/UChart/Assets/00_UCHART/Scatter/02_scatter.png)
 
 - Process
 
