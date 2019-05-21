@@ -18,7 +18,7 @@ Shader "UChart/Wireframe"
 
 	SubShader
 	{
-		Tags{"RenderType"="Transparent"}
+		Tags{"RenderType"="Transparent" "Queue"="Transparent"}
 		Blend SrcAlpha OneMinusSrcAlpha
 
 		Pass
@@ -74,7 +74,12 @@ Shader "UChart/Wireframe"
 				}
 				else
 				{
-					float ratio = antialias(0,_WireframeBorder,IN.uv.x);
+					float mulXY = IN.uv.x * IN.uv.y;
+					if( mulXY > minUV )
+						mulXY = clamp(0,minUV,mulXY);
+					if( mulXY < maxUV )
+						mulXY = clamp(maxUV,1,mulXY);
+					float ratio = antialias(0,_WireframeBorder,mulXY);
 					color = lerp(_WireframeBorderColor,_WireframeColor,ratio);
 				}
 				return color;
