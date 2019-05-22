@@ -67,20 +67,17 @@ Shader "UChart/Wireframe"
 			{
 				fixed4 color = _NormalColor;
 				float minUV = _WireframeWidth;
-				float maxUV = 1 - _WireframeWidth;
-				if( IN.uv.x > minUV && IN.uv.x < maxUV && IN.uv.y > minUV && IN.uv.y < maxUV)
+				float maxUV = 1 - _WireframeWidth; 
+				if( IN.uv.x > minUV && IN.uv.x < maxUV && IN.uv.y > minUV && IN.uv.y < maxUV )
 				{
-
+					float2 remapUV = IN.uv.xy - float2(.5,.5);
+					float dis = sqrt(pow(remapUV.x,2)+pow(remapUV.y,2));
+					if( dis > _WireframeWidth )
+						return _WireframeColor;
 				}
 				else
 				{
-					float mulXY = IN.uv.x * IN.uv.y;
-					if( mulXY > minUV )
-						mulXY = clamp(0,minUV,mulXY);
-					if( mulXY < maxUV )
-						mulXY = clamp(maxUV,1,mulXY);
-					float ratio = antialias(0,_WireframeBorder,mulXY);
-					color = lerp(_WireframeBorderColor,_WireframeColor,ratio);
+					return float4(1,0,0,1);		
 				}
 				return color;
 			}
