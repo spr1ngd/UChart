@@ -25,7 +25,7 @@
 			half _Alpha;
 			uniform int _FactorCount = 0;
 			uniform float3 _Factors[100];
-			uniform float2 _FactorsProperties[100];
+			uniform float3 _FactorsProperties[100];
 
 			struct a2v
 			{
@@ -54,8 +54,9 @@
 					half dis = distance(input.worldPos,_Factors[i].xyz);
 					float radius = _FactorsProperties[i].x;
 					float intensity = _FactorsProperties[i].y;
+					float temperatureFacator = _FactorsProperties[i].z;
 					half ratio = 1 - saturate(dis/radius);
-					heat += intensity * ratio;
+					heat += intensity * ratio * temperatureFacator;
 					heat = clamp(heat,0.05,0.95);
 				}
 				half4 color = tex2D(_HeatMapTex,fixed2(heat,0.5));
